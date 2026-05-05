@@ -1,0 +1,1 @@
+Funciona como controller, contiene rutas
