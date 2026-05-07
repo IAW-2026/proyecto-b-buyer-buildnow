@@ -1,10 +1,10 @@
-import { SignUp } from "@clerk/nextjs";
+import { SignIn } from "@clerk/nextjs";
 
 //  # Rutas sin autenticación
-export default function RegisterPage() {
+export default function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center">
-      <SignUp />
+      <SignIn />
     </main>
   );
 }
