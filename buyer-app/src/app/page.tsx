@@ -1,14 +1,26 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { getCurrentBuyer } from "@/server/services/buyer.service";
 
-// # Página de inicio, redirige según el estado de autenticación
 export default async function HomePage() {
   const { userId } = await auth();
 
-  // user no autenticado, redirigir a login
+  // No autenticado
   if (!userId) {
     redirect("/login");
   }
-  // user autenticado, redirigir a dashboard
+
+  // Buscar buyer en Prisma
+  const buyer =
+    await getCurrentBuyer(userId);
+
+  // Usuario autenticado pero sin onboarding
+  if (!buyer) {
+    redirect(
+      "/settings/profile?onboarding=true"
+    );
+  }
+
+  // Usuario completo
   redirect("/dashboard");
 }
