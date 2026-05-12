@@ -1,53 +1,317 @@
 "use server";
 
-import { auth, currentUser } from "@clerk/nextjs/server";
+import {
+  auth,
+  currentUser,
+} from "@clerk/nextjs/server";
+
 import { redirect } from "next/navigation";
 
-import { findCurrentBuyer, registerBuyer, } from "@/server/services/buyer.service";
+import {
+  findCurrentBuyer,
+  registerBuyer,
+  getAllStores,
+  getCatalogCategories,
+  getStoreProductsService,
+  getProductDetails,
+  getProductsByCategoryService,
+  addProductToCart,
+  decreaseProductQuantity,
+  getStoreProductsWithCartQuantity,
+} from "@/server/services/buyer.service";
 
-export async function createBuyerAction( formData: FormData) {
-  const { userId } = await auth();
+import { ActionResponse } from "@/type/action-response";
 
-  if (!userId) {
-    throw new Error("Unauthorized");
+// ==============================
+// BUYER
+// ==============================
+
+export async function createBuyerAction(
+  formData: FormData
+): Promise<ActionResponse> {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "Debes iniciar sesión",
+      };
+    }
+
+    const existingBuyer =
+      await findCurrentBuyer(userId);
+
+    if (existingBuyer) {
+      redirect("/dashboard");
+    }
+
+    const user = await currentUser();
+
+    if (!user) {
+      return {
+        success: false,
+        error: "Usuario no encontrado",
+      };
+    }
+
+    const name =
+      formData.get("name")?.toString() || "";
+
+    const phone =
+      formData.get("phone")?.toString() || "";
+
+    const street = formData.get(
+      "street"
+    ) as string;
+
+    const city = formData.get("city") as string;
+
+    const notes = formData.get("notes") as string;
+
+    const email =
+      user.emailAddresses?.[0]?.emailAddress;
+
+    if (!email) {
+      return {
+        success: false,
+        error: "Email no encontrado",
+      };
+    }
+
+    await registerBuyer({
+      clerkId: userId,
+      name,
+      phone,
+      email,
+
+      address: {
+        street,
+        city,
+        notes,
+      },
+    });
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+
+    if (
+      error instanceof Error &&
+      error.message === "BUYER_ALREADY_EXISTS"
+    ) {
+      return {
+        success: false,
+        error: "El comprador ya existe",
+      };
+    }
+
+    return {
+      success: false,
+      error:
+        "Ocurrió un error al registrar el comprador",
+    };
   }
+}
 
-  const existingBuyer = await findCurrentBuyer(userId);
+// ==============================
+// CATALOG
+// ==============================
 
-  if (existingBuyer) {
-    redirect("/dashboard");
+export async function fetchStoresAction() {
+  try {
+    return await getAllStores();
+  } catch (error) {
+    console.error(
+      "Error fetching stores:",
+      error
+    );
+
+    throw new Error("FAILED_TO_FETCH_STORES");
   }
+}
 
-  const user = await currentUser();
+export async function fetchCategoriesAction() {
+  try {
+    return await getCatalogCategories();
+  } catch (error) {
+    console.error(
+      "Error fetching categories:",
+      error
+    );
 
-  if (!user) {
-    throw new Error("User not found");
+    throw new Error(
+      "FAILED_TO_FETCH_CATEGORIES"
+    );
   }
+}
 
-  const name = formData.get("name")?.toString() || "";
-  const phone = formData.get("phone")?.toString() || "";
-  const street = formData.get("street") as string;
-  const city = formData.get("city") as string;
-  const notes = formData.get("notes") as string;
-  const email = user.emailAddresses?.[0]?.emailAddress;
+export async function fetchStoreProductsAction(
+  storeId: string
+) {
+  try {
+    return await getStoreProductsService(
+      storeId
+    );
+  } catch (error) {
+    console.error(
+      `Error fetching products for store ${storeId}:`,
+      error
+    );
 
-
-  if (!email) {
-    throw new Error("Email not found");
+    throw new Error(
+      "FAILED_TO_FETCH_STORE_PRODUCTS"
+    );
   }
+}
 
-  await registerBuyer({
-    clerkId: userId,
-    name,
-    phone,
-    email,
+export async function fetchStoreProductsWithCartQuantityAction(
+  storeId: string
+) {
+  try {
+    const { userId } = await auth();
 
-    address: {
-      street,
-      city,
-      notes,
-    },
-  });
+    if (!userId) {
+      throw new Error("UNAUTHORIZED");
+    }
 
-  redirect("/dashboard");
+    return await getStoreProductsWithCartQuantity(
+      userId,
+      storeId
+    );
+  } catch (error) {
+    console.error(
+      `Error fetching products for store ${storeId}:`,
+      error
+    );
+
+    throw new Error(
+      "FAILED_TO_FETCH_STORE_PRODUCTS"
+    );
+  }
+}
+
+export async function fetchProductDetailsAction(
+  productId: string
+) {
+  try {
+    return await getProductDetails(productId);
+  } catch (error) {
+    console.error(
+      `Error fetching product ${productId}:`,
+      error
+    );
+
+    throw new Error(
+      "FAILED_TO_FETCH_PRODUCT_DETAILS"
+    );
+  }
+}
+
+export async function fetchProductsByCategoryAction(
+  categoryId: string
+) {
+  try {
+    return await getProductsByCategoryService(
+      categoryId
+    );
+  } catch (error) {
+    console.error(
+      `Error fetching products for category ${categoryId}:`,
+      error
+    );
+
+    throw new Error(
+      "FAILED_TO_FETCH_PRODUCTS_BY_CATEGORY"
+    );
+  }
+}
+
+// ==============================
+// CART
+// ==============================
+
+export async function addToCartAction(
+  productId: string
+): Promise<ActionResponse> {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "Debes iniciar sesión",
+      };
+    }
+
+    await addProductToCart(userId, productId);
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+
+    if (
+      error instanceof Error &&
+      error.message === "DIFFERENT_STORE_CART"
+    ) {
+      return {
+        success: false,
+        error:
+          "No puedes agregar productos de distintas tiendas",
+      };
+    }
+
+    return {
+      success: false,
+      error:
+        "Ocurrió un error al agregar el producto",
+    };
+  }
+}
+
+export async function decreaseCartItemAction(
+  productId: string
+): Promise<ActionResponse> {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "Debes iniciar sesión",
+      };
+    }
+
+    await decreaseProductQuantity(
+      userId,
+      productId
+    );
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+
+    if (
+      error instanceof Error &&
+      error.message === "CART_ITEM_NOT_FOUND"
+    ) {
+      return {
+        success: false,
+        error:
+          "El producto no existe en el carrito",
+      };
+    }
+
+    return {
+      success: false,
+      error:
+        "Ocurrió un error al actualizar el carrito",
+    };
+  }
 }

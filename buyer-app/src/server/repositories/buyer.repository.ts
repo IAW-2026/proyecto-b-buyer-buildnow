@@ -45,3 +45,89 @@ export async function findBuyerByClerkId(clerkId: string) {
     },
   });
 }
+
+//CART
+export async function getCartByBuyerId(buyerId: string) {
+  return prisma.cart.findFirst({
+    where: {
+      buyerId,
+    },
+  });
+}
+
+export async function createCart(buyerId: string) {
+  return prisma.cart.create({
+    data: {
+      buyerId,
+    },
+  });
+}
+
+export async function getCartItem(cartId: string, productId: string) {
+  return prisma.cartItem.findFirst({
+    where: {
+      cartId,
+      productId,
+    },
+  });
+}
+
+export async function getCartItems(cartId: string) {
+  return prisma.cartItem.findMany({
+    where: {
+      cartId,
+    },
+  });
+}
+
+export async function findCartItemFromDifferentStore(cartId: string, storeId: string) {
+  return prisma.cartItem.findFirst({
+    where: {
+      cartId,
+      storeId: {
+        not: storeId,
+      },
+    },
+  });
+}
+
+type CreateCartItemInput = {
+  cartId: string;
+  productId: string;
+  quantity: number;
+  price: number;
+};
+
+export async function createCartItem(data: CreateCartItemInput) {
+  return prisma.cartItem.create({
+    data,
+  });
+}
+
+export async function incrementCartItem(id: string) {
+  return prisma.cartItem.update({
+    where: { id },
+    data: {
+      quantity: {
+        increment: 1,
+      },
+    },
+  });
+}
+
+export async function decrementCartItem(id: string) {
+  return prisma.cartItem.update({
+    where: { id },
+    data: {
+      quantity: {
+        decrement: 1,
+      },
+    },
+  });
+}
+
+export async function deleteCartItem(id: string) {
+  return prisma.cartItem.delete({
+    where: { id },
+  });
+}

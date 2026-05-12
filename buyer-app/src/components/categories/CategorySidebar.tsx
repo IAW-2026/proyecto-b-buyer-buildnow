@@ -1,21 +1,30 @@
 "use client";
 
-import { useRef, useState } from "react";
-
-const categories = [
-  "Cemento y Cal",
-  "Herramientas",
-  "Electricidad",
-  "Ferretería",
-  "Pinturas",
-  "Sanitarios",
-  "Materiales de obra",
-];
+import { useRef, useState, useEffect } from "react";
+import { fetchCategoriesAction } from "@/actions/buyerActions";
+import type { Category } from "@/lib/apiClients/sellerApi";
 
 export default function CategorySidebar() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await fetchCategoriesAction();
+        setCategories(data);
+      } catch (error) {
+        console.error("Failed to load categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCategories();
+  }, []);
 
   const checkScroll = () => {
     if (scrollContainerRef.current) {
@@ -35,6 +44,17 @@ export default function CategorySidebar() {
       setTimeout(checkScroll, 300);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="rounded-2xl bg-white border border-stone-200 p-5">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-orange-500 mb-4">
+          Categorías
+        </h2>
+        <div className="text-stone-400">Cargando...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-2xl bg-white border border-stone-200 p-5">
@@ -91,7 +111,7 @@ export default function CategorySidebar() {
         >
           {categories.map((category) => (
             <button
-              key={category}
+              key={category.id}
               className="
                 flex-shrink-0
                 rounded-xl
@@ -104,7 +124,7 @@ export default function CategorySidebar() {
                 whitespace-nowrap
               "
             >
-              {category}
+              {category.name}
             </button>
           ))}
         </div>
@@ -143,7 +163,7 @@ export default function CategorySidebar() {
       <div className="hidden lg:flex lg:flex-col lg:space-y-2">
         {categories.map((category) => (
           <button
-            key={category}
+            key={category.id}
             className="
               rounded-xl
               px-3
@@ -156,7 +176,7 @@ export default function CategorySidebar() {
               text-left
             "
           >
-            {category}
+            {category.name}
           </button>
         ))}
       </div>

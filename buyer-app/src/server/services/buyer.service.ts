@@ -1,7 +1,33 @@
+import { serializeDecimal } from "@/lib/utils/serializeDecimal";
+
 import {
   createBuyer,
+  decrementCartItem,
   findBuyerByClerkId,
+  getCartItem,
+  deleteCartItem,
+  createCartItem,
+  incrementCartItem,
+  getCartByBuyerId,
+  createCart,
+  getCartItems,
+  findCartItemFromDifferentStore,
 } from "../repositories/buyer.repository";
+
+import {
+  getStores,
+  getStoreProducts,
+  getCategories,
+  getProduct,
+  getProductsByCategory,
+  type Store,
+  type Product,
+  type Category,
+} from "@/lib/apiClients/sellerApi";
+
+// ==============================
+// BUYER
+// ==============================
 
 export async function registerBuyer(data: {
   clerkId: string;
@@ -15,25 +41,195 @@ export async function registerBuyer(data: {
     notes?: string;
   };
 }) {
-  const existing = await findBuyerByClerkId(data.clerkId);
+  const existingBuyer = await findBuyerByClerkId(
+    data.clerkId
+  );
 
-  if (existing) {
-    throw new Error("Buyer already exists");
+  if (existingBuyer) {
+    throw new Error("BUYER_ALREADY_EXISTS");
   }
 
   return createBuyer(data);
 }
 
-export async function findCurrentBuyer(clerkId: string) {
+export async function findCurrentBuyer(
+  clerkId: string
+) {
   return findBuyerByClerkId(clerkId);
 }
 
-export async function getCurrentBuyer(clerkId: string) {
+export async function getCurrentBuyer(
+  clerkId: string
+) {
   const buyer = await findBuyerByClerkId(clerkId);
 
   if (!buyer) {
-    throw new Error("Buyer not found");
+    throw new Error("BUYER_NOT_FOUND");
   }
 
   return buyer;
+}
+
+// ==============================
+// CATALOG
+// ==============================
+
+export async function getAllStores(): Promise<
+  Store[]
+> {
+  return getStores();
+}
+
+export async function getCatalogCategories(): Promise<
+  Category[]
+> {
+  return getCategories();
+}
+
+export async function getStoreProductsService(
+  storeId: string
+): Promise<Product[]> {
+  return getStoreProducts(storeId);
+}
+
+export async function getProductDetails(
+  productId: string
+): Promise<Product> {
+  return getProduct(productId);
+}
+
+export async function getProductsByCategoryService(
+  categoryId: string
+): Promise<Product[]> {
+  return getProductsByCategory(categoryId);
+}
+
+// ==============================
+// CART
+// ==============================
+
+async function getOrCreateCart(clerkId: string) {
+  const buyer = await findBuyerByClerkId(clerkId);
+
+  if (!buyer) {
+    throw new Error("BUYER_NOT_FOUND");
+  }
+
+  const existingCart = await getCartByBuyerId(
+    buyer.id
+  );
+
+  if (existingCart) {
+    return existingCart;
+  }
+
+  return createCart(buyer.id);
+}
+
+export async function addProductToCart(
+  clerkId: string,
+  productId: string
+) {
+  const cart = await getOrCreateCart(clerkId);
+
+  const existingItem = await getCartItem(
+    cart.id,
+    productId
+  );
+
+  if (existingItem) {
+    return serializeDecimal(
+      await incrementCartItem(existingItem.id)
+    );
+  }
+
+  const product = await getProduct(productId);
+
+  const sameStore = await checkSameStore(
+    cart.id,
+    product.storeId
+  );
+
+  if (!sameStore) {
+    throw new Error("DIFFERENT_STORE_CART");
+  }
+
+  const newCartItem = await createCartItem({
+    cartId: cart.id,
+    productId: product.id,
+    storeId: product.storeId,
+    quantity: 1,
+    price: product.price,
+  });
+
+  return serializeDecimal(newCartItem);
+}
+
+export async function checkSameStore(
+  cartId: string,
+  storeId: string
+) {
+  const differentStoreItem =
+    await findCartItemFromDifferentStore(
+      cartId,
+      storeId
+    );
+
+  return !differentStoreItem;
+}
+
+export async function decreaseProductQuantity(
+  clerkId: string,
+  productId: string
+) {
+  const buyer = await findBuyerByClerkId(clerkId);
+
+  if (!buyer) {
+    throw new Error("BUYER_NOT_FOUND");
+  }
+
+  const cart =
+    (await getCartByBuyerId(buyer.id)) ??
+    (await createCart(buyer.id));
+
+  const existingItem = await getCartItem(
+    cart.id,
+    productId
+  );
+
+  if (!existingItem) {
+    throw new Error("CART_ITEM_NOT_FOUND");
+  }
+
+  if (existingItem.quantity <= 1) {
+    return serializeDecimal(
+      await deleteCartItem(existingItem.id)
+    );
+  }
+
+  return serializeDecimal(
+    await decrementCartItem(existingItem.id)
+  );
+}
+
+export async function getStoreProductsWithCartQuantity(
+  clerkId: string,
+  storeId: string
+) {
+  const products = await getStoreProducts(storeId);
+
+  const cart = await getOrCreateCart(clerkId);
+
+  const cartItems = await getCartItems(cart.id);
+
+  return products.map((product) => {
+    const cartItem = cartItems.find(
+      (item) => item.productId === product.id
+    );
+
+    return {
+      ...product,
+      quantity: cartItem?.quantity ?? 0,
+    };
+  });
 }

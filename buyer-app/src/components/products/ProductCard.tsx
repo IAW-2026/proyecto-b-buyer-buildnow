@@ -1,31 +1,221 @@
 "use client";
 
-import { useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 type Props = {
-  id: number;
+  id: string;
   name: string;
-  price: string;
-  weight: string;
+  storeId: string;
+  price: number;
+  weight: number;
+  quantity: number;
+  onAdd: (id: string) => void;
+  onDecrease: (id: string) => void;
 };
 
-export default function ProductCard({ id, name, price, weight }: Props) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function ProductCard({
+  id,
+  name,
+  price,
+  weight,
+  quantity,
+  onAdd,
+  onDecrease,
+}: Props) {
+  const [isModalOpen, setIsModalOpen] =
+    useState(false);
+
+  // ==============================
+  // FORMATTERS
+  // ==============================
+
+  const formattedPrice = `$${price.toFixed(2)}`;
+
+  const formattedWeight = `${weight} g`;
+
+  // ==============================
+  // MODAL HANDLERS
+  // ==============================
+
+  const openModal = useCallback(() => {
+    setIsModalOpen(true);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
+  // ==============================
+  // PRODUCT ACTIONS
+  // ==============================
+
+  const handleAdd = useCallback(
+    (
+      event?: React.MouseEvent<HTMLButtonElement>
+    ) => {
+      event?.stopPropagation();
+
+      onAdd(id);
+    },
+    [id, onAdd]
+  );
+
+  const handleDecrease = useCallback(
+    (
+      event?: React.MouseEvent<HTMLButtonElement>
+    ) => {
+      event?.stopPropagation();
+
+      onDecrease(id);
+    },
+    [id, onDecrease]
+  );
+
+  // ==============================
+  // ESC TO CLOSE
+  // ==============================
+
+  useEffect(() => {
+    if (!isModalOpen) return;
+
+    const handleEscape = (
+      event: KeyboardEvent
+    ) => {
+      if (event.key === "Escape") {
+        closeModal();
+      }
+    };
+
+    document.addEventListener(
+      "keydown",
+      handleEscape
+    );
+
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener(
+        "keydown",
+        handleEscape
+      );
+
+      document.body.style.overflow = "auto";
+    };
+  }, [isModalOpen, closeModal]);
+
+  // ==============================
+  // CART CONTROLS
+  // ==============================
+
+  const renderCartControls = () => {
+    if (quantity <= 0) {
+      return (
+        <button
+          type="button"
+          onClick={handleAdd}
+          className="
+            w-full
+            rounded-xl
+            bg-orange-500
+            px-4
+            py-2
+            text-sm
+            font-medium
+            text-white
+            transition
+            hover:opacity-90
+          "
+        >
+          Agregar
+        </button>
+      );
+    }
+
+    return (
+      <div
+        onClick={(event) =>
+          event.stopPropagation()
+        }
+        className="
+          flex
+          items-center
+          justify-between
+          rounded-xl
+          bg-orange-500
+          px-4
+          py-2
+          text-white
+        "
+      >
+        <button
+          type="button"
+          onClick={handleDecrease}
+          className="
+            flex
+            h-6
+            w-6
+            items-center
+            justify-center
+            rounded-full
+            bg-white/20
+            text-lg
+            font-bold
+            transition
+            hover:bg-white/30
+          "
+        >
+          −
+        </button>
+
+        <span className="text-sm font-semibold">
+          {quantity}
+        </span>
+
+        <button
+          type="button"
+          onClick={handleAdd}
+          className="
+            flex
+            h-6
+            w-6
+            items-center
+            justify-center
+            rounded-full
+            bg-white/20
+            text-lg
+            font-bold
+            transition
+            hover:bg-white/30
+          "
+        >
+          +
+        </button>
+      </div>
+    );
+  };
+
+  // ==============================
+  // RENDER
+  // ==============================
 
   return (
     <>
-      {/* PRODUCT CARD */}
+      {/* CARD */}
       <article
-        onClick={() => setIsOpen(true)}
+        onClick={openModal}
         className="
+          cursor-pointer
           rounded-2xl
           border
           border-stone-200
           p-4
           transition
-          hover:shadow-md
-          cursor-pointer
           hover:border-orange-300
+          hover:shadow-md
         "
       >
         {/* IMAGE */}
@@ -45,36 +235,17 @@ export default function ProductCard({ id, name, price, weight }: Props) {
           </h3>
 
           <p className="text-lg font-bold text-orange-500">
-            {price}
+            {formattedPrice}
           </p>
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(true);
-            }}
-            className="
-              w-full
-              rounded-xl
-              bg-orange-500
-              px-4
-              py-2
-              text-sm
-              font-medium
-              text-white
-              transition
-              hover:opacity-90
-            "
-          >
-            Agregar
-          </button>
+          {renderCartControls()}
         </div>
       </article>
 
       {/* MODAL */}
-      {isOpen && (
+      {isModalOpen && (
         <div
-          onClick={() => setIsOpen(false)}
+          onClick={closeModal}
           className="
             fixed
             inset-0
@@ -82,13 +253,15 @@ export default function ProductCard({ id, name, price, weight }: Props) {
             flex
             items-center
             justify-center
-            bg-black
-            bg-opacity-50
+            bg-black/50
             p-4
+            backdrop-blur-sm
           "
         >
           <div
-            onClick={(e) => e.stopPropagation()}
+            onClick={(event) =>
+              event.stopPropagation()
+            }
             className="
               relative
               w-full
@@ -96,16 +269,17 @@ export default function ProductCard({ id, name, price, weight }: Props) {
               rounded-2xl
               bg-white
               p-6
-              shadow-lg
+              shadow-xl
             "
           >
-            {/* CLOSE BUTTON */}
+            {/* CLOSE */}
             <button
-              onClick={() => setIsOpen(false)}
+              type="button"
+              onClick={closeModal}
               className="
                 absolute
-                top-4
                 right-4
+                top-4
                 flex
                 h-8
                 w-8
@@ -132,48 +306,41 @@ export default function ProductCard({ id, name, price, weight }: Props) {
             />
 
             {/* CONTENT */}
-            <div className="space-y-4">
+            <div className="space-y-5">
+              {/* TITLE */}
               <div>
                 <h2 className="text-xl font-semibold text-stone-900">
                   {name}
                 </h2>
               </div>
 
-              {/* PRICE & WEIGHT */}
-              <div className="space-y-2">
+              {/* DETAILS */}
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-stone-600">Precio:</span>
+                  <span className="text-stone-500">
+                    Precio
+                  </span>
+
                   <span className="text-2xl font-bold text-orange-500">
-                    {price}
+                    {formattedPrice}
                   </span>
                 </div>
+
                 <div className="flex items-center justify-between">
-                  <span className="text-stone-600">Peso:</span>
+                  <span className="text-stone-500">
+                    Peso
+                  </span>
+
                   <span className="font-medium text-stone-900">
-                    {weight}
+                    {formattedWeight}
                   </span>
                 </div>
               </div>
 
-              {/* ADD BUTTON */}
-              <button
-                onClick={() => setIsOpen(false)}
-                className="
-                  w-full
-                  rounded-xl
-                  bg-orange-500
-                  px-4
-                  py-3
-                  text-sm
-                  font-medium
-                  text-white
-                  transition
-                  hover:opacity-90
-                  mt-6
-                "
-              >
-                Agregar al carrito
-              </button>
+              {/* ACTIONS */}
+              <div className="pt-2">
+                {renderCartControls()}
+              </div>
             </div>
           </div>
         </div>
