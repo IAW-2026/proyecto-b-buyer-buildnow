@@ -1,3 +1,5 @@
+//TODO: DECREPTED O REWORK DE ENDPOINTS QUE CONSUME A ENDPOINTS QUE PROVEE
+
 import { apiClient } from "./baseClient";
 
 const BUYER_API_URL = process.env.NEXT_PUBLIC_BUYER_API_URL!;

@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-import { getCurrentBuyer } from "@/server/services/buyer.service";
+import { findCurrentBuyer } from "@/server/services/buyer.service";
 
 export async function checkOnboarding() {
   const { userId } = await auth();
@@ -10,9 +10,9 @@ export async function checkOnboarding() {
     return;
   }
 
-  const buyer = await getCurrentBuyer(userId);
+  const buyer = await findCurrentBuyer(userId);
 
   if (!buyer) {
     redirect("/settings/profile?onboarding=true");
-  }   
+  }
 }

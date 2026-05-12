@@ -1,0 +1,273 @@
+{
+  "stores": [
+    {
+      "id": "store_001",
+      "name": "Corralón San Martín",
+      "description": "Materiales para construcción y ferretería pesada.",
+      "address": "Av. San Martín 2450, Bahía Blanca",
+      "status": "OPEN"
+    },
+    {
+      "id": "store_002",
+      "name": "ConstruMax",
+      "description": "Especialistas en obra gruesa y terminaciones.",
+      "address": "Don Bosco 1200, Bahía Blanca",
+      "status": "OPEN"
+    },
+    {
+      "id": "store_003",
+      "name": "FerreHogar",
+      "description": "Herramientas, pinturas y accesorios para el hogar.",
+      "address": "Sarmiento 845, Bahía Blanca",
+      "status": "CLOSE"
+    }
+  ],
+
+  "categories": [
+    {
+      "id": "cat_001",
+      "name": "Cementos"
+    },
+    {
+      "id": "cat_002",
+      "name": "Ladrillos"
+    },
+    {
+      "id": "cat_003",
+      "name": "Hierros"
+    },
+    {
+      "id": "cat_004",
+      "name": "Pinturas"
+    },
+    {
+      "id": "cat_005",
+      "name": "Herramientas"
+    }
+  ],
+
+  "products": [
+    {
+      "id": "prod_001",
+      "img": "/mock/products/cemento_avellaneda_50kg.jpg",
+      "storeId": "store_001",
+      "categoryId": "cat_001",
+      "categoryName": "Cementos",
+      "name": "Cemento Avellaneda 50kg",
+      "price": 12500.0,
+      "stock": 120,
+      "weight": 50.0,
+      "available": true
+    },
+    {
+      "id": "prod_002",
+      "img": "/mock/products/cemento_loma_negra_50kg.jpg",
+      "storeId": "store_002",
+      "categoryId": "cat_001",
+      "categoryName": "Cementos",
+      "name": "Cemento Loma Negra 50kg",
+      "price": 13200.0,
+      "stock": 85,
+      "weight": 50.0,
+      "available": true
+    },
+    {
+      "id": "prod_003",
+      "img": "/mock/products/ladrillo_hueco_18.jpg",
+      "storeId": "store_001",
+      "categoryId": "cat_002",
+      "categoryName": "Ladrillos",
+      "name": "Ladrillo Hueco 18x18x33",
+      "price": 950.0,
+      "stock": 2000,
+      "weight": 2.8,
+      "available": true
+    },
+    {
+      "id": "prod_004",
+      "img": "/mock/products/ladrillo_comun.jpg",
+      "storeId": "store_002",
+      "categoryId": "cat_002",
+      "categoryName": "Ladrillos",
+      "name": "Ladrillo Común",
+      "price": 430.0,
+      "stock": 5000,
+      "weight": 1.9,
+      "available": true
+    },
+    {
+      "id": "prod_005",
+      "img": "/mock/products/hierro_8mm.jpg",
+      "storeId": "store_001",
+      "categoryId": "cat_003",
+      "categoryName": "Hierros",
+      "name": "Hierro de Construcción 8mm x 12m",
+      "price": 18900.0,
+      "stock": 70,
+      "weight": 4.7,
+      "available": true
+    },
+    {
+      "id": "prod_006",
+      "img": "/mock/products/hierro_12mm.jpg",
+      "storeId": "store_002",
+      "categoryId": "cat_003",
+      "categoryName": "Hierros",
+      "name": "Hierro de Construcción 12mm x 12m",
+      "price": 28400.0,
+      "stock": 40,
+      "weight": 10.5,
+      "available": true
+    },
+    {
+      "id": "prod_007",
+      "img": "/mock/products/pintura_blanca_20l.jpg",
+      "storeId": "store_003",
+      "categoryId": "cat_004",
+      "categoryName": "Pinturas",
+      "name": "Pintura Latex Blanca 20L",
+      "price": 35600.0,
+      "stock": 15,
+      "weight": 22.0,
+      "available": false
+    },
+    {
+      "id": "prod_008",
+      "img": "/mock/products/pintura_impermeabilizante.jpg",
+      "storeId": "store_003",
+      "categoryId": "cat_004",
+      "categoryName": "Pinturas",
+      "name": "Membrana Líquida Impermeabilizante 10L",
+      "price": 42100.0,
+      "stock": 8,
+      "weight": 12.0,
+      "available": false
+    },
+    {
+      "id": "prod_009",
+      "img": "/mock/products/amoladora_bosch.jpg",
+      "storeId": "store_003",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Amoladora Bosch GWS 700",
+      "price": 98700.0,
+      "stock": 10,
+      "weight": 2.1,
+      "available": false
+    },
+    {
+      "id": "prod_010",
+      "img": "/mock/products/taladro_dewalt.jpg",
+      "storeId": "store_002",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Taladro Percutor DeWalt 650W",
+      "price": 112500.0,
+      "stock": 12,
+      "weight": 3.4,
+      "available": true
+    }
+  ],
+
+  "productsByStore": {
+    "store_001": [
+      "prod_001",
+      "prod_003",
+      "prod_005"
+    ],
+    "store_002": [
+      "prod_002",
+      "prod_004",
+      "prod_006",
+      "prod_010"
+    ],
+    "store_003": [
+      "prod_007",
+      "prod_008",
+      "prod_009"
+    ]
+  },
+
+  "productsByCategory": {
+    "cat_001": [
+      "prod_001",
+      "prod_002"
+    ],
+    "cat_002": [
+      "prod_003",
+      "prod_004"
+    ],
+    "cat_003": [
+      "prod_005",
+      "prod_006"
+    ],
+    "cat_004": [
+      "prod_007",
+      "prod_008"
+    ],
+    "cat_005": [
+      "prod_009",
+      "prod_010"
+    ]
+  },
+
+  "endpoints": {
+    "/api/stores": "stores",
+    "/api/categories": "categories",
+
+    "/api/stores/store_001/products": [
+      "prod_001",
+      "prod_003",
+      "prod_005"
+    ],
+
+    "/api/stores/store_002/products": [
+      "prod_002",
+      "prod_004",
+      "prod_006",
+      "prod_010"
+    ],
+
+    "/api/stores/store_003/products": [
+      "prod_007",
+      "prod_008",
+      "prod_009"
+    ],
+
+    "/api/products/prod_001": "prod_001",
+    "/api/products/prod_002": "prod_002",
+    "/api/products/prod_003": "prod_003",
+    "/api/products/prod_004": "prod_004",
+    "/api/products/prod_005": "prod_005",
+    "/api/products/prod_006": "prod_006",
+    "/api/products/prod_007": "prod_007",
+    "/api/products/prod_008": "prod_008",
+    "/api/products/prod_009": "prod_009",
+    "/api/products/prod_010": "prod_010",
+
+    "/api/products?categoryId=cat_001": [
+      "prod_001",
+      "prod_002"
+    ],
+
+    "/api/products?categoryId=cat_002": [
+      "prod_003",
+      "prod_004"
+    ],
+
+    "/api/products?categoryId=cat_003": [
+      "prod_005",
+      "prod_006"
+    ],
+
+    "/api/products?categoryId=cat_004": [
+      "prod_007",
+      "prod_008"
+    ],
+
+    "/api/products?categoryId=cat_005": [
+      "prod_009",
+      "prod_010"
+    ]
+  }
+}
