@@ -4,13 +4,14 @@ import {
   useEffect,
   useRef,
   useState,
+  useCallback,
 } from "react";
 
 import ProductCard from "@/components/products/ProductCard";
 
+import { useCart } from "@/context/CartContext";
+
 import {
-  addToCartAction,
-  decreaseCartItemAction,
   fetchStoreProductsWithCartQuantityAction,
 } from "@/actions/buyerActions";
 
@@ -22,7 +23,9 @@ type Props = {
   status: "OPEN" | "CLOSE";
 };
 
-type ProductWithQuantity = Product & { quantity: number; };
+type ProductWithQuantity = Product & {
+  quantity: number;
+};
 
 export default function StoreQuickViewRow({
   storeId,
@@ -32,17 +35,20 @@ export default function StoreQuickViewRow({
   const scrollContainerRef =
     useRef<HTMLDivElement>(null);
 
-  const errorTimeoutRef =
+  const messageTimeoutRef =
     useRef<NodeJS.Timeout | null>(null);
 
   const [products, setProducts] = useState<
     ProductWithQuantity[]
   >([]);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] =
+    useState(true);
 
-  const [errorMessage, setErrorMessage] =
-    useState<string | null>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const [canScrollLeft, setCanScrollLeft] =
     useState(false);
@@ -50,44 +56,36 @@ export default function StoreQuickViewRow({
   const [canScrollRight, setCanScrollRight] =
     useState(true);
 
-  // ==============================
-  // ERROR HANDLING
-  // ==============================
-
-  const showError = (message: string) => {
-    setErrorMessage(message);
-
-    if (errorTimeoutRef.current) {
-      clearTimeout(errorTimeoutRef.current);
-    }
-
-    errorTimeoutRef.current = setTimeout(() => {
-      setErrorMessage(null);
-    }, 5000);
-  };
+  const {
+    getProductQuantity,
+    addItem,
+    decreaseItem,
+  } = useCart();
 
   // ==============================
-  // PRODUCT QUANTITY HELPERS
+  // MESSAGE HANDLING
   // ==============================
 
-  const updateProductQuantity = (
-    productId: string,
-    delta: number
-  ) => {
-    setProducts((prev) =>
-      prev.map((product) =>
-        product.id === productId
-          ? {
-              ...product,
-              quantity: Math.max(
-                0,
-                product.quantity + delta
-              ),
-            }
-          : product
-      )
-    );
-  };
+  const showMessage = useCallback(
+    (
+      type: "success" | "error",
+      text: string
+    ) => {
+      setMessage({ type, text });
+
+      if (messageTimeoutRef.current) {
+        clearTimeout(
+          messageTimeoutRef.current
+        );
+      }
+
+      messageTimeoutRef.current =
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
+    },
+    []
+  );
 
   // ==============================
   // INITIAL FETCH
@@ -108,7 +106,8 @@ export default function StoreQuickViewRow({
           error
         );
 
-        showError(
+        showMessage(
+          "error",
           "No se pudieron cargar los productos"
         );
       } finally {
@@ -119,56 +118,62 @@ export default function StoreQuickViewRow({
     fetchProducts();
 
     return () => {
-      if (errorTimeoutRef.current) {
-        clearTimeout(errorTimeoutRef.current);
+      if (messageTimeoutRef.current) {
+        clearTimeout(
+          messageTimeoutRef.current
+        );
       }
     };
-  }, [storeId]);
+  }, [storeId, showMessage]);
 
   // ==============================
   // CART ACTIONS
   // ==============================
 
-  const handleAdd = async (
-    productId: string
-  ) => {
-    // optimistic update
-    updateProductQuantity(productId, +1);
+  const handleAdd = useCallback(
+    async (productId: string) => {
+      const result = await addItem(productId);
 
-    const response = await addToCartAction(
-      productId
-    );
+      if (!result.success) {
+        showMessage(
+          "error",
+          result.error ||
+            "Error al agregar producto"
+        );
 
-    if (!response.success) {
-      // rollback
-      updateProductQuantity(productId, -1);
+        return;
+      }
 
-      showError(
-        response.error ??
-          "Error al agregar producto"
+      showMessage(
+        "success",
+        "Producto agregado al carrito"
       );
-    }
-  };
+    },
+    [addItem, showMessage]
+  );
 
-  const handleDecrease = async (
-    productId: string
-  ) => {
-    // optimistic update
-    updateProductQuantity(productId, -1);
+  const handleDecrease = useCallback(
+    async (productId: string) => {
+      const result =
+        await decreaseItem(productId);
 
-    const response =
-      await decreaseCartItemAction(productId);
+      if (!result.success) {
+        showMessage(
+          "error",
+          result.error ||
+            "Error al actualizar carrito"
+        );
 
-    if (!response.success) {
-      // rollback
-      updateProductQuantity(productId, +1);
+        return;
+      }
 
-      showError(
-        response.error ??
-          "Error al actualizar carrito"
+      showMessage(
+        "success",
+        "Cantidad actualizada"
       );
-    }
-  };
+    },
+    [decreaseItem, showMessage]
+  );
 
   // ==============================
   // HORIZONTAL SCROLL
@@ -266,24 +271,34 @@ export default function StoreQuickViewRow({
         </button>
       </div>
 
-      {/* ERROR */}
-      {errorMessage && (
+      {/* MESSAGE */}
+      {message && (
         <div
-          className="
+          className={`
             mb-4
             rounded-xl
             border
-            border-red-200
-            bg-red-50
             px-4
             py-3
             text-sm
-            text-red-700
             transition-all
             duration-300
-          "
+            ${
+              message.type === "success"
+                ? `
+                  border-green-200
+                  bg-green-50
+                  text-green-700
+                `
+                : `
+                  border-red-200
+                  bg-red-50
+                  text-red-700
+                `
+            }
+          `}
         >
-          {errorMessage}
+          {message.text}
         </div>
       )}
 
@@ -344,7 +359,9 @@ export default function StoreQuickViewRow({
                 storeId={product.storeId}
                 price={product.price}
                 weight={product.weight}
-                quantity={product.quantity}
+                quantity={getProductQuantity(
+                  product.id
+                )}
                 onAdd={handleAdd}
                 onDecrease={handleDecrease}
               />

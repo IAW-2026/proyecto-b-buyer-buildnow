@@ -94,6 +94,7 @@ export async function findCartItemFromDifferentStore(cartId: string, storeId: st
 type CreateCartItemInput = {
   cartId: string;
   productId: string;
+  storeId: string;
   quantity: number;
   price: number;
 };
@@ -129,5 +130,16 @@ export async function decrementCartItem(id: string) {
 export async function deleteCartItem(id: string) {
   return prisma.cartItem.delete({
     where: { id },
+  });
+}
+
+export async function getCartItemsDetailed(cartId: string) {
+  return prisma.cartItem.findMany({
+    where: {
+      cartId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 }

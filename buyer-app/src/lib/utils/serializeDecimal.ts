@@ -9,14 +9,25 @@ type Serialized<T> =
         ? { [K in keyof T]: Serialized<T[K]> }
         : T;
 
+// This function recursively traverses the input data and converts any Decimal instances to numbers.
 export function serializeDecimal<T>(data: T): Serialized<T> {
   return JSON.parse(
-    JSON.stringify(data, (_, value) =>
-      typeof value === "object" &&
-      value !== null &&
-      value.constructor?.name === "Decimal"
-        ? Number(value)
-        : value
-    )
+    JSON.stringify(data, (_, value) => {
+      // Check if value is a Decimal instance
+      if (value instanceof Decimal) {
+        return Number(value);
+      }
+      
+      // Fallback: check by constructor name
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        value.constructor?.name === "Decimal"
+      ) {
+        return Number(value);
+      }
+      
+      return value;
+    })
   ) as Serialized<T>;
 }

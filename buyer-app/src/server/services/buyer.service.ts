@@ -11,6 +11,7 @@ import {
   getCartByBuyerId,
   createCart,
   getCartItems,
+  getCartItemsDetailed,
   findCartItemFromDifferentStore,
 } from "../repositories/buyer.repository";
 
@@ -232,4 +233,59 @@ export async function getStoreProductsWithCartQuantity(
       quantity: cartItem?.quantity ?? 0,
     };
   });
+}
+
+// ==============================
+// CART DETAILS
+// ==============================
+
+export async function getCartItemsWithProductDetails(
+  clerkId: string
+) {
+  const buyer = await findBuyerByClerkId(clerkId);
+
+  if (!buyer) {
+    throw new Error("BUYER_NOT_FOUND");
+  }
+
+  const cart =
+    (await getCartByBuyerId(buyer.id)) ??
+    (await createCart(buyer.id));
+
+  const cartItems = await getCartItemsDetailed(
+    cart.id
+  );
+
+  const itemsWithDetails = await Promise.all(
+    cartItems.map(async (item) => {
+      try {
+        const product = await getProduct(
+          item.productId
+        );
+
+        return {
+          cartItemId: item.id,
+          productId: item.productId,
+          storeId: item.storeId,
+          quantity: item.quantity,
+          price: item.price,
+          product,
+        };
+      } catch (error) {
+        console.error(
+          `Failed to fetch product ${item.productId}:`,
+          error
+        );
+
+        return null;
+      }
+    })
+  );
+
+  const filtered = itemsWithDetails.filter(
+    (item): item is Exclude<typeof item, null> =>
+      item !== null
+  );
+
+  return serializeDecimal(filtered);
 }

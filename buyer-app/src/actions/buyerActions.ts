@@ -18,6 +18,7 @@ import {
   addProductToCart,
   decreaseProductQuantity,
   getStoreProductsWithCartQuantity,
+  getCartItemsWithProductDetails,
 } from "@/server/services/buyer.service";
 
 import { ActionResponse } from "@/type/action-response";
@@ -312,6 +313,43 @@ export async function decreaseCartItemAction(
       success: false,
       error:
         "Ocurrió un error al actualizar el carrito",
+    };
+  }
+}
+
+// ==============================
+// CART DETAILS
+// ==============================
+
+export async function fetchCartItemsAction() {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "Debes iniciar sesión",
+        data: [],
+      };
+    }
+
+    const cartItems =
+      await getCartItemsWithProductDetails(
+        userId
+      );
+
+    return {
+      success: true,
+      data: cartItems,
+    };
+  } catch (error) {
+    console.error("Error fetching cart items:", error);
+
+    return {
+      success: false,
+      error:
+        "Ocurrió un error al obtener el carrito",
+      data: [],
     };
   }
 }
