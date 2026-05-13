@@ -353,3 +353,29 @@ export async function fetchCartItemsAction() {
     };
   }
 }
+
+// ==============================
+// CATEGORY PRODUCTS
+// ==============================
+export async function fetchCategoryProductsAction(
+  categoryId: string
+) {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      throw new Error("UNAUTHORIZED");
+    }
+
+    return await getProductsByCategoryService(categoryId);
+  } catch (error) {
+    console.error(
+      `Error fetching products for category ${categoryId}:`,
+      error
+    );
+
+    throw new Error(
+      "FAILED_TO_FETCH_PRODUCTS_BY_CATEGORY"
+    );
+  }
+}

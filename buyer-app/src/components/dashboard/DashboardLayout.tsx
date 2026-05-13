@@ -1,13 +1,21 @@
 "use client";
 
 import { useState } from "react";
+
 import CategorySidebar from "@/components/categories/CategorySidebar";
+import CategoryLayout from "@/components/categories/CategoryLayout";
+
 import TopSearchBar from "@/components/search/TopSearchBar";
 import StoreQuickViewList from "@/components/stores/StoreQuickViewList";
 import CartSidebar from "@/components/cart/CartSidebar";
 
+import type { Category } from "@/lib/apiClients/sellerApi";
+
 export default function DashboardLayout() {
   const [cartOpen, setCartOpen] = useState(false);
+
+  const [selectedCategory, setSelectedCategory] =
+    useState<Category | null>(null);
 
   return (
     <main className="min-h-screen bg-stone-100">
@@ -20,12 +28,19 @@ export default function DashboardLayout() {
         <div className="mt-4 grid grid-cols-12 gap-4">
           {/* CATEGORIES */}
           <aside className="col-span-12 lg:col-span-2">
-            <CategorySidebar />
+            <CategorySidebar
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory}
+            />
           </aside>
 
-          {/* STORES */}
+          {/* CONTENT */}
           <section className="col-span-12 lg:col-span-7">
-            <StoreQuickViewList />
+            {selectedCategory ? (
+              <CategoryLayout category={selectedCategory} />
+            ) : (
+              <StoreQuickViewList />
+            )}
           </section>
 
           {/* CART */}
@@ -47,6 +62,7 @@ export default function DashboardLayout() {
             >
               ✕
             </button>
+
             <CartSidebar />
           </div>
         </div>
