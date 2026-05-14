@@ -13,6 +13,11 @@ import {
   getCartItems,
   getCartItemsDetailed,
   findCartItemFromDifferentStore,
+  updateBuyer,
+  createAddress,
+  updateAddress,
+  deleteAddress,
+  getAddressesByBuyerId,
 } from "../repositories/buyer.repository";
 
 import {
@@ -288,4 +293,99 @@ export async function getCartItemsWithProductDetails(
   );
 
   return serializeDecimal(filtered);
+}
+
+// ==============================
+// PROFILE MANAGEMENT
+// ==============================
+
+export async function updateBuyerProfile(
+  clerkId: string,
+  data: {
+    name?: string;
+    phone?: string;
+  }
+) {
+  const buyer = await findBuyerByClerkId(clerkId);
+
+  if (!buyer) {
+    throw new Error("BUYER_NOT_FOUND");
+  }
+
+  return updateBuyer(buyer.id, data);
+}
+
+// ==============================
+// ADDRESS MANAGEMENT
+// ==============================
+
+export async function addAddress(
+  clerkId: string,
+  data: {
+    street: string;
+    city: string;
+    notes?: string;
+  }
+) {
+  const buyer = await findBuyerByClerkId(clerkId);
+
+  if (!buyer) {
+    throw new Error("BUYER_NOT_FOUND");
+  }
+
+  return createAddress({
+    buyerId: buyer.id,
+    ...data,
+  });
+}
+
+export async function editAddress(
+  clerkId: string,
+  addressId: string,
+  data: {
+    street?: string;
+    city?: string;
+    notes?: string;
+  }
+) {
+  const buyer = await findBuyerByClerkId(clerkId);
+
+  if (!buyer) {
+    throw new Error("BUYER_NOT_FOUND");
+  }
+
+  const address = await getAddressesByBuyerId(buyer.id);
+  const addressExists = address.some(
+    (addr) => addr.id === addressId
+  );
+
+  if (!addressExists) {
+    throw new Error("ADDRESS_NOT_FOUND");
+  }
+
+  return updateAddress(addressId, data);
+}
+
+export async function removeAddress(
+  clerkId: string,
+  addressId: string
+) {
+  const buyer = await findBuyerByClerkId(clerkId);
+
+  if (!buyer) {
+    throw new Error("BUYER_NOT_FOUND");
+  }
+
+  const address = await getAddressesByBuyerId(buyer.id);
+  const addressExists = address.some(
+    (addr) => addr.id === addressId
+  );
+
+  if (!addressExists) {
+    throw new Error("ADDRESS_NOT_FOUND");
+  }
+
+  await deleteAddress(addressId);
+
+  return { success: true };
 }

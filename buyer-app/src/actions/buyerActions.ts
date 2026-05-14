@@ -19,6 +19,11 @@ import {
   decreaseProductQuantity,
   getStoreProductsWithCartQuantity,
   getCartItemsWithProductDetails,
+  updateBuyerProfile,
+  addAddress,
+  editAddress,
+  removeAddress,
+  getCurrentBuyer,
 } from "@/server/services/buyer.service";
 
 import { ActionResponse } from "@/type/action-response";
@@ -377,5 +382,265 @@ export async function fetchCategoryProductsAction(
     throw new Error(
       "FAILED_TO_FETCH_PRODUCTS_BY_CATEGORY"
     );
+  }
+}
+
+// ==============================
+// PROFILE MANAGEMENT
+// ==============================
+
+export async function getCurrentBuyerAction(): Promise<ActionResponse> {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "Debes iniciar sesión",
+      };
+    }
+
+    const buyer = await getCurrentBuyer(userId);
+
+    return {
+      success: true,
+      data: buyer,
+    };
+  } catch (error) {
+    console.error(error);
+
+    if (
+      error instanceof Error &&
+      error.message === "BUYER_NOT_FOUND"
+    ) {
+      return {
+        success: false,
+        error: "Comprador no encontrado",
+      };
+    }
+
+    return {
+      success: false,
+      error: "Ocurrió un error al obtener los datos",
+    };
+  }
+}
+
+export async function updateBuyerProfileAction(
+  formData: FormData
+): Promise<ActionResponse> {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "Debes iniciar sesión",
+      };
+    }
+
+    const name = formData.get("name")?.toString();
+    const phone = formData.get("phone")?.toString();
+
+    const data: { name?: string; phone?: string } = {};
+
+    if (name) data.name = name;
+    if (phone) data.phone = phone;
+
+    await updateBuyerProfile(userId, data);
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+
+    if (
+      error instanceof Error &&
+      error.message === "BUYER_NOT_FOUND"
+    ) {
+      return {
+        success: false,
+        error: "Comprador no encontrado",
+      };
+    }
+
+    return {
+      success: false,
+      error:
+        "Ocurrió un error al actualizar el perfil",
+    };
+  }
+}
+
+// ==============================
+// ADDRESS MANAGEMENT
+// ==============================
+
+export async function addAddressAction(
+  formData: FormData
+): Promise<ActionResponse> {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "Debes iniciar sesión",
+      };
+    }
+
+    const street =
+      formData.get("street")?.toString() || "";
+    const city = formData.get("city")?.toString() || "";
+    const notes = formData.get("notes")?.toString();
+
+    if (!street || !city) {
+      return {
+        success: false,
+        error: "La calle y la ciudad son requeridas",
+      };
+    }
+
+    await addAddress(userId, {
+      street,
+      city,
+      notes,
+    });
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+
+    if (
+      error instanceof Error &&
+      error.message === "BUYER_NOT_FOUND"
+    ) {
+      return {
+        success: false,
+        error: "Comprador no encontrado",
+      };
+    }
+
+    return {
+      success: false,
+      error:
+        "Ocurrió un error al agregar la dirección",
+    };
+  }
+}
+
+export async function editAddressAction(
+  addressId: string,
+  formData: FormData
+): Promise<ActionResponse> {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "Debes iniciar sesión",
+      };
+    }
+
+    const street = formData.get("street")?.toString();
+    const city = formData.get("city")?.toString();
+    const notes = formData.get("notes")?.toString();
+
+    const data: {
+      street?: string;
+      city?: string;
+      notes?: string;
+    } = {};
+
+    if (street) data.street = street;
+    if (city) data.city = city;
+    if (notes) data.notes = notes;
+
+    await editAddress(userId, addressId, data);
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+
+    if (
+      error instanceof Error &&
+      error.message === "BUYER_NOT_FOUND"
+    ) {
+      return {
+        success: false,
+        error: "Comprador no encontrado",
+      };
+    }
+
+    if (
+      error instanceof Error &&
+      error.message === "ADDRESS_NOT_FOUND"
+    ) {
+      return {
+        success: false,
+        error: "Dirección no encontrada",
+      };
+    }
+
+    return {
+      success: false,
+      error:
+        "Ocurrió un error al editar la dirección",
+    };
+  }
+}
+
+export async function removeAddressAction(
+  addressId: string
+): Promise<ActionResponse> {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "Debes iniciar sesión",
+      };
+    }
+
+    await removeAddress(userId, addressId);
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+
+    if (
+      error instanceof Error &&
+      error.message === "BUYER_NOT_FOUND"
+    ) {
+      return {
+        success: false,
+        error: "Comprador no encontrado",
+      };
+    }
+
+    if (
+      error instanceof Error &&
+      error.message === "ADDRESS_NOT_FOUND"
+    ) {
+      return {
+        success: false,
+        error: "Dirección no encontrada",
+      };
+    }
+
+    return {
+      success: false,
+      error:
+        "Ocurrió un error al eliminar la dirección",
+    };
   }
 }

@@ -143,3 +143,66 @@ export async function getCartItemsDetailed(cartId: string) {
     },
   });
 }
+
+// ==============================
+// BUYER PROFILE
+// ==============================
+
+export async function updateBuyer(buyerId: string, data: {
+  name?: string;
+  phone?: string;
+}) {
+  return prisma.buyer.update({
+    where: { id: buyerId },
+    data,
+    include: {
+      addresses: true,
+    },
+  });
+}
+
+// ==============================
+// ADDRESSES
+// ==============================
+
+export async function createAddress(data: {
+  buyerId: string;
+  street: string;
+  city: string;
+  notes?: string;
+}) {
+  return prisma.address.create({
+    data: {
+      buyerId: data.buyerId,
+      street: data.street,
+      city: data.city,
+      notes: data.notes,
+    },
+  });
+}
+
+export async function updateAddress(addressId: string, data: {
+  street?: string;
+  city?: string;
+  notes?: string;
+}) {
+  return prisma.address.update({
+    where: { id: addressId },
+    data,
+  });
+}
+
+export async function deleteAddress(addressId: string) {
+  return prisma.address.delete({
+    where: { id: addressId },
+  });
+}
+
+export async function getAddressesByBuyerId(buyerId: string) {
+  return prisma.address.findMany({
+    where: { buyerId },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}
