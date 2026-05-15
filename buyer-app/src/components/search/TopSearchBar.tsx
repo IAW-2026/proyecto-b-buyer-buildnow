@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import { SignOutButton } from "@clerk/nextjs";
+import OrdersDropdown from "@/components/orders/OrdersDropdown";
 
 interface TopSearchBarProps {
   showCartButton?: boolean;
@@ -11,6 +12,7 @@ interface TopSearchBarProps {
 
 export default function TopSearchBar({ showCartButton = false, onCartClick }: TopSearchBarProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isOrdersDropdownOpen, setIsOrdersDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -94,6 +96,28 @@ export default function TopSearchBar({ showCartButton = false, onCartClick }: To
 
       {/* USER AND CART */}
       <div className="flex items-center gap-3">
+        {/* ORDERS BUTTON */}
+        <button
+          onClick={() =>
+            setIsOrdersDropdownOpen(!isOrdersDropdownOpen)
+          }
+          className="
+            h-10
+            w-10
+            rounded-full
+            bg-stone-200
+            flex
+            items-center
+            justify-center
+            hover:bg-stone-300
+            transition
+            text-lg
+          "
+          title="Ver mis pedidos"
+        >
+          📦
+        </button>
+
         {showCartButton && (
           <button
             onClick={onCartClick}
@@ -230,6 +254,12 @@ export default function TopSearchBar({ showCartButton = false, onCartClick }: To
           )}
         </div>
       </div>
+
+      {/* ORDERS DROPDOWN */}
+      <OrdersDropdown
+        isOpen={isOrdersDropdownOpen}
+        onClose={() => setIsOrdersDropdownOpen(false)}
+      />
     </header>
   );
 }

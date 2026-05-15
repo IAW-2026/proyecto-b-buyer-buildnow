@@ -269,5 +269,88 @@
       "prod_009",
       "prod_010"
     ]
-  }
+  },
+
+  "orders": [
+    {
+      "id": "order_001",
+      "buyerId": "buyer_001",
+      "storeId": "store_001",
+      "storeName": "Corralón San Martín",
+      "totalAmount": 38500.0,
+      "status": "DELIVERED",
+      "deliveryAddress": "Av. Siempre Viva 742, Bahía Blanca",
+      "items": [
+        {
+          "productId": "prod_001",
+          "quantity": 2
+        },
+        {
+          "productId": "prod_003",
+          "quantity": 50
+        }
+      ],
+      "createdAt": "2026-05-04T12:12:09Z",
+      "updatedAt": "2026-05-09T14:30:00Z"
+    },
+    {
+      "id": "order_002",
+      "buyerId": "buyer_001",
+      "storeId": "store_002",
+      "storeName": "ConstruMax",
+      "totalAmount": 142800.0,
+      "status": "SHIPPED",
+      "deliveryAddress": "Av. Siempre Viva 742, Bahía Blanca",
+      "items": [
+        {
+          "productId": "prod_002",
+          "quantity": 3
+        },
+        {
+          "productId": "prod_006",
+          "quantity": 2
+        }
+      ],
+      "createdAt": "2026-05-12T08:45:23Z",
+      "updatedAt": "2026-05-14T10:15:00Z"
+    },
+    {
+      "id": "order_003",
+      "buyerId": "buyer_001",
+      "storeId": "store_001",
+      "storeName": "Corralón San Martín",
+      "totalAmount": 56700.0,
+      "status": "CONFIRMED",
+      "deliveryAddress": "Av. Siempre Viva 742, Bahía Blanca",
+      "items": [
+        {
+          "productId": "prod_005",
+          "quantity": 3
+        }
+      ],
+      "createdAt": "2026-05-13T16:20:45Z",
+      "updatedAt": "2026-05-13T17:00:00Z"
+    },
+    {
+      "id": "order_004",
+      "buyerId": "buyer_001",
+      "storeId": "store_002",
+      "storeName": "ConstruMax",
+      "totalAmount": 101200.0,
+      "status": "PENDING_PAYMENT",
+      "deliveryAddress": "Av. Siempre Viva 742, Bahía Blanca",
+      "items": [
+        {
+          "productId": "prod_010",
+          "quantity": 1
+        },
+        {
+          "productId": "prod_004",
+          "quantity": 100
+        }
+      ],
+      "createdAt": "2026-05-15T09:30:15Z",
+      "updatedAt": "2026-05-15T09:30:15Z"
+    }
+  ]
 }

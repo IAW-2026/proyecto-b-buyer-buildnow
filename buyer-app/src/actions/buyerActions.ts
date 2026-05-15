@@ -27,6 +27,8 @@ import {
 } from "@/server/services/buyer.service";
 
 import { ActionResponse } from "@/type/action-response";
+import { Order } from "@/type/order";
+import { ordersApi } from "@/lib/apiClients/ordersApi";
 
 // ==============================
 // BUYER
@@ -389,7 +391,9 @@ export async function fetchCategoryProductsAction(
 // PROFILE MANAGEMENT
 // ==============================
 
-export async function getCurrentBuyerAction(): Promise<ActionResponse> {
+export async function getCurrentBuyerAction(): Promise<
+  ActionResponse<Awaited<ReturnType<typeof getCurrentBuyer>>>
+> {
   try {
     const { userId } = await auth();
 
@@ -641,6 +645,53 @@ export async function removeAddressAction(
       success: false,
       error:
         "Ocurrió un error al eliminar la dirección",
+    };
+  }
+}
+
+// ==============================
+// ORDERS
+// ==============================
+
+export async function fetchBuyerOrdersAction(): Promise<
+  ActionResponse<Order[]>
+> {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "Debes iniciar sesión",
+        data: [],
+      };
+    }
+
+    const buyer = await findCurrentBuyer(userId);
+
+    if (!buyer) {
+      return {
+        success: false,
+        error: "Comprador no encontrado",
+        data: [],
+      };
+    }
+
+    const orders = await ordersApi.getOrdersByBuyer(
+      buyer.id
+    );
+
+    return {
+      success: true,
+      data: orders,
+    };
+  } catch (error) {
+    console.error("Error fetching buyer orders:", error);
+
+    return {
+      success: false,
+      error: "Ocurrió un error al obtener los pedidos",
+      data: [],
     };
   }
 }
