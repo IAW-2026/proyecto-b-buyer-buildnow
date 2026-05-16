@@ -24,11 +24,12 @@ import {
   editAddress,
   removeAddress,
   getCurrentBuyer,
+  clearBuyerCart,
 } from "@/server/services/buyer.service";
 
 import { ActionResponse } from "@/type/action-response";
-import { Order } from "@/type/order";
-import { ordersApi } from "@/lib/apiClients/ordersApi";
+import * as sellerApi from "@/lib/apiClients/sellerApi";
+import type { BuyerOrderDto, OrderResponseDto } from "@/lib/mockSeller";
 
 // ==============================
 // BUYER
@@ -654,7 +655,7 @@ export async function removeAddressAction(
 // ==============================
 
 export async function fetchBuyerOrdersAction(): Promise<
-  ActionResponse<Order[]>
+  ActionResponse<BuyerOrderDto[]>
 > {
   try {
     const { userId } = await auth();
@@ -677,7 +678,7 @@ export async function fetchBuyerOrdersAction(): Promise<
       };
     }
 
-    const orders = await ordersApi.getOrdersByBuyer(
+    const orders = await sellerApi.getBuyerOrders(
       buyer.id
     );
 
@@ -692,6 +693,194 @@ export async function fetchBuyerOrdersAction(): Promise<
       success: false,
       error: "Ocurrió un error al obtener los pedidos",
       data: [],
+    };
+  }
+}
+
+/**
+ * Crea una nueva orden
+ * Flujo: buyer autenticado → servicio Prisma → retorna DTO
+ */
+export async function createOrderAction(
+  storeId: string,
+  deliveryAddress: string,
+  items: Array<{ productId: string; quantity: number }>
+): Promise<ActionResponse<OrderResponseDto>> {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "Debes iniciar sesión",
+      };
+    }
+
+    const buyer = await findCurrentBuyer(userId);
+
+    if (!buyer) {
+      return {
+        success: false,
+        error: "Comprador no encontrado",
+      };
+    }
+
+    const order = await sellerApi.createOrder({
+      buyerId: buyer.id,
+      storeId,
+      deliveryAddress,
+      items,
+    });
+
+    if (!order) {
+      return {
+        success: false,
+        error: "No se pudo crear la orden",
+      };
+    }
+
+    return {
+      success: true,
+      data: order,
+    };
+  } catch (error) {
+    console.error("Error creating order:", error);
+
+    return {
+      success: false,
+      error: "Ocurrió un error al crear la orden",
+    };
+  }
+}
+
+/**
+ * Limpia el carrito del comprador autenticado
+ */
+export async function clearCartAction(): Promise<ActionResponse> {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "Debes iniciar sesión",
+      };
+    }
+
+    await clearBuyerCart(userId);
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error("Error clearing cart:", error);
+
+    return {
+      success: false,
+      error: "Ocurrió un error al limpiar el carrito",
+    };
+  }
+}
+
+/**
+ * Procesa el checkout:
+ * 1. Obtiene los items del carrito
+ * 2. Agrupa por tienda (cada tienda = una orden)
+ * 3. Crea una orden para cada tienda usando direccion de entrega
+ * 4. Limpia el carrito
+ * 5. Retorna la primera orden (para redireccion)
+ */
+export async function checkoutAction(
+  deliveryAddress: string
+): Promise<ActionResponse<{ orderId: string; orders: OrderResponseDto[] }>> {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "Debes iniciar sesión",
+      };
+    }
+
+    const buyer = await findCurrentBuyer(userId);
+
+    if (!buyer) {
+      return {
+        success: false,
+        error: "Comprador no encontrado",
+      };
+    }
+
+    // Obtener items del carrito
+    const cartItems = await getCartItemsWithProductDetails(userId);
+
+    if (cartItems.length === 0) {
+      return {
+        success: false,
+        error: "El carrito está vacío",
+      };
+    }
+
+    // Agrupar items por storeId
+    const itemsByStore: Record<
+      string,
+      Array<{ productId: string; quantity: number; price: number }>
+    > = {};
+
+    for (const item of cartItems) {
+      if (!itemsByStore[item.storeId]) {
+        itemsByStore[item.storeId] = [];
+      }
+
+      itemsByStore[item.storeId].push({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.price,
+      });
+    }
+
+    // Crear una orden por cada tienda
+    const createdOrders: OrderResponseDto[] = [];
+
+    for (const [storeId, items] of Object.entries(
+      itemsByStore
+    )) {
+      const order = await sellerApi.createOrder({
+        buyerId: buyer.id,
+        storeId,
+        deliveryAddress,
+        items,
+      });
+
+      if (order) {
+        createdOrders.push(order);
+      }
+    }
+
+    if (createdOrders.length === 0) {
+      return {
+        success: false,
+        error: "No se pudieron crear las órdenes",
+      };
+    }
+
+    // Limpiar carrito
+    await clearBuyerCart(userId);
+
+    return {
+      success: true,
+      data: {
+        orderId: createdOrders[0].id,
+        orders: createdOrders,
+      },
+    };
+  } catch (error) {
+    console.error("Error in checkout:", error);
+
+    return {
+      success: false,
+      error: "Ocurrió un error al procesar el checkout",
     };
   }
 }

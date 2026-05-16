@@ -18,6 +18,7 @@ import {
   updateAddress,
   deleteAddress,
   getAddressesByBuyerId,
+  clearCartByBuyerId,
 } from "../repositories/buyer.repository";
 
 import {
@@ -293,6 +294,19 @@ export async function getCartItemsWithProductDetails(
   );
 
   return serializeDecimal(filtered);
+}
+
+/**
+ * Limpia todos los items del carrito del comprador
+ */
+export async function clearBuyerCart(clerkId: string) {
+  const buyer = await findBuyerByClerkId(clerkId);
+
+  if (!buyer) {
+    throw new Error("BUYER_NOT_FOUND");
+  }
+
+  return clearCartByBuyerId(buyer.id);
 }
 
 // ==============================

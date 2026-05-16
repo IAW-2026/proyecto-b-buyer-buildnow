@@ -1,5 +1,9 @@
 import { prisma } from "@/lib/prisma";
 
+// ==============================
+// HELPER TYPES
+// ==============================
+
 export async function createBuyer(data: {
   clerkId: string;
   name: string;
@@ -142,6 +146,22 @@ export async function getCartItemsDetailed(cartId: string) {
       createdAt: "desc",
     },
   });
+}
+
+export async function clearCartByBuyerId(buyerId: string) {
+  const cart = await getCartByBuyerId(buyerId);
+  
+  if (!cart) {
+    return { deletedCount: 0 };
+  }
+
+  const result = await prisma.cartItem.deleteMany({
+    where: {
+      cartId: cart.id,
+    },
+  });
+
+  return result;
 }
 
 // ==============================

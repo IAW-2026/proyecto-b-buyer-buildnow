@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Order } from "@/type/order";
+import type { OrderResponseDto } from "@/lib/mockSeller";
 
 const statusSteps = [
   {
@@ -15,7 +15,12 @@ const statusSteps = [
     icon: "✅",
   },
   {
-    key: "SHIPPED",
+    key: "READY",
+    label: "Listo",
+    icon: "📦",
+  },
+  {
+    key: "ON_THE_WAY",
     label: "En camino",
     icon: "🚚",
   },
@@ -29,13 +34,14 @@ const statusSteps = [
 const statusIndex: Record<string, number> = {
   PENDING_PAYMENT: 0,
   CONFIRMED: 1,
-  SHIPPED: 2,
-  DELIVERED: 3,
+  READY: 2,
+  ON_THE_WAY: 3,
+  DELIVERED: 4,
   CANCELLED: -1,
 };
 
 interface OrderTrackingClientProps {
-  order: Order;
+  order: OrderResponseDto;
 }
 
 export default function OrderTrackingClient({
@@ -43,7 +49,6 @@ export default function OrderTrackingClient({
 }: OrderTrackingClientProps) {
   const currentStepIndex =
     statusIndex[order.status] ?? -1;
-  const isCompleted = order.status === "DELIVERED";
   const isCancelled = order.status === "CANCELLED";
 
   return (
@@ -154,29 +159,32 @@ export default function OrderTrackingClient({
                           ).toLocaleDateString("es-AR")
                         : "-"}
                       {index === 2 &&
-                        order.status === "SHIPPED"
+                        order.status === "READY"
                           ? new Date(
                               new Date(
                                 order.createdAt
                               ).getTime() +
-                                3 * 24 * 60 * 60 * 1000
+                                2 * 24 * 60 * 60 * 1000
                             ).toLocaleDateString("es-AR")
-                          : order.status === "DELIVERED"
+                          : order.status === "ON_THE_WAY" ||
+                            order.status === "DELIVERED"
                           ? new Date(
                               new Date(
                                 order.createdAt
                               ).getTime() +
-                                3 * 24 * 60 * 60 * 1000
+                                2 * 24 * 60 * 60 * 1000
                               )
                               .toLocaleDateString("es-AR")
                           : "-"}
                       {index === 3 &&
-                        order.status === "DELIVERED"
+                        (order.status === "ON_THE_WAY" ||
+                          order.status ===
+                            "DELIVERED")
                           ? new Date(
                               new Date(
                                 order.createdAt
                               ).getTime() +
-                                5 * 24 * 60 * 60 * 1000
+                                3 * 24 * 60 * 60 * 1000
                             ).toLocaleDateString("es-AR")
                           : "-"}
                     </p>
@@ -206,8 +214,10 @@ export default function OrderTrackingClient({
                 {order.status === "PENDING_PAYMENT"
                   ? "Tu pedido ha sido recibido. Esperamos tu confirmación de pago."
                   : order.status === "CONFIRMED"
-                  ? "Tu pedido ha sido confirmado. Pronto será enviado."
-                  : order.status === "SHIPPED"
+                  ? "Tu pedido ha sido confirmado. Se está preparando para envío."
+                  : order.status === "READY"
+                  ? "Tu pedido está listo. Próximamente será enviado."
+                  : order.status === "ON_THE_WAY"
                   ? "Tu pedido está en camino. Nuestro repartidor tiene tu pedido y está en ruta hacia tu dirección."
                   : order.status === "DELIVERED"
                   ? "¡Tu pedido ha sido entregado! Esperamos que disfrutes tu compra."

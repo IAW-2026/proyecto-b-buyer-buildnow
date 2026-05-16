@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Order, OrderStatus } from "@/type/order";
 import { fetchBuyerOrdersAction } from "@/actions/buyerActions";
+import type { BuyerOrderDto } from "@/lib/mockSeller";
 
 const statusConfig: Record<
-  OrderStatus,
+  string,
   { label: string; color: string; icon: string }
 > = {
   PENDING_PAYMENT: {
@@ -19,7 +19,12 @@ const statusConfig: Record<
     color: "bg-blue-100 text-blue-800",
     icon: "✅",
   },
-  SHIPPED: {
+  READY: {
+    label: "Listo para retirar",
+    color: "bg-purple-100 text-purple-800",
+    icon: "📦",
+  },
+  ON_THE_WAY: {
     label: "En camino",
     color: "bg-purple-100 text-purple-800",
     icon: "🚚",
@@ -27,7 +32,7 @@ const statusConfig: Record<
   DELIVERED: {
     label: "Entregado",
     color: "bg-green-100 text-green-800",
-    icon: "📦",
+    icon: "✓",
   },
   CANCELLED: {
     label: "Cancelado",
@@ -45,7 +50,9 @@ export default function OrdersDropdown({
   isOpen,
   onClose,
 }: OrdersDropdownProps) {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<BuyerOrderDto[]>(
+    []
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const router = useRouter();
@@ -61,7 +68,11 @@ export default function OrdersDropdown({
         const response =
           await fetchBuyerOrdersAction();
 
-        if (response.success && response.data) {
+        if (
+          response.success &&
+          response.data &&
+          Array.isArray(response.data)
+        ) {
           setOrders(response.data);
         } else {
           setHasError(true);
@@ -118,8 +129,10 @@ export default function OrdersDropdown({
           <h3 className="font-semibold text-stone-900">
             📦 Mis Pedidos
           </h3>
+
           <p className="text-xs text-stone-500">
-            Haz clic en un pedido para ver el seguimiento
+            Haz clic en un pedido para ver el
+            seguimiento
           </p>
         </div>
 
@@ -140,6 +153,7 @@ export default function OrdersDropdown({
                     border-t-orange-500
                   "
                 />
+
                 <p className="mt-2 text-sm text-stone-500">
                   Cargando pedidos...
                 </p>
@@ -151,21 +165,24 @@ export default function OrdersDropdown({
             <div className="flex items-center justify-center py-8">
               <div className="text-center">
                 <p className="text-sm text-red-600">
-                  ⚠️ Error al cargar los pedidos
+                  ⚠️ Error al cargar los
+                  pedidos
                 </p>
               </div>
             </div>
           )}
 
-          {!isLoading && !hasError && orders.length === 0 && (
-            <div className="flex items-center justify-center py-8">
-              <div className="text-center">
-                <p className="text-sm text-stone-500">
-                  No tienes pedidos aún
-                </p>
+          {!isLoading &&
+            !hasError &&
+            orders.length === 0 && (
+              <div className="flex items-center justify-center py-8">
+                <div className="text-center">
+                  <p className="text-sm text-stone-500">
+                    No tienes pedidos aún
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           {!isLoading &&
             !hasError &&
@@ -195,9 +212,9 @@ export default function OrdersDropdown({
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-semibold text-stone-900 text-sm">
-                          {order.storeName ||
-                            `Tienda ${order.storeId.slice(0, 8)}`}
+                          {order.storeName}
                         </span>
+
                         <span
                           className={`
                             text-xs
@@ -208,12 +225,15 @@ export default function OrdersDropdown({
                             ${status.color}
                           `}
                         >
-                          {status.icon} {status.label}
+                          {status.icon}{" "}
+                          {status.label}
                         </span>
                       </div>
 
                       <p className="text-xs text-stone-500 mb-1">
-                        ID: {order.id.slice(0, 8)}...
+                        ID:{" "}
+                        {order.id.slice(0, 8)}
+                        ...
                       </p>
 
                       <p className="text-sm font-medium text-orange-600">

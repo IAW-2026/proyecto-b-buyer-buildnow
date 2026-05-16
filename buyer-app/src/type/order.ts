@@ -9,7 +9,7 @@ export interface Order {
   storeId: string;
   storeName?: string;
   totalAmount: number;
-  status: "PENDING_PAYMENT" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+  status: "PENDING_PAYMENT" | "CONFIRMED" | "READY" | "ON_THE_WAY" | "DELIVERED" | "CANCELLED";
   deliveryAddress: string;
   items?: OrderItem[];
   createdAt: string;

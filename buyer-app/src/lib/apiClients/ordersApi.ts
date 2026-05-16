@@ -1,42 +1,37 @@
+/**
+ * Orders API Client
+ * 
+ * DEPRECATED: Este archivo se mantiene por compatibilidad.
+ * El código nuevo debe usar sellerApi directamente.
+ * 
+ * sellerApi.ts es ahora la puerta de acceso única a Seller App,
+ * incluyendo gestión de órdenes.
+ */
+
 import { Order, OrderItem } from "@/type/order";
-import mockData from "@/mockData/sellerApp.json";
+import * as sellerApi from "./sellerApi";
 
 export const ordersApi = {
   /**
-   * Get all orders for a buyer (MOCK DATA)
-   * @param buyerId - The buyer's ID
-   * @returns List of orders
+   * Get all orders for a buyer
+   * @deprecated Use sellerApi.getBuyerOrders() instead
    */
   getOrdersByBuyer: async (buyerId: string): Promise<Order[]> => {
     try {
-      // Simulate API delay
-      await new Promise((resolve) =>
-        setTimeout(resolve, 300)
-      );
+      const orders =
+        await sellerApi.getBuyerOrders(buyerId);
 
-      // Filter orders by buyerId from mock data
-      let orders = mockData.orders
-        .filter((order) => order.buyerId === buyerId)
-        .map(
-          (order) =>
-            ({
-              ...order,
-              status: order.status as Order["status"],
-            }) as Order
-        );
-
-      // If no orders found for this buyerId, return all mock orders for demo purposes
-      if (orders.length === 0) {
-        orders = mockData.orders.map(
-          (order) =>
-            ({
-              ...order,
-              status: order.status as Order["status"],
-            }) as Order
-        );
-      }
-
-      return orders;
+      return orders.map((order) => ({
+        id: order.id,
+        buyerId,
+        storeId: order.storeId,
+        storeName: order.storeName,
+        totalAmount: order.totalAmount,
+        status: order.status as Order["status"],
+        deliveryAddress: order.deliveryAddress,
+        items: [],
+        createdAt: order.createdAt,
+      }));
     } catch (error) {
       console.error("Error fetching orders:", error);
       return [];
@@ -44,9 +39,8 @@ export const ordersApi = {
   },
 
   /**
-   * Create a new order (MOCK DATA)
-   * @param orderData - Order creation data
-   * @returns The created order
+   * Create a new order
+   * @deprecated Use sellerApi.createOrder() instead
    */
   createOrder: async (
     buyerId: string,
@@ -55,23 +49,31 @@ export const ordersApi = {
     items: OrderItem[]
   ): Promise<Order | null> => {
     try {
-      // Simulate API delay
-      await new Promise((resolve) =>
-        setTimeout(resolve, 300)
-      );
-
-      const newOrder: Order = {
-        id: `order_${Date.now()}`,
+      const response = await sellerApi.createOrder({
         buyerId,
         storeId,
-        totalAmount: Math.random() * 100000,
-        status: "PENDING_PAYMENT",
         deliveryAddress,
-        items,
-        createdAt: new Date().toISOString(),
-      };
+        items: items.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+        })),
+      });
 
-      return newOrder;
+      if (response) {
+        return {
+          id: response.id,
+          buyerId: response.buyerId,
+          storeId: response.storeId,
+          storeName: response.storeName,
+          totalAmount: response.totalAmount,
+          status: response.status as Order["status"],
+          deliveryAddress: response.deliveryAddress,
+          items: response.items || [],
+          createdAt: response.createdAt,
+        };
+      }
+
+      return null;
     } catch (error) {
       console.error("Error creating order:", error);
       return null;
@@ -79,31 +81,31 @@ export const ordersApi = {
   },
 
   /**
-   * Get a specific order by ID (MOCK DATA)
-   * @param orderId - The order's ID
-   * @returns The order details
+   * Get a specific order by ID
+   * @deprecated Use sellerApi.getOrderById() instead
    */
   getOrderById: async (
     orderId: string
   ): Promise<Order | null> => {
     try {
-      // Simulate API delay
-      await new Promise((resolve) =>
-        setTimeout(resolve, 300)
-      );
+      const response =
+        await sellerApi.getOrderById(orderId);
 
-      const order = mockData.orders.find(
-        (o) => o.id === orderId
-      );
-
-      if (!order) {
-        return null;
+      if (response) {
+        return {
+          id: response.id,
+          buyerId: response.buyerId,
+          storeId: response.storeId,
+          storeName: response.storeName,
+          totalAmount: response.totalAmount,
+          status: response.status as Order["status"],
+          deliveryAddress: response.deliveryAddress,
+          items: response.items || [],
+          createdAt: response.createdAt,
+        };
       }
 
-      return {
-        ...order,
-        status: order.status as Order["status"],
-      } as Order;
+      return null;
     } catch (error) {
       console.error(
         `Error fetching order ${orderId}:`,

@@ -1,16 +1,24 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import CartItemCard from "@/components/cart/CartItemCard";
 import { useCart } from "@/context/CartContext";
+import { checkoutAction } from "@/actions/buyerActions";
 
 export default function CartSidebar() {
+  const router = useRouter();
   const {
     items: cartItems,
     loading,
     error: errorMessage,
     addItem,
     decreaseItem,
+    refetch,
   } = useCart();
+
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   // ==============================
   // CALCULATIONS
@@ -35,6 +43,49 @@ export default function CartSidebar() {
   const formattedTotalPrice = `$${totalPrice.toFixed(2)}`;
 
   const formattedTotalWeight = `${totalWeight} g`;
+
+  // ==============================
+  // HANDLERS
+  // ==============================
+
+  const handleCheckout = async () => {
+    if (cartItems.length === 0) {
+      setCheckoutError("El carrito está vacío");
+      return;
+    }
+
+    // TODO: obtener dirección de entrega (por ahora usar la primera dirección del buyer)
+    // Por ahora usamos una dirección placeholder
+    const deliveryAddress = "Dirección de entrega";
+
+    setIsCheckingOut(true);
+    setCheckoutError(null);
+
+    try {
+      const result = await checkoutAction(deliveryAddress);
+
+      if (!result.success) {
+        setCheckoutError(result.error || "Error al procesar el checkout");
+        return;
+      }
+
+      if (!result.data) {
+        setCheckoutError("Error al procesar el checkout: datos no recibidos");
+        return;
+      }
+
+      // Refetch cart to clear it in UI
+      await refetch();
+
+      // Redirigir a la página de tracking de la primera orden
+      router.push(`/orders/${result.data.orderId}/tracking`);
+    } catch (error) {
+      console.error("Checkout error:", error);
+      setCheckoutError("Ocurrió un error al procesar el checkout");
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
 
   // ==============================
   // RENDER
@@ -113,7 +164,22 @@ export default function CartSidebar() {
           {errorMessage}
         </div>
       )}
-
+      {/* CHECKOUT ERROR MESSAGE */}
+      {checkoutError && (
+        <div
+          className="
+            rounded-lg
+            bg-red-50
+            p-3
+            text-sm
+            text-red-600
+            border
+            border-red-200
+          "
+        >
+          {checkoutError}
+        </div>
+      )}
       {/* EMPTY STATE */}
       {isEmpty ? (
         <div className="py-8 text-center">
@@ -163,6 +229,8 @@ export default function CartSidebar() {
 
             {/* CHECKOUT BUTTON */}
             <button
+              onClick={handleCheckout}
+              disabled={isCheckingOut}
               className="
                 w-full
                 rounded-xl
@@ -174,9 +242,11 @@ export default function CartSidebar() {
                 transition
                 hover:opacity-90
                 hover:bg-orange-600
+                disabled:opacity-50
+                disabled:cursor-not-allowed
               "
             >
-              Ir al checkout
+              {isCheckingOut ? "Procesando..." : "Ir al checkout"}
             </button>
           </div>
         </>
