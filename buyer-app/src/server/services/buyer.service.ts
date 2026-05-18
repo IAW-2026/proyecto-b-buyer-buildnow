@@ -27,9 +27,11 @@ import {
   getCategories,
   getProduct,
   getProductsByCategory,
+  getProducts,
   type Store,
   type Product,
   type Category,
+  type ProductsSearchResponse,
 } from "@/lib/apiClients/sellerApi";
 
 // ==============================
@@ -109,6 +111,14 @@ export async function getProductsByCategoryService(
   categoryId: string
 ): Promise<Product[]> {
   return getProductsByCategory(categoryId);
+}
+
+export async function searchProductsService(params: {
+  search: string;
+  pageNumber?: number;
+  pageSize?: number;
+}): Promise<ProductsSearchResponse> {
+  return getProducts(params);
 }
 
 // ==============================

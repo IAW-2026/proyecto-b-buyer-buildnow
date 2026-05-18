@@ -6,6 +6,7 @@ import CategorySidebar from "@/components/categories/CategorySidebar";
 import CategoryLayout from "@/components/categories/CategoryLayout";
 
 import TopSearchBar from "@/components/search/TopSearchBar";
+import ProductSearchResults from "@/components/products/ProductSearchResults";
 import StoreQuickViewList from "@/components/stores/StoreQuickViewList";
 import CartSidebar from "@/components/cart/CartSidebar";
 
@@ -16,6 +17,19 @@ export default function DashboardLayout() {
 
   const [selectedCategory, setSelectedCategory] =
     useState<Category | null>(null);
+  const [productSearch, setProductSearch] =
+    useState("");
+  const [searchDraft, setSearchDraft] =
+    useState("");
+
+  const handleProductSearch = (search: string) => {
+    setProductSearch(search);
+    setSearchDraft(search);
+
+    if (search) {
+      setSelectedCategory(null);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-stone-100">
@@ -23,6 +37,9 @@ export default function DashboardLayout() {
         <TopSearchBar
           showCartButton={true}
           onCartClick={() => setCartOpen(true)}
+          onSearch={handleProductSearch}
+          searchValue={searchDraft}
+          onSearchValueChange={setSearchDraft}
         />
 
         <div className="mt-4 grid grid-cols-12 gap-4">
@@ -30,13 +47,22 @@ export default function DashboardLayout() {
           <aside className="col-span-12 lg:col-span-2">
             <CategorySidebar
               selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
+              onSelectCategory={(category) => {
+                setSelectedCategory(category);
+                setProductSearch("");
+                setSearchDraft("");
+              }}
             />
           </aside>
 
           {/* CONTENT */}
           <section className="col-span-12 lg:col-span-7">
-            {selectedCategory ? (
+            {productSearch ? (
+              <ProductSearchResults
+                key={productSearch}
+                search={productSearch}
+              />
+            ) : selectedCategory ? (
               <CategoryLayout category={selectedCategory} />
             ) : (
               <StoreQuickViewList />

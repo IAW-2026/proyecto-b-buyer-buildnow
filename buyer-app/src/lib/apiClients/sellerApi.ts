@@ -38,6 +38,14 @@ export interface Product {
   available: boolean;
 }
 
+export interface ProductsSearchResponse {
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  data: Product[];
+}
+
 type SellerAppMock = {
   stores: Store[];
   categories: Category[];
@@ -83,6 +91,32 @@ function resolveProductsByCategory(categoryId: string) {
       (product): product is Product =>
         Boolean(product)
     );
+}
+
+function getPaginatedProducts(
+  products: Product[],
+  pageNumber: number,
+  pageSize: number
+): ProductsSearchResponse {
+  const safePageSize = Math.max(1, pageSize);
+  const total = products.length;
+  const totalPages = Math.max(
+    1,
+    Math.ceil(total / safePageSize)
+  );
+  const safePageNumber = Math.min(
+    Math.max(1, pageNumber),
+    totalPages
+  );
+  const start = (safePageNumber - 1) * safePageSize;
+
+  return {
+    total,
+    page: safePageNumber,
+    pageSize: safePageSize,
+    totalPages,
+    data: products.slice(start, start + safePageSize),
+  };
 }
 
 // Inicializar dependencias del orderService
@@ -180,6 +214,75 @@ export async function getProductsByCategory(
       serviceUrl: SELLER_API_URL,
     }
   ) as Promise<Product[]>;
+}
+
+export async function getProducts(params: {
+  categoryId?: string;
+  search?: string;
+  pageNumber?: number;
+  pageSize?: number;
+}): Promise<ProductsSearchResponse> {
+  const {
+    categoryId,
+    search = "",
+    pageNumber = 1,
+    pageSize = 9,
+  } = params;
+
+  if (useMock) {
+    const normalizedSearch = search
+      .trim()
+      .toLocaleLowerCase();
+
+    const products = sellerApp.products
+      .filter((product) =>
+        categoryId
+          ? product.categoryId === categoryId
+          : true
+      )
+      .filter((product) =>
+        normalizedSearch
+          ? product.name
+              .toLocaleLowerCase()
+              .includes(normalizedSearch)
+          : true
+      )
+      .sort((left, right) => {
+        const availability =
+          Number(!left.available) -
+          Number(!right.available);
+
+        if (availability !== 0) {
+          return availability;
+        }
+
+        return left.name.localeCompare(right.name);
+      });
+
+    return getPaginatedProducts(
+      products,
+      pageNumber,
+      pageSize
+    );
+  }
+
+  const query = new URLSearchParams();
+
+  if (categoryId) {
+    query.set("categoryId", categoryId);
+  }
+
+  if (search.trim()) {
+    query.set("search", search.trim());
+  }
+
+  query.set("pageNumber", String(pageNumber));
+  query.set("pageSize", String(pageSize));
+
+  return apiClient(`/api/products?${query.toString()}`, {
+    method: "GET",
+    serviceUrl: SELLER_API_URL,
+  }) as Promise<ProductsSearchResponse>;
 }
 
 // ================================

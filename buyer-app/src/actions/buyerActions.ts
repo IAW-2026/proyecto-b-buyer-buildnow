@@ -15,6 +15,7 @@ import {
   getStoreProductsService,
   getProductDetails,
   getProductsByCategoryService,
+  searchProductsService,
   addProductToCart,
   decreaseProductQuantity,
   getStoreProductsWithCartQuantity,
@@ -235,6 +236,29 @@ export async function fetchProductsByCategoryAction(
     throw new Error(
       "FAILED_TO_FETCH_PRODUCTS_BY_CATEGORY"
     );
+  }
+}
+
+export async function searchProductsAction(params: {
+  search: string;
+  pageNumber?: number;
+  pageSize?: number;
+}) {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      throw new Error("UNAUTHORIZED");
+    }
+
+    return await searchProductsService(params);
+  } catch (error) {
+    console.error(
+      `Error searching products for "${params.search}":`,
+      error
+    );
+
+    throw new Error("FAILED_TO_SEARCH_PRODUCTS");
   }
 }
 

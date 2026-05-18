@@ -8,12 +8,23 @@ import OrdersDropdown from "@/components/orders/OrdersDropdown";
 interface TopSearchBarProps {
   showCartButton?: boolean;
   onCartClick?: () => void;
+  onSearch?: (search: string) => void;
+  searchValue?: string;
+  onSearchValueChange?: (search: string) => void;
 }
 
-export default function TopSearchBar({ showCartButton = false, onCartClick }: TopSearchBarProps) {
+export default function TopSearchBar({
+  showCartButton = false,
+  onCartClick,
+  onSearch,
+  searchValue,
+  onSearchValueChange,
+}: TopSearchBarProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isOrdersDropdownOpen, setIsOrdersDropdownOpen] = useState(false);
+  const [localSearchText, setLocalSearchText] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchText = searchValue ?? localSearchText;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -29,6 +40,26 @@ export default function TopSearchBar({ showCartButton = false, onCartClick }: To
     return () =>
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleSearchSubmit = (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    onSearch?.(searchText.trim());
+  };
+
+  const handleSearchTextChange = (value: string) => {
+    if (searchValue === undefined) {
+      setLocalSearchText(value);
+    }
+
+    onSearchValueChange?.(value);
+  };
+
+  const handleClearSearch = () => {
+    handleSearchTextChange("");
+    onSearch?.("");
+  };
 
   return (
     <header
@@ -74,9 +105,16 @@ export default function TopSearchBar({ showCartButton = false, onCartClick }: To
       </div>
 
       {/* SEARCH */}
-      <div className="flex-1 max-w-2xl">
+      <form
+        onSubmit={handleSearchSubmit}
+        className="flex flex-1 max-w-2xl gap-2"
+      >
         <input
           type="text"
+          value={searchText}
+          onChange={(event) =>
+            handleSearchTextChange(event.target.value)
+          }
           placeholder="Buscar productos..."
           className="
             w-full
@@ -92,7 +130,47 @@ export default function TopSearchBar({ showCartButton = false, onCartClick }: To
             focus:bg-white
           "
         />
-      </div>
+
+        {searchText && (
+          <button
+            type="button"
+            onClick={handleClearSearch}
+            className="
+              h-12
+              rounded-xl
+              border
+              border-stone-300
+              bg-white
+              px-3
+              text-sm
+              font-medium
+              text-stone-600
+              transition
+              hover:border-orange-300
+              hover:text-orange-600
+            "
+          >
+            Limpiar
+          </button>
+        )}
+
+        <button
+          type="submit"
+          className="
+            h-12
+            rounded-xl
+            bg-orange-500
+            px-4
+            text-sm
+            font-semibold
+            text-white
+            transition
+            hover:bg-orange-600
+          "
+        >
+          Buscar
+        </button>
+      </form>
 
       {/* USER AND CART */}
       <div className="flex items-center gap-3">
