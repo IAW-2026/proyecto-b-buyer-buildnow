@@ -57,6 +57,12 @@ type SellerAppMock = {
 const sellerApp = sellerAppMock as SellerAppMock;
 const useMock = !SELLER_API_URL;
 
+type StoresQuery = {
+  search?: string;
+  pageNumber?: number;
+  pageSize?: number;
+};
+
 // ================================
 // Helper Functions
 // ================================
@@ -119,6 +125,18 @@ function getPaginatedProducts(
   };
 }
 
+function getPaginatedStores(
+  stores: Store[],
+  pageNumber: number,
+  pageSize: number
+) {
+  const safePageSize = Math.max(1, pageSize);
+  const safePageNumber = Math.max(1, pageNumber);
+  const start = (safePageNumber - 1) * safePageSize;
+
+  return stores.slice(start, start + safePageSize);
+}
+
 // Inicializar dependencias del orderService
 setSellerApiDependencies({
   getProductDetails,
@@ -129,12 +147,49 @@ setSellerApiDependencies({
 // CATALOG - Mock from sellerApp.json
 // ================================
 
-export async function getStores() {
+export async function getStores(
+  params?: StoresQuery
+) {
   if (useMock) {
-    return sellerApp.stores;
+    if (!params) {
+      return sellerApp.stores;
+    }
+
+    const {
+      search = "",
+      pageNumber = 1,
+      pageSize = 4,
+    } = params;
+
+    const normalizedSearch = search
+      .trim()
+      .toLocaleLowerCase();
+
+    const filteredStores = sellerApp.stores.filter((store) =>
+      normalizedSearch
+        ? store.name
+            .toLocaleLowerCase()
+            .includes(normalizedSearch)
+        : true
+    );
+
+    return getPaginatedStores(
+      filteredStores,
+      pageNumber,
+      pageSize
+    );
   }
 
-  return apiClient("/api/stores", {
+  const query = new URLSearchParams();
+
+  query.set("search", params?.search?.trim() ?? "");
+  query.set(
+    "pageNumber",
+    String(params?.pageNumber ?? 1)
+  );
+  query.set("pageSize", String(params?.pageSize ?? 4));
+
+  return apiClient(`/api/stores?${query.toString()}`, {
     method: "GET",
     serviceUrl: SELLER_API_URL,
   }) as Promise<Store[]>;

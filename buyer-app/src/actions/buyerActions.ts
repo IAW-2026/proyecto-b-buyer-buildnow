@@ -11,6 +11,7 @@ import {
   findCurrentBuyer,
   registerBuyer,
   getAllStores,
+  getStoresPage,
   getCatalogCategories,
   getStoreProductsService,
   getProductDetails,
@@ -130,8 +131,16 @@ export async function createBuyerAction(
 // CATALOG
 // ==============================
 
-export async function fetchStoresAction() {
+export async function fetchStoresAction(params?: {
+  search?: string;
+  pageNumber?: number;
+  pageSize?: number;
+}) {
   try {
+    if (params) {
+      return await getStoresPage(params);
+    }
+
     return await getAllStores();
   } catch (error) {
     console.error(

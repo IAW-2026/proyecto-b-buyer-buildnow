@@ -89,6 +89,14 @@ export async function getAllStores(): Promise<
   return getStores();
 }
 
+export async function getStoresPage(params: {
+  search?: string;
+  pageNumber?: number;
+  pageSize?: number;
+}): Promise<Store[]> {
+  return getStores(params);
+}
+
 export async function getCatalogCategories(): Promise<
   Category[]
 > {
