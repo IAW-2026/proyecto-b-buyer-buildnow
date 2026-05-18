@@ -169,6 +169,7 @@ export default function CategoryLayout({
             storeId={product.storeId}
             price={product.price}
             weight={product.weight}
+            available={product.available}
             quantity={getProductQuantity(
               product.id
             )}

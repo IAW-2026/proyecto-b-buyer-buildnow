@@ -12,6 +12,7 @@ type Props = {
   storeId: string;
   price: number;
   weight: number;
+  available?: boolean;
   quantity: number;
   onAdd: (id: string) => void;
   onDecrease: (id: string) => void;
@@ -22,6 +23,7 @@ export default function ProductCard({
   name,
   price,
   weight,
+  available = true,
   quantity,
   onAdd,
   onDecrease,
@@ -112,6 +114,25 @@ export default function ProductCard({
   // ==============================
 
   const renderCartControls = () => {
+    if (!available) {
+      return (
+        <div className="
+            rounded-xl
+            border
+            border-stone-200
+            bg-stone-50
+            px-4
+            py-2
+            text-center
+            text-sm
+            font-medium
+            text-stone-500
+          ">
+          No disponible
+        </div>
+      );
+    }
+
     if (quantity <= 0) {
       return (
         <button
@@ -207,8 +228,8 @@ export default function ProductCard({
       {/* CARD */}
       <article
         onClick={openModal}
-        className="
-          cursor-pointer
+        className={
+          `
           rounded-2xl
           border
           border-stone-200
@@ -216,7 +237,9 @@ export default function ProductCard({
           transition
           hover:border-orange-300
           hover:shadow-md
-        "
+          ${available ? "cursor-pointer" : "opacity-70"}
+        `
+        }
       >
         {/* IMAGE */}
         <div

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   useEffect,
   useRef,
@@ -266,9 +267,12 @@ export default function StoreQuickViewRow({
           </p>
         </div>
 
-        <button className="text-sm font-medium text-orange-500 hover:underline">
+        <Link
+          href={`/${storeId}`}
+          className="text-sm font-medium text-orange-500 hover:underline"
+        >
           Ver tienda
-        </button>
+        </Link>
       </div>
 
       {/* MESSAGE */}
@@ -359,6 +363,7 @@ export default function StoreQuickViewRow({
                 storeId={product.storeId}
                 price={product.price}
                 weight={product.weight}
+                available={product.available}
                 quantity={getProductQuantity(
                   product.id
                 )}

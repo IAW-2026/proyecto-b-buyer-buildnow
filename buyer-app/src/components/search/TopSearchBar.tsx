@@ -77,7 +77,7 @@ export default function TopSearchBar({ showCartButton = false, onCartClick }: To
       <div className="flex-1 max-w-2xl">
         <input
           type="text"
-          placeholder="Buscar productos o comercios..."
+          placeholder="Buscar productos..."
           className="
             w-full
             rounded-xl
