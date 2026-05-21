@@ -223,6 +223,18 @@ export function CartProvider({
         return;
       }
 
+      if (
+        result.error === "UNAUTHORIZED" ||
+        result.error === "FORBIDDEN"
+      ) {
+        dispatch({
+          type: "SET_ITEMS",
+          payload: [],
+        });
+
+        return;
+      }
+
       dispatchError(
         result.error ||
           "Error al cargar el carrito"

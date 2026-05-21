@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import CityAutocompleteInput from "./CityAutocompleteInput";
 
 interface Address {
   id: string;
   street: string;
   city: string;
-  notes?: string;
+  notes: string | null;
 }
 
 interface AddressFormProps {
@@ -81,8 +82,7 @@ export default function AddressForm({
         <label className="block text-sm font-medium text-stone-700 mb-2">
           Ciudad
         </label>
-        <input
-          type="text"
+        <CityAutocompleteInput
           name="city"
           value={formData.city}
           onChange={handleChange}

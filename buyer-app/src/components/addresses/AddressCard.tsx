@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
-
 interface Address {
   id: string;
   street: string;
   city: string;
-  notes?: string;
+  notes: string | null;
 }
 
 interface AddressCardProps {

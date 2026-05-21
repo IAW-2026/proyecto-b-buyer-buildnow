@@ -15,4 +15,5 @@ export async function checkOnboarding() {
   if (!buyer) {
     redirect("/settings/profile?onboarding=true");
   }
+
 }

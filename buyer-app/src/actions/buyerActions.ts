@@ -5,8 +5,6 @@ import {
   currentUser,
 } from "@clerk/nextjs/server";
 
-import { redirect } from "next/navigation";
-
 import {
   findCurrentBuyer,
   registerBuyer,
@@ -32,6 +30,17 @@ import {
 import { ActionResponse } from "@/type/action-response";
 import * as sellerApi from "@/lib/apiClients/sellerApi";
 import type { BuyerOrderDto, OrderResponseDto } from "@/lib/mockSeller";
+import { assignBuyerRole } from "@/lib/auth/assignBuyerRole";
+import {
+  ForbiddenError,
+  requireBuyer,
+  UnauthorizedError,
+} from "@/lib/auth/requireBuyer";
+import {
+  getOptionalFormValue,
+  getRequiredFormValue,
+  validatePhone,
+} from "@/lib/validation/buyerValidation";
 
 // ==============================
 // BUYER
@@ -54,7 +63,9 @@ export async function createBuyerAction(
       await findCurrentBuyer(userId);
 
     if (existingBuyer) {
-      redirect("/dashboard");
+      return {
+        success: true,
+      };
     }
 
     const user = await currentUser();
@@ -66,19 +77,68 @@ export async function createBuyerAction(
       };
     }
 
-    const name =
-      formData.get("name")?.toString() || "";
+    const nameResult = getRequiredFormValue(
+      formData,
+      "name",
+      "El nombre"
+    );
 
-    const phone =
-      formData.get("phone")?.toString() || "";
+    if (!nameResult.success) {
+      return {
+        success: false,
+        error: nameResult.error,
+      };
+    }
 
-    const street = formData.get(
-      "street"
-    ) as string;
+    const phoneResult = getRequiredFormValue(
+      formData,
+      "phone",
+      "El telefono"
+    );
 
-    const city = formData.get("city") as string;
+    if (!phoneResult.success) {
+      return {
+        success: false,
+        error: phoneResult.error,
+      };
+    }
 
-    const notes = formData.get("notes") as string;
+    const validPhone = validatePhone(phoneResult.data);
+
+    if (!validPhone.success) {
+      return {
+        success: false,
+        error: validPhone.error,
+      };
+    }
+
+    const streetResult = getRequiredFormValue(
+      formData,
+      "street",
+      "La calle"
+    );
+
+    if (!streetResult.success) {
+      return {
+        success: false,
+        error: streetResult.error,
+      };
+    }
+
+    const cityResult = getRequiredFormValue(
+      formData,
+      "city",
+      "La ciudad"
+    );
+
+    if (!cityResult.success) {
+      return {
+        success: false,
+        error: cityResult.error,
+      };
+    }
+
+    const notes = getOptionalFormValue(formData, "notes");
 
     const email =
       user.emailAddresses?.[0]?.emailAddress;
@@ -92,16 +152,18 @@ export async function createBuyerAction(
 
     await registerBuyer({
       clerkId: userId,
-      name,
-      phone,
+      name: nameResult.data,
+      phone: validPhone.data,
       email,
 
       address: {
-        street,
-        city,
+        street: streetResult.data,
+        city: cityResult.data,
         notes,
       },
     });
+
+    await assignBuyerRole(userId);
 
     return {
       success: true,
@@ -190,11 +252,7 @@ export async function fetchStoreProductsWithCartQuantityAction(
   storeId: string
 ) {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      throw new Error("UNAUTHORIZED");
-    }
+    const { userId } = await requireBuyer();
 
     return await getStoreProductsWithCartQuantity(
       userId,
@@ -279,14 +337,7 @@ export async function addToCartAction(
   productId: string
 ): Promise<ActionResponse> {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return {
-        success: false,
-        error: "Debes iniciar sesión",
-      };
-    }
+    const { userId } = await requireBuyer();
 
     await addProductToCart(userId, productId);
 
@@ -319,14 +370,7 @@ export async function decreaseCartItemAction(
   productId: string
 ): Promise<ActionResponse> {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return {
-        success: false,
-        error: "Debes iniciar sesión",
-      };
-    }
+    const { userId } = await requireBuyer();
 
     await decreaseProductQuantity(
       userId,
@@ -364,15 +408,7 @@ export async function decreaseCartItemAction(
 
 export async function fetchCartItemsAction() {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return {
-        success: false,
-        error: "Debes iniciar sesión",
-        data: [],
-      };
-    }
+    const { userId } = await requireBuyer();
 
     const cartItems =
       await getCartItemsWithProductDetails(
@@ -385,6 +421,17 @@ export async function fetchCartItemsAction() {
     };
   } catch (error) {
     console.error("Error fetching cart items:", error);
+
+    if (
+      error instanceof UnauthorizedError ||
+      error instanceof ForbiddenError
+    ) {
+      return {
+        success: false,
+        error: error.message,
+        data: [],
+      };
+    }
 
     return {
       success: false,
@@ -402,11 +449,7 @@ export async function fetchCategoryProductsAction(
   categoryId: string
 ) {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      throw new Error("UNAUTHORIZED");
-    }
+    await requireBuyer();
 
     return await getProductsByCategoryService(categoryId);
   } catch (error) {
@@ -429,14 +472,7 @@ export async function getCurrentBuyerAction(): Promise<
   ActionResponse<Awaited<ReturnType<typeof getCurrentBuyer>>>
 > {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return {
-        success: false,
-        error: "Debes iniciar sesión",
-      };
-    }
+    const { userId } = await requireBuyer();
 
     const buyer = await getCurrentBuyer(userId);
 
@@ -468,22 +504,47 @@ export async function updateBuyerProfileAction(
   formData: FormData
 ): Promise<ActionResponse> {
   try {
-    const { userId } = await auth();
+    const { userId } = await requireBuyer();
 
-    if (!userId) {
+    const nameResult = getRequiredFormValue(
+      formData,
+      "name",
+      "El nombre"
+    );
+
+    if (!nameResult.success) {
       return {
         success: false,
-        error: "Debes iniciar sesión",
+        error: nameResult.error,
       };
     }
 
-    const name = formData.get("name")?.toString();
-    const phone = formData.get("phone")?.toString();
+    const phoneResult = getRequiredFormValue(
+      formData,
+      "phone",
+      "El telefono"
+    );
 
-    const data: { name?: string; phone?: string } = {};
+    if (!phoneResult.success) {
+      return {
+        success: false,
+        error: phoneResult.error,
+      };
+    }
 
-    if (name) data.name = name;
-    if (phone) data.phone = phone;
+    const validPhone = validatePhone(phoneResult.data);
+
+    if (!validPhone.success) {
+      return {
+        success: false,
+        error: validPhone.error,
+      };
+    }
+
+    const data = {
+      name: nameResult.data,
+      phone: validPhone.data,
+    };
 
     await updateBuyerProfile(userId, data);
 
@@ -519,30 +580,39 @@ export async function addAddressAction(
   formData: FormData
 ): Promise<ActionResponse> {
   try {
-    const { userId } = await auth();
+    const { userId } = await requireBuyer();
 
-    if (!userId) {
+    const streetResult = getRequiredFormValue(
+      formData,
+      "street",
+      "La calle"
+    );
+
+    if (!streetResult.success) {
       return {
         success: false,
-        error: "Debes iniciar sesión",
+        error: streetResult.error,
       };
     }
 
-    const street =
-      formData.get("street")?.toString() || "";
-    const city = formData.get("city")?.toString() || "";
-    const notes = formData.get("notes")?.toString();
+    const cityResult = getRequiredFormValue(
+      formData,
+      "city",
+      "La ciudad"
+    );
 
-    if (!street || !city) {
+    if (!cityResult.success) {
       return {
         success: false,
-        error: "La calle y la ciudad son requeridas",
+        error: cityResult.error,
       };
     }
+
+    const notes = getOptionalFormValue(formData, "notes");
 
     await addAddress(userId, {
-      street,
-      city,
+      street: streetResult.data,
+      city: cityResult.data,
       notes,
     });
 
@@ -575,28 +645,43 @@ export async function editAddressAction(
   formData: FormData
 ): Promise<ActionResponse> {
   try {
-    const { userId } = await auth();
+    const { userId } = await requireBuyer();
 
-    if (!userId) {
+    const streetResult = getRequiredFormValue(
+      formData,
+      "street",
+      "La calle"
+    );
+
+    if (!streetResult.success) {
       return {
         success: false,
-        error: "Debes iniciar sesión",
+        error: streetResult.error,
       };
     }
 
-    const street = formData.get("street")?.toString();
-    const city = formData.get("city")?.toString();
-    const notes = formData.get("notes")?.toString();
+    const cityResult = getRequiredFormValue(
+      formData,
+      "city",
+      "La ciudad"
+    );
+
+    if (!cityResult.success) {
+      return {
+        success: false,
+        error: cityResult.error,
+      };
+    }
 
     const data: {
-      street?: string;
-      city?: string;
+      street: string;
+      city: string;
       notes?: string;
-    } = {};
-
-    if (street) data.street = street;
-    if (city) data.city = city;
-    if (notes) data.notes = notes;
+    } = {
+      street: streetResult.data,
+      city: cityResult.data,
+      notes: getOptionalFormValue(formData, "notes"),
+    };
 
     await editAddress(userId, addressId, data);
 
@@ -638,14 +723,7 @@ export async function removeAddressAction(
   addressId: string
 ): Promise<ActionResponse> {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return {
-        success: false,
-        error: "Debes iniciar sesión",
-      };
-    }
+    const { userId } = await requireBuyer();
 
     await removeAddress(userId, addressId);
 
@@ -691,15 +769,7 @@ export async function fetchBuyerOrdersAction(): Promise<
   ActionResponse<BuyerOrderDto[]>
 > {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return {
-        success: false,
-        error: "Debes iniciar sesión",
-        data: [],
-      };
-    }
+    const { userId } = await requireBuyer();
 
     const buyer = await findCurrentBuyer(userId);
 
@@ -740,14 +810,7 @@ export async function createOrderAction(
   items: Array<{ productId: string; quantity: number }>
 ): Promise<ActionResponse<OrderResponseDto>> {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return {
-        success: false,
-        error: "Debes iniciar sesión",
-      };
-    }
+    const { userId } = await requireBuyer();
 
     const buyer = await findCurrentBuyer(userId);
 
@@ -791,14 +854,7 @@ export async function createOrderAction(
  */
 export async function clearCartAction(): Promise<ActionResponse> {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return {
-        success: false,
-        error: "Debes iniciar sesión",
-      };
-    }
+    const { userId } = await requireBuyer();
 
     await clearBuyerCart(userId);
 
@@ -827,14 +883,7 @@ export async function checkoutAction(
   deliveryAddress: string
 ): Promise<ActionResponse<{ orderId: string; orders: OrderResponseDto[] }>> {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return {
-        success: false,
-        error: "Debes iniciar sesión",
-      };
-    }
+    const { userId } = await requireBuyer();
 
     const buyer = await findCurrentBuyer(userId);
 

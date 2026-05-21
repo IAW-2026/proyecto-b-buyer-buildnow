@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import TopSearchBar from "@/components/search/TopSearchBar";
 import {
@@ -16,19 +15,18 @@ import AddressForm from "@/components/addresses/AddressForm";
 
 interface Buyer {
   id: string;
-  name: string;
+  name: string | null;
   email: string;
-  phone?: string;
+  phone: string | null;
   addresses: Array<{
     id: string;
     street: string;
     city: string;
-    notes?: string;
+    notes: string | null;
   }>;
 }
 
 export default function MePage() {
-  const router = useRouter();
   const [buyer, setBuyer] = useState<Buyer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -39,6 +37,9 @@ export default function MePage() {
   >(null);
   const [isDeletingAddress, setIsDeletingAddress] =
     useState(false);
+  const [formError, setFormError] = useState<string | null>(
+    null
+  );
 
   // Fetch buyer data
   useEffect(() => {
@@ -64,6 +65,7 @@ export default function MePage() {
     formData: FormData
   ) => {
     try {
+      setFormError(null);
       const response =
         await updateBuyerProfileAction(formData);
 
@@ -79,14 +81,14 @@ export default function MePage() {
           setIsEditing(false);
         }
       } else {
-        alert(
+        setFormError(
           response.error ||
           "Error al actualizar el perfil"
         );
       }
     } catch (error) {
       console.error(error);
-      alert("Error al actualizar el perfil");
+      setFormError("Error al actualizar el perfil");
     }
   };
 
@@ -94,6 +96,7 @@ export default function MePage() {
     formData: FormData
   ) => {
     try {
+      setFormError(null);
       const response =
         await addAddressAction(formData);
 
@@ -109,14 +112,14 @@ export default function MePage() {
           setIsAddingAddress(false);
         }
       } else {
-        alert(
+        setFormError(
           response.error ||
           "Error al agregar la dirección"
         );
       }
     } catch (error) {
       console.error(error);
-      alert("Error al agregar la dirección");
+      setFormError("Error al agregar la dirección");
     }
   };
 
@@ -126,6 +129,7 @@ export default function MePage() {
     if (!editingAddress) return;
 
     try {
+      setFormError(null);
       const response =
         await editAddressAction(
           editingAddress.id,
@@ -144,14 +148,14 @@ export default function MePage() {
           setEditingAddress(null);
         }
       } else {
-        alert(
+        setFormError(
           response.error ||
           "Error al editar la dirección"
         );
       }
     } catch (error) {
       console.error(error);
-      alert("Error al editar la dirección");
+      setFormError("Error al editar la dirección");
     }
   };
 
@@ -183,14 +187,14 @@ export default function MePage() {
           setBuyer(updatedBuyer.data);
         }
       } else {
-        alert(
+        setFormError(
           response.error ||
           "Error al eliminar la dirección"
         );
       }
     } catch (error) {
       console.error(error);
-      alert("Error al eliminar la dirección");
+      setFormError("Error al eliminar la dirección");
     } finally {
       setIsDeletingAddress(false);
     }
@@ -233,6 +237,12 @@ export default function MePage() {
       <TopSearchBar />
 
       <div className="max-w-2xl mx-auto p-6 space-y-8">
+        {formError && (
+          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {formError}
+          </div>
+        )}
+
         {/* PROFILE SECTION */}
         <section>
           <div className="flex items-center justify-between mb-6">
@@ -264,6 +274,7 @@ export default function MePage() {
                   type="text"
                   name="name"
                   defaultValue={buyer.name || ""}
+                  required
                   className="w-full rounded-lg border border-stone-300 px-4 py-2 outline-none transition focus:border-orange-500 focus:bg-white"
                 />
               </div>
@@ -273,9 +284,13 @@ export default function MePage() {
                   Teléfono
                 </label>
                 <input
-                  type="text"
+                  type="tel"
                   name="phone"
                   defaultValue={buyer.phone || ""}
+                  required
+                  inputMode="numeric"
+                  pattern="[0-9]{8,15}"
+                  title="Ingresá entre 8 y 15 números, sin espacios ni guiones."
                   className="w-full rounded-lg border border-stone-300 px-4 py-2 outline-none transition focus:border-orange-500 focus:bg-white"
                 />
               </div>

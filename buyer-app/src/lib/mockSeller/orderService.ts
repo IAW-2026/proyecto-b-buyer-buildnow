@@ -14,8 +14,17 @@ import type {
 
 // Importar funciones de sellerApi para obtener productos y tiendas
 // Se inyectarán como parámetros para evitar ciclos de importación
+type SellerProduct = {
+  id: string;
+  name: string;
+  price: number;
+  weight: number;
+};
+
 interface SellerApiDeps {
-  getProductDetails: (productId: string) => Promise<any>;
+  getProductDetails: (
+    productId: string
+  ) => Promise<SellerProduct>;
   getStores: () => Promise<Array<{ id: string; name: string }>>;
 }
 
