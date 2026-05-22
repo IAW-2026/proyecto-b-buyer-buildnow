@@ -17,25 +17,36 @@ export async function getCurrentUser() {
   const claims =
     sessionClaims as SessionClaimsWithRole | null;
 
-  let role =
-    claims?.metadata?.role ??
-    claims?.publicMetadata?.role ??
-    null;
+  let publicMetadataRole: string | null = null;
 
-  if (userId && !role) {
+  if (userId) {
     const client = await clerkClient();
     const user = await client.users.getUser(userId);
     const publicRole = user.publicMetadata.role;
 
-    role =
+    publicMetadataRole =
       typeof publicRole === "string"
         ? publicRole
         : null;
   }
 
+  const role =
+    publicMetadataRole ??
+    claims?.publicMetadata?.role ??
+    claims?.metadata?.role ??
+    null;
+  const roleSource = publicMetadataRole
+    ? "clerk_public_metadata"
+    : claims?.publicMetadata?.role
+      ? "session_public_metadata"
+      : claims?.metadata?.role
+        ? "session_metadata"
+        : "none";
+
   return {
     userId,
     role,
+    roleSource,
     isAuthenticated: Boolean(userId),
   };
 }

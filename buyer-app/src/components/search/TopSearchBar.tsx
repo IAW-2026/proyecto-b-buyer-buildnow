@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { SignOutButton } from "@clerk/nextjs";
 import OrdersDropdown from "@/components/orders/OrdersDropdown";
 
@@ -76,22 +77,19 @@ export default function TopSearchBar({
       "
     >
       {/* LOGO */}
-      <div className="flex items-center gap-2">
-        <div
-          className="
-            flex
-            h-10
-            w-10
-            items-center
-            justify-center
-            rounded-xl
-            bg-orange-500
-            text-white
-            font-bold
-          "
-        >
-          B
-        </div>
+      <Link
+        href="/dashboard"
+        className="flex items-center gap-2 rounded-xl transition hover:opacity-85"
+        aria-label="Ir al dashboard"
+      >
+        <Image
+          src="/buildnow-logo.png"
+          alt="BuildNow"
+          width={40}
+          height={40}
+          className="h-10 w-10 rounded-xl object-cover"
+          priority
+        />
 
         <div>
           <h1 className="text-lg font-bold text-stone-900">
@@ -102,7 +100,7 @@ export default function TopSearchBar({
             Materiales para construcción
           </p>
         </div>
-      </div>
+      </Link>
 
       {/* SEARCH */}
       <form

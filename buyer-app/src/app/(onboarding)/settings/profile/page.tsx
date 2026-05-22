@@ -1,17 +1,21 @@
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 import ProfileForm from "@/components/forms/profile-form";
+import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 import { findCurrentBuyer } from "@/server/services/buyer.service";
 
 export default async function ProfilePage() {
-  const { userId } = await auth();
+  const user = await getCurrentUser();
 
-  if (!userId) {
+  if (!user.userId) {
     redirect("/login");
   }
 
-  const buyer = await findCurrentBuyer(userId);
+  if (user.role === "admin") {
+    redirect("/admin");
+  }
+
+  const buyer = await findCurrentBuyer(user.userId);
 
   if (buyer) {
     redirect("/dashboard");

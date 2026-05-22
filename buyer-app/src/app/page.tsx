@@ -1,21 +1,23 @@
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 import { findCurrentBuyer } from "@/server/services/buyer.service";
 
 export default async function HomePage() {
-  const { userId } = await auth();
+  const user = await getCurrentUser();
 
-  // No autenticado
-  if (!userId) {
+  if (!user.userId) {
     redirect("/login");
   }
 
-  const buyer = await findCurrentBuyer(userId);
+  if (user.role === "admin") {
+    redirect("/admin");
+  }
+
+  const buyer = await findCurrentBuyer(user.userId);
 
   if (!buyer) {
     redirect("/settings/profile?onboarding=true");
   }
 
-  // Usuario completo
   redirect("/dashboard");
 }
