@@ -10,7 +10,7 @@ export default function OrdersLayout({
       {/* HEADER */}
       <div className="sticky top-0 z-40 bg-stone-50 p-4 md:p-8">
         <div className="max-w-6xl mx-auto">
-          <TopSearchBar />
+          <TopSearchBar showSearch={false} />
         </div>
       </div>
 

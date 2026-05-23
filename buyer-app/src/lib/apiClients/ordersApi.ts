@@ -8,7 +8,7 @@
  * incluyendo gestión de órdenes.
  */
 
-import { Order, OrderItem } from "@/type/order";
+import { Order, OrderItem } from "@/types/order";
 import * as sellerApi from "./sellerApi";
 
 export const ordersApi = {

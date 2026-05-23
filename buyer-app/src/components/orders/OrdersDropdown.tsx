@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchBuyerOrdersAction } from "@/actions/buyerActions";
-import type { BuyerOrderDto } from "@/lib/mockSeller";
+import type { BuyerOrderDto } from "@/server/mockSeller";
 
 const statusConfig: Record<
   string,

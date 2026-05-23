@@ -37,6 +37,9 @@ export default function MePage() {
   >(null);
   const [isDeletingAddress, setIsDeletingAddress] =
     useState(false);
+  const [addressToDelete, setAddressToDelete] = useState<
+    Buyer["addresses"][0] | null
+  >(null);
   const [formError, setFormError] = useState<string | null>(
     null
   );
@@ -159,22 +162,30 @@ export default function MePage() {
     }
   };
 
-  const handleDeleteAddress = async (
+  const handleDeleteAddress = (
     addressId: string
   ) => {
-    if (
-      !confirm(
-        "¿Estás seguro de que quieres eliminar esta dirección?"
-      )
-    ) {
+    const address = buyer?.addresses.find(
+      (item) => item.id === addressId
+    );
+
+    if (address) {
+      setFormError(null);
+      setAddressToDelete(address);
       return;
     }
+
+  };
+
+  const confirmDeleteAddress = async () => {
+    if (!addressToDelete) return;
 
     setIsDeletingAddress(true);
 
     try {
-      const response =
-        await removeAddressAction(addressId);
+      const response = await removeAddressAction(
+        addressToDelete.id
+      );
 
       if (response.success) {
         const updatedBuyer =
@@ -186,6 +197,8 @@ export default function MePage() {
         ) {
           setBuyer(updatedBuyer.data);
         }
+
+        setAddressToDelete(null);
       } else {
         setFormError(
           response.error ||
@@ -203,7 +216,7 @@ export default function MePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-stone-50">
-        <TopSearchBar />
+        <TopSearchBar showSearch={false} />
         <div className="flex items-center justify-center py-20">
           <p className="text-stone-600">
             Cargando datos...
@@ -216,7 +229,7 @@ export default function MePage() {
   if (!buyer) {
     return (
       <div className="min-h-screen bg-stone-50">
-        <TopSearchBar />
+        <TopSearchBar showSearch={false} />
         <div className="flex flex-col items-center justify-center py-20 gap-4">
           <p className="text-stone-600">
             Error al cargar los datos
@@ -234,7 +247,7 @@ export default function MePage() {
 
   return (
     <div className="min-h-screen bg-stone-50">
-      <TopSearchBar />
+      <TopSearchBar showSearch={false} />
 
       <div className="max-w-2xl mx-auto p-6 space-y-8">
         {formError && (
@@ -442,6 +455,45 @@ export default function MePage() {
           </Link>
         </div>
       </div>
+
+      {addressToDelete ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-2xl border border-stone-200 bg-white p-6 shadow-xl">
+            <h3 className="text-lg font-semibold text-stone-950">
+              Eliminar dirección
+            </h3>
+            <p className="mt-2 text-sm text-stone-600">
+              ¿Estás seguro de que querés eliminar esta dirección?
+            </p>
+            <div className="mt-4 rounded-xl bg-stone-50 p-4 text-sm text-stone-700">
+              <p className="font-medium text-stone-950">
+                {addressToDelete.street}
+              </p>
+              <p>{addressToDelete.city}</p>
+            </div>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setAddressToDelete(null)}
+                disabled={isDeletingAddress}
+                className="rounded-xl border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-50 disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={confirmDeleteAddress}
+                disabled={isDeletingAddress}
+                className="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 disabled:opacity-50"
+              >
+                {isDeletingAddress
+                  ? "Eliminando..."
+                  : "Eliminar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

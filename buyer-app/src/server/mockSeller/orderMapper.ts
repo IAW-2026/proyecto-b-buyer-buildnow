@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Mapper para transformar entidades Prisma a DTOs
  * Responsabilidad: transformación de datos
@@ -7,7 +9,6 @@
 import type {
   OrderResponseDto,
   BuyerOrderDto,
-  OrderItemResponseDto,
 } from "./orderTypes";
 import type { MockSellerOrder, MockSellerOrderItem } from "@prisma/client";
 

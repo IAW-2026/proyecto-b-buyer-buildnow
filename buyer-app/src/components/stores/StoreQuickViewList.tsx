@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import StoreQuickViewRow from "./StoreQuickViewRow";
 import { fetchStoresAction } from "@/actions/buyerActions";
-import type { Store } from "@/lib/apiClients/sellerApi";
+import type { Store } from "@/server/integrations/seller/seller.types";
 
 const PAGE_SIZE = 4;
 

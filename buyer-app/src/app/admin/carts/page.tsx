@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import { getAdminCarts } from "@/server/services/admin.service";
 
 function formatMoney(value: number) {
@@ -13,14 +14,10 @@ export default async function AdminCartsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold text-stone-950">
-          Carritos
-        </h2>
-        <p className="mt-1 text-sm text-stone-600">
-          Carritos activos con totales estimados desde CART_ITEM.
-        </p>
-      </div>
+      <AdminPageHeader
+        title="Carritos"
+        description="Carritos activos con totales estimados desde CART_ITEM."
+      />
 
       <div className="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
         {carts.length === 0 ? (

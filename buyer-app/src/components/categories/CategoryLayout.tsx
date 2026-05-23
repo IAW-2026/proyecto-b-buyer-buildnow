@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import ProductCard from "@/components/products/ProductCard";
 
@@ -10,8 +10,10 @@ import { useCart } from "@/context/CartContext";
 
 import type {
   Category,
-  Product,
-} from "@/lib/apiClients/sellerApi";
+  ProductsSearchResponse,
+} from "@/server/integrations/seller/seller.types";
+
+const PAGE_SIZE = 9;
 
 type Props = {
   category: Category;
@@ -20,9 +22,15 @@ type Props = {
 export default function CategoryLayout({
   category,
 }: Props) {
-  const [products, setProducts] = useState<
-    Product[]
-  >([]);
+  const [page, setPage] = useState(1);
+  const [result, setResult] =
+    useState<ProductsSearchResponse>({
+      total: 0,
+      page: 1,
+      pageSize: PAGE_SIZE,
+      totalPages: 1,
+      data: [],
+    });
 
   const [loading, setLoading] =
     useState(true);
@@ -43,31 +51,53 @@ export default function CategoryLayout({
         setLoading(true);
 
         const data =
-          await fetchCategoryProductsAction(
-            category.id
-          );
+          await fetchCategoryProductsAction(category.id, {
+            pageNumber: page,
+            pageSize: PAGE_SIZE,
+          });
 
-        const availableProducts =
-          data.filter(
-            (product) =>
-              product.available
-          );
-
-        setProducts(availableProducts);
+        setResult(data);
       } catch (error) {
         console.error(
           "Failed to load category products:",
           error
         );
 
-        setProducts([]);
+        setResult({
+          total: 0,
+          page: 1,
+          pageSize: PAGE_SIZE,
+          totalPages: 1,
+          data: [],
+        });
       } finally {
         setLoading(false);
       }
     };
 
     loadProducts();
-  }, [category.id]);
+  }, [category.id, page]);
+
+  const pages = useMemo(() => {
+    const totalPages = result.totalPages;
+    const currentPage = result.page;
+    const start = Math.max(1, currentPage - 2);
+    const end = Math.min(totalPages, start + 4);
+
+    return Array.from(
+      { length: end - start + 1 },
+      (_, index) => start + index
+    );
+  }, [result.page, result.totalPages]);
+
+  const firstVisible =
+    result.total === 0
+      ? 0
+      : (result.page - 1) * result.pageSize + 1;
+  const lastVisible = Math.min(
+    result.page * result.pageSize,
+    result.total
+  );
 
   // ==============================
   // CART ACTIONS
@@ -103,7 +133,7 @@ export default function CategoryLayout({
   // EMPTY STATE
   // ==============================
 
-  if (products.length === 0) {
+  if (result.data.length === 0) {
     return (
       <div className="rounded-2xl bg-white border border-stone-200 p-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -151,8 +181,8 @@ export default function CategoryLayout({
         </div>
 
         <div className="rounded-xl bg-stone-100 px-4 py-2 text-sm text-stone-600">
-          {products.length} producto
-          {products.length !== 1
+          {result.total} producto
+          {result.total !== 1
             ? "s"
             : ""}{" "}
           disponibles
@@ -161,7 +191,7 @@ export default function CategoryLayout({
 
       {/* PRODUCTS */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-3">
-        {products.map((product) => (
+        {result.data.map((product) => (
           <ProductCard
             key={product.id}
             id={product.id}
@@ -177,6 +207,58 @@ export default function CategoryLayout({
             onDecrease={handleDecrease}
           />
         ))}
+      </div>
+
+      <div className="mt-6 flex flex-col gap-3 border-t border-stone-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-stone-500">
+          Mostrando {firstVisible}-{lastVisible} de{" "}
+          {result.total}
+        </p>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() =>
+              setPage((current) =>
+                Math.max(1, current - 1)
+              )
+            }
+            disabled={result.page <= 1}
+            className="rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-700 transition hover:border-orange-300 hover:text-orange-600 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {"<"} Anterior
+          </button>
+
+          <div className="flex items-center gap-1">
+            {pages.map((pageNumber) => (
+              <button
+                key={pageNumber}
+                type="button"
+                onClick={() => setPage(pageNumber)}
+                className={
+                  pageNumber === result.page
+                    ? "h-10 w-10 rounded-xl bg-orange-500 text-sm font-semibold text-white"
+                    : "h-10 w-10 rounded-xl border border-stone-300 bg-white text-sm font-medium text-stone-700 transition hover:border-orange-300 hover:text-orange-600"
+                }
+              >
+                {pageNumber}
+              </button>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() =>
+              setPage((current) =>
+                Math.min(result.totalPages, current + 1)
+              )
+            }
+            disabled={result.page >= result.totalPages}
+            className="rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-700 transition hover:border-orange-300 hover:text-orange-600 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Siguiente {">"}
+          </button>
+        </div>
       </div>
     </div>
   );

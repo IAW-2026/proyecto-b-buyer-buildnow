@@ -45,20 +45,12 @@ export default async function AdminLayout({
               {user.role ?? "sin rol"}
             </span>
           </p>
-          <div className="mt-3 space-y-1 rounded-lg bg-stone-100 px-3 py-2 text-left text-xs text-stone-600">
-            <p>
-              UserId:{" "}
-              <span className="font-medium text-stone-900">
-                {user.userId}
-              </span>
-            </p>
-            <p>
-              Fuente:{" "}
-              <span className="font-medium text-stone-900">
-                {user.roleSource}
-              </span>
-            </p>
-          </div>
+          <Link
+            href="/dashboard"
+            className="mt-5 inline-flex rounded-lg bg-orange-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-orange-600"
+          >
+            Volver al dashboard
+          </Link>
         </section>
       </main>
     );

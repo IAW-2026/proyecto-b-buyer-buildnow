@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from "react";
 
 import { fetchCategoriesAction } from "@/actions/buyerActions";
 
-import type { Category } from "@/lib/apiClients/sellerApi";
+import type { Category } from "@/server/integrations/seller/seller.types";
 
 type Props = {
   selectedCategory: Category | null;

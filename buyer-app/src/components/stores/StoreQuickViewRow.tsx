@@ -16,7 +16,7 @@ import {
   fetchStoreProductsWithCartQuantityAction,
 } from "@/actions/buyerActions";
 
-import type { Product } from "@/lib/apiClients/sellerApi";
+import type { Product } from "@/server/integrations/seller/seller.types";
 
 type Props = {
   storeId: string;

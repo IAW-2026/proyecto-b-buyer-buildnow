@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Repository para acceso a Prisma
  * Responsabilidad: persistencia de datos
@@ -5,12 +7,6 @@
  */
 
 import { prisma } from "@/lib/prisma";
-import type {
-  CreateOrderDto,
-  UpdateOrderStatusDto,
-  OrderResponseDto,
-} from "./orderTypes";
-
 export const orderRepository = {
   /**
    * Crea una orden con sus items en la base de datos

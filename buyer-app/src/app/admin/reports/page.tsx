@@ -1,3 +1,4 @@
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import { getAdminCartReport } from "@/server/services/admin.service";
 
 function formatMoney(value: number) {
@@ -12,14 +13,10 @@ export default async function AdminReportsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold text-stone-950">
-          Reporte de carritos activos
-        </h2>
-        <p className="mt-1 text-sm text-stone-600">
-          Métricas calculadas solo con CART y CART_ITEM.
-        </p>
-      </div>
+      <AdminPageHeader
+        title="Reporte de carritos activos"
+        description="Métricas calculadas solo con CART y CART_ITEM."
+      />
 
       <section className="grid gap-4 md:grid-cols-3">
         <div className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">

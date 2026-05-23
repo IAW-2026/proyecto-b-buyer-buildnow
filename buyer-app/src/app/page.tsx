@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import RoleRedirect from "@/components/auth/RoleRedirect";
 import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 import { findCurrentBuyer } from "@/server/services/buyer.service";
 
@@ -10,14 +11,16 @@ export default async function HomePage() {
   }
 
   if (user.role === "admin") {
-    redirect("/admin");
+    return <RoleRedirect target="/admin" />;
   }
 
   const buyer = await findCurrentBuyer(user.userId);
 
   if (!buyer) {
-    redirect("/settings/profile?onboarding=true");
+    return (
+      <RoleRedirect target="/settings/profile?onboarding=true" />
+    );
   }
 
-  redirect("/dashboard");
+  return <RoleRedirect target="/dashboard" />;
 }

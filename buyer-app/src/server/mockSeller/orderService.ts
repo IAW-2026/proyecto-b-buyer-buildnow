@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Servicio para lógica de negocio de órdenes
  * Responsabilidad: validaciones, cálculos, coordinación

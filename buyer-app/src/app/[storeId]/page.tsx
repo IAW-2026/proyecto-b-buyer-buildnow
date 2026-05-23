@@ -8,12 +8,11 @@ import {
   getAllStores,
   getCatalogCategories,
   getStoreProductsService,
-} from "@/server/services/buyer.service";
+} from "@/server/services/catalog.service";
 import type {
   Category,
   Product,
-  Store,
-} from "@/lib/apiClients/sellerApi";
+} from "@/server/integrations/seller/seller.types";
 
 type CategoryGroup = {
   category: Category;

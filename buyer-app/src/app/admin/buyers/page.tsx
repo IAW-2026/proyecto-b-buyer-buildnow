@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import { getAdminBuyers } from "@/server/services/admin.service";
 
 export default async function AdminBuyersPage() {
@@ -6,14 +7,10 @@ export default async function AdminBuyersPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold text-stone-950">
-          Compradores
-        </h2>
-        <p className="mt-1 text-sm text-stone-600">
-          Listado de usuarios dados de alta como buyers.
-        </p>
-      </div>
+      <AdminPageHeader
+        title="Compradores"
+        description="Listado de usuarios dados de alta como buyers."
+      />
 
       <div className="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
         {buyers.length === 0 ? (

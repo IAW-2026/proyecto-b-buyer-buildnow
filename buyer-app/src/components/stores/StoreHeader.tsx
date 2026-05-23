@@ -1,4 +1,4 @@
-import type { Store } from "@/lib/apiClients/sellerApi";
+import type { Store } from "@/server/integrations/seller/seller.types";
 
 type Props = {
   store: Store;

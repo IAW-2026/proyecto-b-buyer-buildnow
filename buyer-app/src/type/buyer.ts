@@ -1,7 +1,1 @@
-export interface Buyer {
-  id: string;
-  clerkUserId: string;
-  name: string;
-  email: string;
-  phone: string;
-}
+export type { Buyer } from "@/types/buyer";

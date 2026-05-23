@@ -1,4 +1,6 @@
 import Link from "next/link";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import AdminStatCard from "@/components/admin/AdminStatCard";
 import {
   getAdminCartReport,
   getAdminSummary,
@@ -42,27 +44,19 @@ export default async function AdminPage() {
 
   return (
     <div className="space-y-8">
-      <section>
-        <h2 className="text-xl font-semibold text-stone-950">
-          Resumen general
-        </h2>
-        <p className="mt-1 text-sm text-stone-600">
-          Datos propios de compradores, direcciones y carritos.
-        </p>
-      </section>
+      <AdminPageHeader
+        title="Resumen general"
+        description="Datos propios de compradores, direcciones y carritos."
+      />
 
       <section className="grid gap-4 md:grid-cols-4">
         {cards.map((card) => (
-          <Link
+          <AdminStatCard
             key={card.label}
+            label={card.label}
+            value={card.value}
             href={card.href}
-            className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm transition hover:border-orange-300"
-          >
-            <p className="text-sm text-stone-600">{card.label}</p>
-            <p className="mt-3 text-3xl font-bold text-stone-950">
-              {card.value}
-            </p>
-          </Link>
+          />
         ))}
       </section>
 

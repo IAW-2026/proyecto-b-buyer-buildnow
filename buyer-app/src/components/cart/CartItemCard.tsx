@@ -15,7 +15,6 @@ type Props = {
 };
 
 export default function CartItemCard({
-  cartItemId,
   productId,
   img,
   name,

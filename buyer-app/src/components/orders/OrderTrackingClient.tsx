@@ -1,33 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import type { OrderResponseDto } from "@/lib/mockSeller";
+import type { OrderResponseDto } from "@/server/mockSeller";
+import type { DeliveryTracking } from "@/server/integrations/delivery/delivery.types";
 
 const statusSteps = [
   {
     key: "PENDING_PAYMENT",
     label: "Pedido recibido",
-    icon: "📦",
   },
   {
     key: "CONFIRMED",
     label: "Confirmado",
-    icon: "✅",
   },
   {
     key: "READY",
     label: "Listo",
-    icon: "📦",
   },
   {
     key: "ON_THE_WAY",
     label: "En camino",
-    icon: "🚚",
   },
   {
     key: "DELIVERED",
     label: "Entregado",
-    icon: "📍",
   },
 ];
 
@@ -40,12 +36,69 @@ const statusIndex: Record<string, number> = {
   CANCELLED: -1,
 };
 
+const statusMessages: Record<string, string> = {
+  PENDING_PAYMENT:
+    "Tu pedido fue recibido. Esperamos la confirmación del pago.",
+  CONFIRMED:
+    "Tu pedido fue confirmado y está siendo preparado.",
+  READY:
+    "Tu pedido está listo y será despachado próximamente.",
+  ON_THE_WAY:
+    "Tu pedido está en camino hacia tu dirección.",
+  DELIVERED:
+    "Tu pedido fue entregado.",
+};
+
 interface OrderTrackingClientProps {
   order: OrderResponseDto;
+  deliveryTracking: DeliveryTracking | null;
+}
+
+function formatMoney(value: number) {
+  return new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+  }).format(value);
+}
+
+function formatDate(value: string | Date) {
+  return new Date(value).toLocaleDateString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
+function formatDateTime(value: string | Date) {
+  return new Date(value).toLocaleString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function getStepDate(
+  order: OrderResponseDto,
+  stepIndex: number,
+  currentStepIndex: number
+) {
+  if (stepIndex > currentStepIndex) {
+    return "-";
+  }
+
+  const createdAt = new Date(order.createdAt);
+  const date = new Date(
+    createdAt.getTime() + stepIndex * 24 * 60 * 60 * 1000
+  );
+
+  return formatDate(date);
 }
 
 export default function OrderTrackingClient({
   order,
+  deliveryTracking,
 }: OrderTrackingClientProps) {
   const currentStepIndex =
     statusIndex[order.status] ?? -1;
@@ -53,153 +106,88 @@ export default function OrderTrackingClient({
 
   return (
     <div className="min-h-screen bg-stone-50 p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        {/* HEADER */}
-        <div className="flex items-center justify-between mb-8">
+      <div className="mx-auto max-w-4xl">
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
             <Link
               href="/dashboard"
-              className="text-sm text-orange-600 hover:text-orange-700 mb-2 inline-block"
+              className="mb-2 inline-block text-sm text-orange-600 hover:text-orange-700"
             >
-              ← Volver a pedidos
+              Volver a pedidos
             </Link>
 
             <h1 className="text-3xl font-bold text-stone-900">
               Seguimiento del pedido
             </h1>
 
-            <p className="text-stone-500 mt-2">
+            <p className="mt-2 text-stone-500">
               Pedido #{order.id.slice(0, 12)}...
             </p>
           </div>
 
-          <div className="text-right">
+          <div className="md:text-right">
             <p className="text-2xl font-bold text-orange-600">
-              ${order.totalAmount.toFixed(2)}
+              {formatMoney(order.totalAmount)}
             </p>
 
             <p className="text-sm text-stone-500">
-              Realizado:{" "}
-              {new Date(order.createdAt).toLocaleDateString("es-AR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+              Realizado: {formatDateTime(order.createdAt)}
             </p>
           </div>
         </div>
 
-        {/* STATUS TIMELINE */}
         {!isCancelled ? (
-          <div className="bg-white rounded-2xl border border-stone-200 p-8 mb-8">
-            <h2 className="text-lg font-semibold text-stone-900 mb-8">
+          <div className="mb-8 rounded-2xl border border-stone-200 bg-white p-8">
+            <h2 className="mb-8 text-lg font-semibold text-stone-900">
               Estado del pedido
             </h2>
 
             <div className="relative">
-              {/* STEPS */}
-              <div className="flex justify-between relative z-10">
+              <div className="relative z-10 grid grid-cols-5 gap-2">
                 {statusSteps.map((step, index) => (
                   <div
                     key={step.key}
-                    className="flex flex-col items-center"
+                    className="flex min-w-0 flex-col items-center text-center"
                   >
                     <div
-                      className={`
-                        h-12
-                        w-12
-                        rounded-full
-                        flex
-                        items-center
-                        justify-center
-                        text-2xl
-                        font-bold
-                        transition
-                        ${
-                          index <= currentStepIndex
-                            ? "bg-orange-500 text-white"
-                            : "bg-stone-200 text-stone-400"
-                        }
-                      `}
+                      className={
+                        index <= currentStepIndex
+                          ? "flex h-12 w-12 items-center justify-center rounded-full bg-orange-500 text-sm font-bold text-white"
+                          : "flex h-12 w-12 items-center justify-center rounded-full bg-stone-200 text-sm font-bold text-stone-400"
+                      }
                     >
-                      {step.icon}
+                      {index + 1}
                     </div>
 
                     <p
-                      className={`
-                        text-xs
-                        font-medium
-                        text-center
-                        mt-2
-                        max-w-20
-                        ${
-                          index <= currentStepIndex
-                            ? "text-stone-900"
-                            : "text-stone-400"
-                        }
-                      `}
+                      className={
+                        index <= currentStepIndex
+                          ? "mt-2 min-h-8 text-xs font-medium text-stone-900"
+                          : "mt-2 min-h-8 text-xs font-medium text-stone-400"
+                      }
                     >
                       {step.label}
                     </p>
 
-                    <p className="text-xs text-stone-400 mt-1">
-                      {index === 0 &&
-                        new Date(
-                          order.createdAt
-                        ).toLocaleDateString("es-AR")}
-                      {index === 1 &&
-                        order.status !== "PENDING_PAYMENT"
-                        ? new Date(
-                            new Date(
-                              order.createdAt
-                            ).getTime() +
-                              1 * 24 * 60 * 60 * 1000
-                          ).toLocaleDateString("es-AR")
-                        : "-"}
-                      {index === 2 &&
-                        order.status === "READY"
-                          ? new Date(
-                              new Date(
-                                order.createdAt
-                              ).getTime() +
-                                2 * 24 * 60 * 60 * 1000
-                            ).toLocaleDateString("es-AR")
-                          : order.status === "ON_THE_WAY" ||
-                            order.status === "DELIVERED"
-                          ? new Date(
-                              new Date(
-                                order.createdAt
-                              ).getTime() +
-                                2 * 24 * 60 * 60 * 1000
-                              )
-                              .toLocaleDateString("es-AR")
-                          : "-"}
-                      {index === 3 &&
-                        (order.status === "ON_THE_WAY" ||
-                          order.status ===
-                            "DELIVERED")
-                          ? new Date(
-                              new Date(
-                                order.createdAt
-                              ).getTime() +
-                                3 * 24 * 60 * 60 * 1000
-                            ).toLocaleDateString("es-AR")
-                          : "-"}
+                    <p className="mt-1 min-h-5 text-xs text-stone-400">
+                      {getStepDate(
+                        order,
+                        index,
+                        currentStepIndex
+                      )}
                     </p>
                   </div>
                 ))}
               </div>
 
-              {/* CONNECTING LINE */}
-              <div className="absolute top-6 left-0 right-0 h-1 bg-stone-200 -z-10">
+              <div className="absolute left-0 right-0 top-6 h-1 bg-stone-200">
                 <div
                   className="h-full bg-orange-500 transition-all"
                   style={{
                     width: `${
                       currentStepIndex >= 0
-                        ? (currentStepIndex / (statusSteps.length - 1)) *
+                        ? (currentStepIndex /
+                            (statusSteps.length - 1)) *
                           100
                         : 0
                     }%`,
@@ -208,177 +196,110 @@ export default function OrderTrackingClient({
               </div>
             </div>
 
-            {/* MESSAGE */}
-            <div className="mt-8 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+            <div className="mt-8 rounded-lg border border-orange-200 bg-orange-50 p-4">
               <p className="text-sm text-orange-900">
-                {order.status === "PENDING_PAYMENT"
-                  ? "Tu pedido ha sido recibido. Esperamos tu confirmación de pago."
-                  : order.status === "CONFIRMED"
-                  ? "Tu pedido ha sido confirmado. Se está preparando para envío."
-                  : order.status === "READY"
-                  ? "Tu pedido está listo. Próximamente será enviado."
-                  : order.status === "ON_THE_WAY"
-                  ? "Tu pedido está en camino. Nuestro repartidor tiene tu pedido y está en ruta hacia tu dirección."
-                  : order.status === "DELIVERED"
-                  ? "¡Tu pedido ha sido entregado! Esperamos que disfrutes tu compra."
-                  : ""}
+                {statusMessages[order.status] ?? ""}
               </p>
             </div>
           </div>
         ) : (
-          <div className="bg-red-50 border border-red-200 rounded-2xl p-8 mb-8">
-            <h2 className="text-lg font-semibold text-red-900 mb-2">
-              ❌ Pedido Cancelado
+          <div className="mb-8 rounded-2xl border border-red-200 bg-red-50 p-8">
+            <h2 className="mb-2 text-lg font-semibold text-red-900">
+              Pedido cancelado
             </h2>
-
             <p className="text-red-700">
-              Este pedido ha sido cancelado. Si tienes dudas, por favor contacta a nuestro equipo de soporte.
+              Este pedido fue cancelado.
             </p>
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* ORDER DETAILS */}
-          <div className="bg-white rounded-2xl border border-stone-200 p-6">
-            <h3 className="text-lg font-semibold text-stone-900 mb-4">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div className="rounded-2xl border border-stone-200 bg-white p-6">
+            <h3 className="mb-4 text-lg font-semibold text-stone-900">
               Detalles del pedido
             </h3>
 
             <div className="space-y-3">
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between gap-4 text-sm">
                 <span className="text-stone-600">
                   ID del pedido:
                 </span>
-
                 <span className="font-medium text-stone-900">
                   {order.id.slice(0, 16)}...
                 </span>
               </div>
 
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between gap-4 text-sm">
                 <span className="text-stone-600">
                   Tienda:
                 </span>
-
                 <span className="font-medium text-stone-900">
                   {order.storeName ||
                     `Tienda ${order.storeId.slice(0, 8)}`}
                 </span>
               </div>
 
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between gap-4 text-sm">
                 <span className="text-stone-600">
                   Items:
                 </span>
-
                 <span className="font-medium text-stone-900">
                   {order.items?.length ?? 0}
                 </span>
               </div>
 
-              <hr className="border-stone-200 my-2" />
+              <hr className="my-2 border-stone-200" />
 
-              <div className="flex justify-between text-sm">
-                <span className="text-stone-600">
-                  Subtotal:
-                </span>
-
-                <span className="font-medium text-stone-900">
-                  ${(order.totalAmount * 0.85).toFixed(2)}
-                </span>
-              </div>
-
-              <div className="flex justify-between text-sm">
-                <span className="text-stone-600">
-                  Envío:
-                </span>
-
-                <span className="font-medium text-stone-900">
-                  Gratis
-                </span>
-              </div>
-
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between gap-4 text-sm">
                 <span className="text-stone-600">
                   Total:
                 </span>
-
-                <span className="font-bold text-orange-600 text-base">
-                  ${order.totalAmount.toFixed(2)}
+                <span className="text-base font-bold text-orange-600">
+                  {formatMoney(order.totalAmount)}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* DELIVERY INFO */}
-          <div className="bg-white rounded-2xl border border-stone-200 p-6">
-            <h3 className="text-lg font-semibold text-stone-900 mb-4">
+          <div className="rounded-2xl border border-stone-200 bg-white p-6">
+            <h3 className="mb-4 text-lg font-semibold text-stone-900">
               Información de entrega
             </h3>
 
             <div className="space-y-4">
               <div>
-                <p className="text-sm text-stone-600 mb-1">
+                <p className="mb-1 text-sm text-stone-600">
                   Dirección de entrega
                 </p>
-
                 <p className="text-sm font-medium text-stone-900">
                   {order.deliveryAddress}
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-stone-200">
-                <p className="text-sm text-stone-600 mb-2">
+              <div className="border-t border-stone-200 pt-4">
+                <p className="mb-2 text-sm text-stone-600">
                   Repartidor
                 </p>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
-                    👤
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-medium text-stone-900">
-                      Por confirmar
-                    </p>
-
-                    <p className="text-xs text-stone-500">
-                      Se te notificará cuando salga a ruta
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-stone-200">
-                <p className="text-sm text-stone-600 mb-2">
-                  Contacto
-                </p>
-
                 <p className="text-sm font-medium text-stone-900">
-                  📞 +54 (0) 291 1234
+                  {deliveryTracking?.curierName ??
+                    "Se asignará cuando el pedido salga a ruta"}
                 </p>
               </div>
+
+              {deliveryTracking ? (
+                <div className="border-t border-stone-200 pt-4">
+                  <p className="mb-1 text-sm text-stone-600">
+                    Llegada estimada
+                  </p>
+                  <p className="text-sm font-medium text-stone-900">
+                    {formatDateTime(
+                      deliveryTracking.estimatedArrival
+                    )}
+                  </p>
+                </div>
+              ) : null}
             </div>
           </div>
-        </div>
-
-        {/* SUPPORT BUTTON */}
-        <div className="mt-8 flex justify-center">
-          <button
-            className="
-              px-6
-              py-3
-              border
-              border-orange-500
-              text-orange-600
-              font-medium
-              rounded-lg
-              hover:bg-orange-50
-              transition
-            "
-          >
-            ☎️ Contactar a soporte
-          </button>
         </div>
       </div>
     </div>

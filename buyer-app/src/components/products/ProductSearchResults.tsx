@@ -9,7 +9,7 @@ import { useCart } from "@/context/CartContext";
 import type {
   Product,
   ProductsSearchResponse,
-} from "@/lib/apiClients/sellerApi";
+} from "@/server/integrations/seller/seller.types";
 
 const PAGE_SIZE = 9;
 

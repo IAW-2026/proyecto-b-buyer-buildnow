@@ -2,9 +2,12 @@
  * Barrel export para mockSeller
  */
 
-export { orderMapper } from "./orderMapper";
-export { orderRepository } from "./orderRepository";
-export { orderService, setSellerApiDependencies } from "./orderService";
+export { orderMapper } from "@/server/mockSeller/orderMapper";
+export { orderRepository } from "@/server/mockSeller/orderRepository";
+export {
+  orderService,
+  setSellerApiDependencies,
+} from "@/server/mockSeller/orderService";
 export type {
   CreateOrderDto,
   CreateOrderItemDto,
@@ -12,4 +15,4 @@ export type {
   OrderResponseDto,
   BuyerOrderDto,
   OrderItemResponseDto,
-} from "./orderTypes";
+} from "@/server/mockSeller/orderTypes";

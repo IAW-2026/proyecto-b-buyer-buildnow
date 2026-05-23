@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import OrderTrackingClient from "@/components/orders/OrderTrackingClient";
 import { requireBuyer } from "@/lib/auth/requireBuyer";
 import { getCurrentBuyer } from "@/server/services/buyer.service";
-import * as sellerApi from "@/lib/apiClients/sellerApi";
+import * as sellerApi from "@/server/integrations/seller/seller.client";
+import { getOrderTracking } from "@/server/integrations/delivery/delivery.client";
 
 interface OrderTrackingPageProps {
   params: Promise<{
@@ -17,6 +18,9 @@ export default async function OrderTrackingPage({
   let order: Awaited<
     ReturnType<typeof sellerApi.getOrderById>
   > | null = null;
+  let deliveryTracking: Awaited<
+    ReturnType<typeof getOrderTracking>
+  > = [];
 
   try {
     const { userId } = await requireBuyer();
@@ -26,6 +30,10 @@ export default async function OrderTrackingPage({
     if (!order || order.buyerId !== buyer.id) {
       notFound();
     }
+
+    if (order.status === "ON_THE_WAY") {
+      deliveryTracking = await getOrderTracking(order.id);
+    }
   } catch (error) {
     console.error(
       "Error loading order tracking:",
@@ -34,5 +42,10 @@ export default async function OrderTrackingPage({
     notFound();
   }
 
-  return <OrderTrackingClient order={order} />;
+  return (
+    <OrderTrackingClient
+      order={order}
+      deliveryTracking={deliveryTracking[0] ?? null}
+    />
+  );
 }

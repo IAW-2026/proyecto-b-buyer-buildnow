@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import { getAdminAddresses } from "@/server/services/admin.service";
 
 export default async function AdminAddressesPage() {
@@ -6,14 +7,10 @@ export default async function AdminAddressesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold text-stone-950">
-          Direcciones
-        </h2>
-        <p className="mt-1 text-sm text-stone-600">
-          Direcciones registradas por compradores.
-        </p>
-      </div>
+      <AdminPageHeader
+        title="Direcciones"
+        description="Direcciones registradas por compradores."
+      />
 
       <div className="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
         {addresses.length === 0 ? (

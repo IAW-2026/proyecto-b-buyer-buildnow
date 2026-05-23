@@ -1,5 +1,1 @@
-export type ActionResponse<T = void> = {
-  success: boolean;
-  data?: T;
-  error?: string;
-};
+export type { ActionResponse } from "@/types/action-response";

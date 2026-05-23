@@ -10,7 +10,6 @@ import {
   incrementCartItem,
   getCartByBuyerId,
   createCart,
-  getCartItems,
   getCartItemsDetailed,
   findCartItemFromDifferentStore,
   updateBuyer,
@@ -20,19 +19,7 @@ import {
   getAddressesByBuyerId,
   clearCartByBuyerId,
 } from "../repositories/buyer.repository";
-
-import {
-  getStores,
-  getStoreProducts,
-  getCategories,
-  getProduct,
-  getProductsByCategory,
-  getProducts,
-  type Store,
-  type Product,
-  type Category,
-  type ProductsSearchResponse,
-} from "@/lib/apiClients/sellerApi";
+import { getProductDetails } from "@/server/services/catalog.service";
 
 // ==============================
 // BUYER
@@ -80,56 +67,6 @@ export async function getCurrentBuyer(
 }
 
 // ==============================
-// CATALOG
-// ==============================
-
-export async function getAllStores(): Promise<
-  Store[]
-> {
-  return getStores();
-}
-
-export async function getStoresPage(params: {
-  search?: string;
-  pageNumber?: number;
-  pageSize?: number;
-}): Promise<Store[]> {
-  return getStores(params);
-}
-
-export async function getCatalogCategories(): Promise<
-  Category[]
-> {
-  return getCategories();
-}
-
-export async function getStoreProductsService(
-  storeId: string
-): Promise<Product[]> {
-  return getStoreProducts(storeId);
-}
-
-export async function getProductDetails(
-  productId: string
-): Promise<Product> {
-  return getProduct(productId);
-}
-
-export async function getProductsByCategoryService(
-  categoryId: string
-): Promise<Product[]> {
-  return getProductsByCategory(categoryId);
-}
-
-export async function searchProductsService(params: {
-  search: string;
-  pageNumber?: number;
-  pageSize?: number;
-}): Promise<ProductsSearchResponse> {
-  return getProducts(params);
-}
-
-// ==============================
 // CART
 // ==============================
 
@@ -168,7 +105,7 @@ export async function addProductToCart(
     );
   }
 
-  const product = await getProduct(productId);
+  const product = await getProductDetails(productId);
 
   const sameStore = await checkSameStore(
     cart.id,
@@ -237,28 +174,6 @@ export async function decreaseProductQuantity(
   );
 }
 
-export async function getStoreProductsWithCartQuantity(
-  clerkId: string,
-  storeId: string
-) {
-  const products = await getStoreProducts(storeId);
-
-  const cart = await getOrCreateCart(clerkId);
-
-  const cartItems = await getCartItems(cart.id);
-
-  return products.map((product) => {
-    const cartItem = cartItems.find(
-      (item) => item.productId === product.id
-    );
-
-    return {
-      ...product,
-      quantity: cartItem?.quantity ?? 0,
-    };
-  });
-}
-
 // ==============================
 // CART DETAILS
 // ==============================
@@ -283,7 +198,7 @@ export async function getCartItemsWithProductDetails(
   const itemsWithDetails = await Promise.all(
     cartItems.map(async (item) => {
       try {
-        const product = await getProduct(
+        const product = await getProductDetails(
           item.productId
         );
 

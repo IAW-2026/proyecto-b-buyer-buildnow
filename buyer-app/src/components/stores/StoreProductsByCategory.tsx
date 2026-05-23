@@ -6,7 +6,7 @@ import { useCart } from "@/context/CartContext";
 import type {
   Category,
   Product,
-} from "@/lib/apiClients/sellerApi";
+} from "@/server/integrations/seller/seller.types";
 
 type CategoryProducts = {
   category: Category;

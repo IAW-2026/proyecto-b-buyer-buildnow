@@ -12,6 +12,7 @@ interface TopSearchBarProps {
   onSearch?: (search: string) => void;
   searchValue?: string;
   onSearchValueChange?: (search: string) => void;
+  showSearch?: boolean;
 }
 
 export default function TopSearchBar({
@@ -20,6 +21,7 @@ export default function TopSearchBar({
   onSearch,
   searchValue,
   onSearchValueChange,
+  showSearch = true,
 }: TopSearchBarProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isOrdersDropdownOpen, setIsOrdersDropdownOpen] = useState(false);
@@ -102,73 +104,76 @@ export default function TopSearchBar({
         </div>
       </Link>
 
-      {/* SEARCH */}
-      <form
-        onSubmit={handleSearchSubmit}
-        className="flex flex-1 max-w-2xl gap-2"
-      >
-        <input
-          type="text"
-          value={searchText}
-          onChange={(event) =>
-            handleSearchTextChange(event.target.value)
-          }
-          placeholder="Buscar productos..."
-          className="
-            w-full
-            rounded-xl
-            border
-            border-stone-300
-            bg-stone-50
-            px-4
-            py-3
-            outline-none
-            transition
-            focus:border-orange-500
-            focus:bg-white
-          "
-        />
-
-        {searchText && (
-          <button
-            type="button"
-            onClick={handleClearSearch}
+      {showSearch ? (
+        <form
+          onSubmit={handleSearchSubmit}
+          className="flex flex-1 max-w-2xl gap-2"
+        >
+          <input
+            type="text"
+            value={searchText}
+            onChange={(event) =>
+              handleSearchTextChange(event.target.value)
+            }
+            placeholder="Buscar productos..."
             className="
-              h-12
+              w-full
               rounded-xl
               border
               border-stone-300
-              bg-white
-              px-3
-              text-sm
-              font-medium
-              text-stone-600
+              bg-stone-50
+              px-4
+              py-3
+              outline-none
               transition
-              hover:border-orange-300
-              hover:text-orange-600
+              focus:border-orange-500
+              focus:bg-white
+            "
+          />
+
+          {searchText && (
+            <button
+              type="button"
+              onClick={handleClearSearch}
+              className="
+                h-12
+                rounded-xl
+                border
+                border-stone-300
+                bg-white
+                px-3
+                text-sm
+                font-medium
+                text-stone-600
+                transition
+                hover:border-orange-300
+                hover:text-orange-600
+              "
+            >
+              Limpiar
+            </button>
+          )}
+
+          <button
+            type="submit"
+            className="
+              h-12
+              rounded-xl
+              bg-orange-500
+              px-4
+              text-sm
+              font-semibold
+              text-white
+              transition
+              hover:bg-orange-600
             "
           >
-            Limpiar
+            Buscar
           </button>
-        )}
-
-        <button
-          type="submit"
-          className="
-            h-12
-            rounded-xl
-            bg-orange-500
-            px-4
-            text-sm
-            font-semibold
-            text-white
-            transition
-            hover:bg-orange-600
-          "
-        >
-          Buscar
-        </button>
-      </form>
+        </form>
+      ) : (
+        <div className="flex-1" />
+      )}
 
       {/* USER AND CART */}
       <div className="flex items-center gap-3">
