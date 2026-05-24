@@ -4,13 +4,17 @@ import { useEffect, useMemo, useState } from "react";
 
 import ProductCard from "@/components/products/ProductCard";
 
-import { fetchCategoryProductsAction } from "@/actions/buyerActions";
+import {
+  fetchCategoryProductsAction,
+  fetchStoresAction,
+} from "@/actions/buyerActions";
 
 import { useCart } from "@/context/CartContext";
 
 import type {
   Category,
   ProductsSearchResponse,
+  Store,
 } from "@/server/integrations/seller/seller.types";
 
 const PAGE_SIZE = 9;
@@ -34,12 +38,27 @@ export default function CategoryLayout({
 
   const [loading, setLoading] =
     useState(true);
+  const [stores, setStores] = useState<Store[]>([]);
 
   const {
     addItem,
     decreaseItem,
     getProductQuantity,
   } = useCart();
+
+  useEffect(() => {
+    const loadStores = async () => {
+      try {
+        const data = await fetchStoresAction();
+        setStores(data);
+      } catch (error) {
+        console.error("Failed to load stores:", error);
+        setStores([]);
+      }
+    };
+
+    loadStores();
+  }, []);
 
   // ==============================
   // FETCH PRODUCTS
@@ -89,6 +108,12 @@ export default function CategoryLayout({
       (_, index) => start + index
     );
   }, [result.page, result.totalPages]);
+
+  const storeNamesById = useMemo(() => {
+    return new Map(
+      stores.map((store) => [store.id, store.name])
+    );
+  }, [stores]);
 
   const firstVisible =
     result.total === 0
@@ -197,6 +222,7 @@ export default function CategoryLayout({
             id={product.id}
             name={product.name}
             storeId={product.storeId}
+            storeName={storeNamesById.get(product.storeId)}
             price={product.price}
             weight={product.weight}
             available={product.available}

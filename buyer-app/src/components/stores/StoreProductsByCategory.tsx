@@ -15,10 +15,12 @@ type CategoryProducts = {
 
 type Props = {
   categories: CategoryProducts[];
+  storeName: string;
 };
 
 export default function StoreProductsByCategory({
   categories,
+  storeName,
 }: Props) {
   const {
     addItem,
@@ -88,6 +90,7 @@ export default function StoreProductsByCategory({
                 id={product.id}
                 name={product.name}
                 storeId={product.storeId}
+                storeName={storeName}
                 price={product.price}
                 weight={product.weight}
                 available={product.available}

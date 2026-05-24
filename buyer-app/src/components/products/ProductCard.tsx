@@ -10,6 +10,7 @@ type Props = {
   id: string;
   name: string;
   storeId: string;
+  storeName?: string;
   price: number;
   weight: number;
   available?: boolean;
@@ -21,6 +22,7 @@ type Props = {
 export default function ProductCard({
   id,
   name,
+  storeName,
   price,
   weight,
   available = true,
@@ -335,6 +337,11 @@ export default function ProductCard({
                 <h2 className="text-xl font-semibold text-stone-900">
                   {name}
                 </h2>
+                {storeName ? (
+                  <p className="mt-1 text-sm text-stone-500">
+                    Vendido por {storeName}
+                  </p>
+                ) : null}
               </div>
 
               {/* DETAILS */}

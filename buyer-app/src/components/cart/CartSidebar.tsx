@@ -95,8 +95,6 @@ export default function CartSidebar() {
     return (
       <div
         className="
-          sticky
-          top-4
           rounded-2xl
           bg-white
           border
@@ -127,8 +125,6 @@ export default function CartSidebar() {
   return (
     <div
       className="
-        sticky
-        top-4
         rounded-2xl
         bg-white
         border

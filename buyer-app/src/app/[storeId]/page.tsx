@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import AiMaterialAssistant from "@/components/ai/AiMaterialAssistant";
 import CartSidebar from "@/components/cart/CartSidebar";
 import StoreHeader from "@/components/stores/StoreHeader";
 import StoreProductsByCategory from "@/components/stores/StoreProductsByCategory";
@@ -125,16 +126,19 @@ export default async function StorePage({
         <div className="space-y-6">
           <StoreProductsByCategory
             categories={data.categories}
+            storeName={data.store.name}
           />
         </div>
 
-        <div className="hidden xl:block">
+        <div className="hidden space-y-6 xl:block">
           <CartSidebar />
+          <AiMaterialAssistant storeId={storeId} />
         </div>
       </div>
 
-      <div className="xl:hidden">
+      <div className="space-y-6 xl:hidden">
         <CartSidebar />
+        <AiMaterialAssistant storeId={storeId} />
       </div>
     </main>
   );

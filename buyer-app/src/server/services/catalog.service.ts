@@ -43,6 +43,16 @@ export async function getStoreProductsService(
   return getStoreProducts(storeId);
 }
 
+export async function getAvailableStoreProductsService(
+  storeId: string
+): Promise<Product[]> {
+  const products = await getStoreProducts(storeId);
+
+  return products.filter(
+    (product) => product.available && product.stock > 0
+  );
+}
+
 export async function getProductDetails(
   productId: string
 ): Promise<Product> {

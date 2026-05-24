@@ -361,6 +361,7 @@ export default function StoreQuickViewRow({
                 id={product.id}
                 name={product.name}
                 storeId={product.storeId}
+                storeName={name}
                 price={product.price}
                 weight={product.weight}
                 available={product.available}

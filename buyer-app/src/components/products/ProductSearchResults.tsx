@@ -2,13 +2,17 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { searchProductsAction } from "@/actions/buyerActions";
+import {
+  fetchStoresAction,
+  searchProductsAction,
+} from "@/actions/buyerActions";
 import ProductCard from "@/components/products/ProductCard";
 import { useCart } from "@/context/CartContext";
 
 import type {
   Product,
   ProductsSearchResponse,
+  Store,
 } from "@/server/integrations/seller/seller.types";
 
 const PAGE_SIZE = 9;
@@ -30,12 +34,27 @@ export default function ProductSearchResults({
       totalPages: 1,
       data: [],
     });
+  const [stores, setStores] = useState<Store[]>([]);
 
   const {
     addItem,
     decreaseItem,
     getProductQuantity,
   } = useCart();
+
+  useEffect(() => {
+    const loadStores = async () => {
+      try {
+        const data = await fetchStoresAction();
+        setStores(data);
+      } catch (error) {
+        console.error("Failed to load stores:", error);
+        setStores([]);
+      }
+    };
+
+    loadStores();
+  }, []);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -82,6 +101,12 @@ export default function ProductSearchResults({
     );
   }, [result.page, result.totalPages]);
 
+  const storeNamesById = useMemo(() => {
+    return new Map(
+      stores.map((store) => [store.id, store.name])
+    );
+  }, [stores]);
+
   const handleAdd = async (productId: string) => {
     await addItem(productId);
   };
@@ -96,6 +121,7 @@ export default function ProductSearchResults({
       id={product.id}
       name={product.name}
       storeId={product.storeId}
+      storeName={storeNamesById.get(product.storeId)}
       price={product.price}
       weight={product.weight}
       available={product.available}
