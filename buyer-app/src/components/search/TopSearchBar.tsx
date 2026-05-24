@@ -68,20 +68,23 @@ export default function TopSearchBar({
     <header
       className="
         flex
+        flex-wrap
         items-center
         justify-between
-        gap-4
+        gap-3
         rounded-2xl
         bg-white
         border
         border-stone-200
-        p-4
+        p-3
+        sm:gap-4
+        sm:p-4
       "
     >
       {/* LOGO */}
       <Link
         href="/dashboard"
-        className="flex items-center gap-2 rounded-xl transition hover:opacity-85"
+        className="flex min-w-0 flex-1 items-center gap-2 rounded-xl transition hover:opacity-85 sm:flex-none"
         aria-label="Ir al dashboard"
       >
         <Image
@@ -89,16 +92,16 @@ export default function TopSearchBar({
           alt="BuildNow"
           width={40}
           height={40}
-          className="h-10 w-10 rounded-xl object-cover"
+          className="h-9 w-9 shrink-0 rounded-xl object-cover sm:h-10 sm:w-10"
           priority
         />
 
-        <div>
-          <h1 className="text-lg font-bold text-stone-900">
+        <div className="min-w-0">
+          <h1 className="truncate text-base font-bold text-stone-900 sm:text-lg">
             BuildNow
           </h1>
 
-          <p className="text-xs text-stone-500">
+          <p className="hidden text-xs text-stone-500 sm:block">
             Materiales para construcción
           </p>
         </div>
@@ -107,57 +110,69 @@ export default function TopSearchBar({
       {showSearch ? (
         <form
           onSubmit={handleSearchSubmit}
-          className="flex flex-1 max-w-2xl gap-2"
+          className="order-3 flex w-full gap-2 sm:order-none sm:flex-1 sm:max-w-2xl"
         >
-          <input
-            type="text"
-            value={searchText}
-            onChange={(event) =>
-              handleSearchTextChange(event.target.value)
-            }
-            placeholder="Buscar productos..."
-            className="
-              w-full
-              rounded-xl
-              border
-              border-stone-300
-              bg-stone-50
-              px-4
-              py-3
-              outline-none
-              transition
-              focus:border-orange-500
-              focus:bg-white
-            "
-          />
-
-          {searchText && (
-            <button
-              type="button"
-              onClick={handleClearSearch}
+          <div className="relative min-w-0 flex-1">
+            <input
+              type="text"
+              value={searchText}
+              onChange={(event) =>
+                handleSearchTextChange(event.target.value)
+              }
+              placeholder="Buscar productos..."
               className="
-                h-12
+                h-11
+                w-full
                 rounded-xl
                 border
                 border-stone-300
-                bg-white
-                px-3
+                bg-stone-50
+                px-4
+                pr-11
                 text-sm
-                font-medium
-                text-stone-600
+                outline-none
                 transition
-                hover:border-orange-300
-                hover:text-orange-600
+                focus:border-orange-500
+                focus:bg-white
+                sm:h-12
+                sm:text-base
               "
-            >
-              Limpiar
-            </button>
-          )}
+            />
+
+            {searchText && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                aria-label="Limpiar búsqueda"
+                className="
+                  absolute
+                  right-2
+                  top-1/2
+                  flex
+                  h-7
+                  w-7
+                  -translate-y-1/2
+                  items-center
+                  justify-center
+                  rounded-full
+                  text-lg
+                  font-medium
+                  text-stone-500
+                  transition
+                  hover:bg-stone-200
+                  hover:text-orange-600
+                "
+              >
+                ×
+              </button>
+            )}
+          </div>
 
           <button
             type="submit"
             className="
-              h-12
+              h-11
+              shrink-0
               rounded-xl
               bg-orange-500
               px-4
@@ -166,17 +181,19 @@ export default function TopSearchBar({
               text-white
               transition
               hover:bg-orange-600
+              sm:h-12
+              sm:px-5
             "
           >
             Buscar
           </button>
         </form>
       ) : (
-        <div className="flex-1" />
+        <div className="hidden flex-1 sm:block" />
       )}
 
       {/* USER AND CART */}
-      <div className="flex items-center gap-3">
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
         {/* ORDERS BUTTON */}
         <button
           onClick={() =>
@@ -185,6 +202,8 @@ export default function TopSearchBar({
           className="
             h-10
             w-10
+            max-[420px]:h-9
+            max-[420px]:w-9
             rounded-full
             bg-stone-200
             flex
@@ -205,6 +224,8 @@ export default function TopSearchBar({
             className="
               h-10
               w-10
+              max-[420px]:h-9
+              max-[420px]:w-9
               rounded-full
               bg-stone-200
               flex
@@ -238,6 +259,8 @@ export default function TopSearchBar({
               className="
                 h-10
                 w-10
+                max-[420px]:h-9
+                max-[420px]:w-9
                 rounded-full
                 bg-stone-200
                 flex

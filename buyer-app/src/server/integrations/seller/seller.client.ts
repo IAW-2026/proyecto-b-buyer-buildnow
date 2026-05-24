@@ -1,7 +1,7 @@
 import "server-only";
 
 import { apiClient } from "@/lib/apiClients/baseClient";
-import sellerAppMock from "@/mockData/sellerApp.json";
+import sellerAppMock from "@/server/mockSeller/sellerApp.json";
 import {
   orderService,
   setSellerApiDependencies,
