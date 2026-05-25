@@ -3,8 +3,8 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-stone-50 px-6 py-12">
-      <section className="w-full max-w-lg rounded-2xl border border-stone-200 bg-white p-8 text-center shadow-sm">
+    <main className="flex min-h-screen items-center justify-center bg-[#FFF4E8] px-6 py-12">
+      <section className="w-full max-w-lg rounded-2xl border border-[#A76E04] bg-white p-8 text-center shadow-sm">
         <Image
           src="/buildnow-logo.png"
           alt="BuildNow"
@@ -14,7 +14,7 @@ export default function NotFound() {
           priority
         />
 
-        <p className="mt-6 text-sm font-semibold uppercase tracking-wide text-orange-600">
+        <p className="mt-6 text-sm font-semibold uppercase tracking-wide text-[#ED6F00]">
           Error 404
         </p>
 
@@ -30,7 +30,7 @@ export default function NotFound() {
         <div className="mt-6 flex justify-center">
           <Link
             href="/dashboard"
-            className="rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600"
+            className="rounded-xl bg-[#ED6F00] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#A76E04]"
           >
             Ir al dashboard
           </Link>

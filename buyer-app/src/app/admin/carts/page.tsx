@@ -64,7 +64,7 @@ export default async function AdminCartsPage() {
                       <td className="px-4 py-3">
                         <Link
                           href={`/admin/buyers/${cart.buyer.id}`}
-                          className="font-medium text-stone-950 hover:text-orange-600"
+                          className="font-medium text-stone-950 hover:text-[#823A00]"
                         >
                           {cart.buyer.name ||
                             cart.buyer.email}
@@ -84,7 +84,7 @@ export default async function AdminCartsPage() {
                       <td className="px-4 py-3">
                         <Link
                           href={`/admin/carts/${cart.id}`}
-                          className="font-medium text-orange-600 hover:underline"
+                          className="font-medium text-[#ED6F00] hover:underline"
                         >
                           Ver detalle
                         </Link>

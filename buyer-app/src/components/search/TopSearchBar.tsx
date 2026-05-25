@@ -159,10 +159,11 @@ export default function TopSearchBar({
         rounded-2xl
         bg-white
         border
-        border-stone-200
+        border-[#823A00]
         p-3
         sm:gap-4
         sm:p-4
+        shadow-[0_10px_28px_rgba(130,58,0,0.10)]
       "
     >
       {/* LOGO */}
@@ -181,11 +182,11 @@ export default function TopSearchBar({
         />
 
         <div className="min-w-0">
-          <h1 className="truncate text-base font-bold text-stone-900 sm:text-lg">
+          <h1 className="truncate text-base font-bold text-[#823A00] sm:text-lg">
             BuildNow
           </h1>
 
-          <p className="hidden text-xs text-stone-500 sm:block">
+          <p className="hidden text-xs text-[#A76E04] sm:block">
             Materiales para construcción
           </p>
         </div>
@@ -211,14 +212,15 @@ export default function TopSearchBar({
                 w-full
                 rounded-xl
                 border
-                border-stone-300
-                bg-stone-50
+                border-[#A76E04]
+                bg-[#FFF4E8]
                 px-4
                 pr-11
                 text-sm
+                text-[#823A00]
                 outline-none
                 transition
-                focus:border-orange-500
+                focus:border-[#823A00]
                 focus:bg-white
                 sm:h-12
                 sm:text-base
@@ -246,7 +248,7 @@ export default function TopSearchBar({
                   text-stone-500
                   transition
                   hover:bg-stone-200
-                  hover:text-orange-600
+                  hover:text-[#823A00]
                 "
               >
                 ×
@@ -254,8 +256,8 @@ export default function TopSearchBar({
             )}
 
             {isSearchHistoryOpen && searchHistory.length > 0 ? (
-              <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg">
-                <div className="border-b border-stone-100 px-4 py-2 text-xs font-medium uppercase tracking-wide text-stone-500">
+              <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-[#A76E04] bg-white shadow-lg">
+                <div className="border-b border-[#F8C58D] px-4 py-2 text-xs font-medium uppercase tracking-wide text-[#823A00]">
                   Búsquedas recientes
                 </div>
                 <div className="max-h-64 overflow-y-auto">
@@ -272,7 +274,7 @@ export default function TopSearchBar({
                         onClick={() =>
                           handleHistorySearch(item)
                         }
-                        className="min-w-0 flex-1 truncate px-4 py-3 text-left text-sm text-stone-700 transition hover:bg-orange-50 hover:text-orange-700"
+                        className="min-w-0 flex-1 truncate px-4 py-3 text-left text-sm text-stone-700 transition hover:bg-[#FFF4E8] hover:text-[#823A00]"
                         title={item}
                       >
                         {item}
@@ -303,13 +305,13 @@ export default function TopSearchBar({
               h-11
               shrink-0
               rounded-xl
-              bg-orange-500
+              bg-[#ED6F00]
               px-4
               text-sm
               font-semibold
               text-white
               transition
-              hover:bg-orange-600
+              hover:bg-[#A76E04]
               sm:h-12
               sm:px-5
             "
@@ -334,11 +336,14 @@ export default function TopSearchBar({
             max-[420px]:h-9
             max-[420px]:w-9
             rounded-full
-            bg-stone-200
+            border
+            border-[#A76E04]
+            bg-[#FFF4E8]
             flex
             items-center
             justify-center
-            hover:bg-stone-300
+            text-[#823A00]
+            hover:bg-[#F8C58D]
             transition
             text-lg
           "
@@ -356,11 +361,14 @@ export default function TopSearchBar({
               max-[420px]:h-9
               max-[420px]:w-9
               rounded-full
-              bg-stone-200
+              border
+              border-[#A76E04]
+              bg-[#FFF4E8]
               flex
               items-center
               justify-center
-              hover:bg-stone-300
+              text-[#823A00]
+              hover:bg-[#F8C58D]
               transition
             "
           >
@@ -379,7 +387,7 @@ export default function TopSearchBar({
               items-center
               gap-2
               p-2
-              hover:bg-stone-100
+              hover:bg-[#FFF4E8]
               rounded-xl
               transition
             "
@@ -391,7 +399,10 @@ export default function TopSearchBar({
                 max-[420px]:h-9
                 max-[420px]:w-9
                 rounded-full
-                bg-stone-200
+                border
+                border-[#A76E04]
+                bg-[#FFF4E8]
+                text-[#823A00]
                 flex
                 items-center
                 justify-center
@@ -401,7 +412,7 @@ export default function TopSearchBar({
             </div>
 
             <div className="hidden md:block text-left">
-              <p className="text-sm font-medium text-stone-800">
+              <p className="text-sm font-medium text-[#823A00]">
                 Hola
               </p>
 
@@ -421,7 +432,7 @@ export default function TopSearchBar({
                 w-48
                 bg-white
                 border
-                border-stone-200
+                border-[#A76E04]
                 rounded-xl
                 shadow-lg
                 z-50
@@ -436,8 +447,8 @@ export default function TopSearchBar({
                   py-3
                   text-sm
                   text-stone-800
-                  hover:bg-orange-50
-                  hover:text-orange-600
+                  hover:bg-[#FFF4E8]
+                  hover:text-[#823A00]
                   transition
                   rounded-t-xl
                 "
@@ -454,8 +465,8 @@ export default function TopSearchBar({
                   py-3
                   text-sm
                   text-stone-800
-                  hover:bg-orange-50
-                  hover:text-orange-600
+                  hover:bg-[#FFF4E8]
+                  hover:text-[#823A00]
                   transition
                   border-t
                   border-stone-200

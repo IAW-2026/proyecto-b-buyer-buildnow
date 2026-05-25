@@ -58,11 +58,11 @@ export default function ProductCard({
   const renderImage = (sizes: string) => {
     if (imageFailed) {
       return (
-        <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-stone-100 via-orange-50 to-stone-200 px-4 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-orange-500 shadow-sm">
+        <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-stone-100 via-[#FFF4E8] to-stone-200 px-4 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-[#ED6F00] shadow-sm">
             {fallbackInitial}
           </div>
-          <p className="mt-3 line-clamp-2 text-sm font-semibold text-stone-700">
+          <p className="mt-3 line-clamp-2 text-sm font-semibold text-[#823A00]">
             {name}
           </p>
           <p className="mt-1 text-xs text-stone-500">
@@ -164,8 +164,8 @@ export default function ProductCard({
         <div className="
             rounded-xl
             border
-            border-stone-200
-            bg-stone-50
+            border-[#F8C58D]
+            bg-[#FFF4E8]
             px-4
             py-2
             text-center
@@ -186,7 +186,7 @@ export default function ProductCard({
           className="
             w-full
             rounded-xl
-            bg-orange-500
+            bg-[#ED6F00]
             px-4
             py-2
             text-sm
@@ -211,7 +211,7 @@ export default function ProductCard({
           items-center
           justify-between
           rounded-xl
-          bg-orange-500
+          bg-[#ED6F00]
           px-4
           py-2
           text-white
@@ -280,7 +280,7 @@ export default function ProductCard({
           border-stone-200
           p-4
           transition
-          hover:border-orange-300
+          hover:border-[#823A00]
           hover:shadow-md
           ${available ? "cursor-pointer" : "opacity-70"}
         `
@@ -293,11 +293,11 @@ export default function ProductCard({
 
         {/* INFO */}
         <div className="space-y-2">
-          <h3 className="text-sm font-medium text-stone-800">
+          <h3 className="text-sm font-semibold text-[#823A00]">
             {name}
           </h3>
 
-          <p className="text-lg font-bold text-orange-500">
+          <p className="text-lg font-bold text-[#ED6F00]">
             {formattedPrice}
           </p>
 
@@ -367,7 +367,7 @@ export default function ProductCard({
             <div className="space-y-5">
               {/* TITLE */}
               <div>
-                <h2 className="text-xl font-semibold text-stone-900">
+                <h2 className="text-xl font-semibold text-[#823A00]">
                   {name}
                 </h2>
                 {storeName ? (
@@ -384,7 +384,7 @@ export default function ProductCard({
                     Precio
                   </span>
 
-                  <span className="text-2xl font-bold text-orange-500">
+                  <span className="text-2xl font-bold text-[#ED6F00]">
                     {formattedPrice}
                   </span>
                 </div>

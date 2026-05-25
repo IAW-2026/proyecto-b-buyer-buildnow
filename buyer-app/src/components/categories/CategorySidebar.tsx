@@ -84,16 +84,16 @@ export default function CategorySidebar({
       w-full
       ${
         isSelected
-          ? "bg-orange-100 text-orange-700 font-medium"
-          : "text-stone-700 hover:bg-stone-100"
+          ? "border border-[#A76E04] bg-[#FFF4E8] text-[#823A00] font-semibold"
+          : "text-stone-700 hover:bg-[#FFF4E8] hover:text-[#823A00]"
       }
     `;
   };
 
   if (loading) {
     return (
-      <div className="rounded-2xl bg-white border border-stone-200 p-5">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-orange-500 mb-4">
+      <div className="rounded-2xl bg-white border border-[#823A00] p-5 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-[#823A00] mb-4">
           Categorías
         </h2>
 
@@ -103,8 +103,8 @@ export default function CategorySidebar({
   }
 
   return (
-    <div className="rounded-2xl bg-white border border-stone-200 p-5">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-orange-500 mb-4">
+    <div className="rounded-2xl bg-white border border-[#823A00] p-5 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-[#823A00] mb-4">
         Categorías
       </h2>
 
@@ -126,12 +126,12 @@ export default function CategorySidebar({
             rounded-full
             bg-white
             border
-            border-stone-200
-            text-stone-600
+            border-[#A76E04]
+            text-[#823A00]
             text-sm
             transition
-            hover:enabled:bg-orange-50
-            hover:enabled:border-orange-300
+            hover:enabled:bg-[#FFF4E8]
+            hover:enabled:border-[#A76E04]
             disabled:opacity-30
             disabled:cursor-not-allowed
           "
@@ -182,12 +182,12 @@ export default function CategorySidebar({
             rounded-full
             bg-white
             border
-            border-stone-200
-            text-stone-600
+            border-[#A76E04]
+            text-[#823A00]
             text-sm
             transition
-            hover:enabled:bg-orange-50
-            hover:enabled:border-orange-300
+            hover:enabled:bg-[#FFF4E8]
+            hover:enabled:border-[#A76E04]
             disabled:opacity-30
             disabled:cursor-not-allowed
           "

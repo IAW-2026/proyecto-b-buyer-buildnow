@@ -35,7 +35,7 @@ export default async function AdminAddressDetailPage({
     <div className="space-y-6">
       <Link
         href="/admin/addresses"
-        className="text-sm font-medium text-orange-600 hover:underline"
+        className="text-sm font-medium text-[#ED6F00] hover:underline"
       >
         Volver a direcciones
       </Link>
@@ -48,7 +48,7 @@ export default async function AdminAddressDetailPage({
           Comprador:{" "}
           <Link
             href={`/admin/buyers/${address.buyer.id}`}
-            className="font-medium text-orange-600 hover:underline"
+            className="font-medium text-[#ED6F00] hover:underline"
           >
             {address.buyer.name || address.buyer.email}
           </Link>
@@ -69,7 +69,7 @@ export default async function AdminAddressDetailPage({
               name="street"
               required
               defaultValue={address.street}
-              className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500"
+              className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-[#ED6F00]"
             />
           </label>
           <label className="text-sm font-medium text-stone-700">
@@ -78,7 +78,7 @@ export default async function AdminAddressDetailPage({
               name="city"
               required
               defaultValue={address.city}
-              className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500"
+              className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-[#ED6F00]"
             />
           </label>
           <label className="text-sm font-medium text-stone-700">
@@ -87,13 +87,13 @@ export default async function AdminAddressDetailPage({
               name="notes"
               rows={3}
               defaultValue={address.notes ?? ""}
-              className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500"
+              className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-[#ED6F00]"
             />
           </label>
           <div className="flex flex-wrap gap-3">
             <button
               type="submit"
-              className="rounded-lg bg-orange-500 px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
+              className="rounded-lg bg-[#ED6F00] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#A76E04]"
             >
               Guardar cambios
             </button>

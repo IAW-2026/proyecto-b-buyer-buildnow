@@ -32,7 +32,7 @@ export default function DashboardLayout() {
   };
 
   return (
-    <main className="min-h-screen bg-stone-100">
+    <main className="min-h-screen bg-[#FFF4E8]">
       <div className="mx-auto max-w-[1600px] p-4">
         <TopSearchBar
           showCartButton={true}

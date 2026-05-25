@@ -215,7 +215,7 @@ export default function MePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-stone-50">
+      <div className="min-h-screen bg-[#FFF4E8]">
         <TopSearchBar showSearch={false} />
         <div className="flex items-center justify-center py-20">
           <p className="text-stone-600">
@@ -228,7 +228,7 @@ export default function MePage() {
 
   if (!buyer) {
     return (
-      <div className="min-h-screen bg-stone-50">
+      <div className="min-h-screen bg-[#FFF4E8]">
         <TopSearchBar showSearch={false} />
         <div className="flex flex-col items-center justify-center py-20 gap-4">
           <p className="text-stone-600">
@@ -236,7 +236,7 @@ export default function MePage() {
           </p>
           <Link
             href="/dashboard"
-            className="text-orange-600 hover:underline"
+            className="text-[#ED6F00] hover:underline"
           >
             Volver al dashboard
           </Link>
@@ -246,7 +246,7 @@ export default function MePage() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-[#FFF4E8]">
       <TopSearchBar showSearch={false} />
 
       <div className="max-w-2xl mx-auto p-6 space-y-8">
@@ -266,7 +266,7 @@ export default function MePage() {
               onClick={() =>
                 setIsEditing(!isEditing)
               }
-              className="px-4 py-2 rounded-lg bg-orange-500 text-white hover:opacity-90 transition"
+              className="px-4 py-2 rounded-lg bg-[#ED6F00] text-white hover:bg-[#A76E04] transition"
             >
               {isEditing
                 ? "Cancelar"
@@ -277,7 +277,7 @@ export default function MePage() {
           {isEditing ? (
             <form
               action={handleUpdateProfile}
-              className="bg-white border border-stone-200 rounded-2xl p-6 space-y-4"
+              className="bg-white border border-[#A76E04] rounded-2xl p-6 space-y-4"
             >
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-2">
@@ -288,7 +288,7 @@ export default function MePage() {
                   name="name"
                   defaultValue={buyer.name || ""}
                   required
-                  className="w-full rounded-lg border border-stone-300 px-4 py-2 outline-none transition focus:border-orange-500 focus:bg-white"
+                  className="w-full rounded-lg border border-stone-300 px-4 py-2 outline-none transition focus:border-[#ED6F00] focus:bg-white"
                 />
               </div>
 
@@ -304,7 +304,7 @@ export default function MePage() {
                   inputMode="numeric"
                   pattern="[0-9]{8,15}"
                   title="Ingresá entre 8 y 15 números, sin espacios ni guiones."
-                  className="w-full rounded-lg border border-stone-300 px-4 py-2 outline-none transition focus:border-orange-500 focus:bg-white"
+                  className="w-full rounded-lg border border-stone-300 px-4 py-2 outline-none transition focus:border-[#ED6F00] focus:bg-white"
                 />
               </div>
 
@@ -322,13 +322,13 @@ export default function MePage() {
 
               <button
                 type="submit"
-                className="w-full px-4 py-2 rounded-lg bg-orange-500 text-white hover:opacity-90 transition"
+                className="w-full px-4 py-2 rounded-lg bg-[#ED6F00] text-white hover:bg-[#A76E04] transition"
               >
                 Guardar cambios
               </button>
             </form>
           ) : (
-            <div className="bg-white border border-stone-200 rounded-2xl p-6 space-y-4">
+            <div className="bg-white border border-[#A76E04] rounded-2xl p-6 space-y-4">
               <div>
                 <p className="text-sm text-stone-600 mb-1">
                   Nombre
@@ -420,14 +420,14 @@ export default function MePage() {
                     setIsAddingAddress(true);
                     setEditingAddress(null);
                   }}
-                  className="w-full px-4 py-3 border-2 border-dashed border-stone-300 text-stone-700 rounded-xl hover:border-orange-500 hover:text-orange-600 transition font-medium"
+                  className="w-full px-4 py-3 border-2 border-dashed border-stone-300 text-stone-700 rounded-xl hover:border-[#ED6F00] hover:text-[#823A00] transition font-medium"
                 >
                   + Agregar nueva dirección
                 </button>
               )}
             </>
           ) : (
-            <div className="bg-white border border-stone-200 rounded-2xl p-8 text-center">
+            <div className="bg-white border border-[#A76E04] rounded-2xl p-8 text-center">
               <p className="text-stone-600 mb-4">
                 No tienes direcciones agregadas
               </p>
@@ -436,7 +436,7 @@ export default function MePage() {
                   onClick={() =>
                     setIsAddingAddress(true)
                   }
-                  className="inline-block px-6 py-3 bg-orange-500 text-white rounded-xl hover:opacity-90 transition font-medium"
+                  className="inline-block px-6 py-3 bg-[#ED6F00] text-white rounded-xl hover:bg-[#A76E04] transition font-medium"
                 >
                   Agregar primera dirección
                 </button>
@@ -449,7 +449,7 @@ export default function MePage() {
         <div className="flex justify-center pt-6">
           <Link
             href="/dashboard"
-            className="text-stone-600 hover:text-orange-600 transition"
+            className="text-stone-600 hover:text-[#823A00] transition"
           >
             ← Volver al dashboard
           </Link>
@@ -458,14 +458,14 @@ export default function MePage() {
 
       {addressToDelete ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-md rounded-2xl border border-stone-200 bg-white p-6 shadow-xl">
+          <div className="w-full max-w-md rounded-2xl border border-[#A76E04] bg-white p-6 shadow-xl">
             <h3 className="text-lg font-semibold text-stone-950">
               Eliminar dirección
             </h3>
             <p className="mt-2 text-sm text-stone-600">
               ¿Estás seguro de que querés eliminar esta dirección?
             </p>
-            <div className="mt-4 rounded-xl bg-stone-50 p-4 text-sm text-stone-700">
+            <div className="mt-4 rounded-xl bg-[#FFF4E8] p-4 text-sm text-stone-700">
               <p className="font-medium text-stone-950">
                 {addressToDelete.street}
               </p>
@@ -476,7 +476,7 @@ export default function MePage() {
                 type="button"
                 onClick={() => setAddressToDelete(null)}
                 disabled={isDeletingAddress}
-                className="rounded-xl border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-50 disabled:opacity-50"
+                className="rounded-xl border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:bg-[#FFF4E8] disabled:opacity-50"
               >
                 Cancelar
               </button>

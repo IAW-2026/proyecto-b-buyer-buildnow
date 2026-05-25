@@ -10,7 +10,7 @@ export default function StoreHeader({
   productCount,
 }: Props) {
   return (
-    <section className="rounded-2xl bg-white border border-stone-200 p-6 shadow-sm">
+    <section className="rounded-2xl bg-white border border-[#A76E04] p-6 shadow-sm">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
@@ -42,7 +42,7 @@ export default function StoreHeader({
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl bg-stone-50 p-4">
+          <div className="rounded-2xl bg-[#FFF4E8] p-4">
             <p className="text-sm uppercase tracking-wide text-stone-500">
               Productos
             </p>
@@ -51,7 +51,7 @@ export default function StoreHeader({
             </p>
           </div>
 
-          <div className="rounded-2xl bg-stone-50 p-4">
+          <div className="rounded-2xl bg-[#FFF4E8] p-4">
             <p className="text-sm uppercase tracking-wide text-stone-500">
               Dirección
             </p>

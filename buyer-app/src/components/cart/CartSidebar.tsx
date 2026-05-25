@@ -98,7 +98,7 @@ export default function CartSidebar() {
           rounded-2xl
           bg-white
           border
-          border-stone-200
+          border-[#A76E04]
           p-5
         "
       >
@@ -128,18 +128,19 @@ export default function CartSidebar() {
         rounded-2xl
         bg-white
         border
-        border-stone-200
+        border-[#823A00]
         p-5
         space-y-4
+        shadow-[0_10px_28px_rgba(130,58,0,0.10)]
       "
     >
       {/* HEADER */}
       <div>
-        <h2 className="text-xl font-bold text-stone-900">
+        <h2 className="text-xl font-bold text-[#823A00]">
           Mi carrito
         </h2>
 
-        <p className="text-sm text-stone-500">
+        <p className="text-sm text-[#A76E04]">
           {totalItems} {totalItems === 1 ? "producto" : "productos"} agregados
         </p>
       </div>
@@ -204,7 +205,7 @@ export default function CartSidebar() {
           </div>
 
           {/* TOTALS */}
-          <div className="border-t border-stone-200 pt-4 space-y-3">
+          <div className="border-t border-[#A76E04] pt-4 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-stone-600">
                 Peso total
@@ -216,9 +217,9 @@ export default function CartSidebar() {
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-stone-600">Total</span>
+              <span className="text-[#823A00]">Total</span>
 
-              <span className="text-2xl font-bold text-orange-500">
+              <span className="text-2xl font-bold text-[#ED6F00]">
                 {formattedTotalPrice}
               </span>
             </div>
@@ -230,14 +231,14 @@ export default function CartSidebar() {
               className="
                 w-full
                 rounded-xl
-                bg-orange-500
+                bg-[#ED6F00]
                 px-4
                 py-3
                 font-medium
                 text-white
                 transition
                 hover:opacity-90
-                hover:bg-orange-600
+                hover:bg-[#A76E04]
                 disabled:opacity-50
                 disabled:cursor-not-allowed
               "

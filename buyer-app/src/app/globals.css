@@ -1,9 +1,30 @@
 @import "tailwindcss";
 
-@import "tailwindcss";
-
 :root {
   --color-brand-dark: #823A00;
   --color-brand-primary: #A76E04;
   --color-brand-accent: #ED6F00;
+}
+
+@theme {
+  --color-orange-50: #FFF4E8;
+  --color-orange-100: #FFE5C7;
+  --color-orange-200: #F8C58D;
+  --color-orange-300: #D99B45;
+  --color-orange-400: #A76E04;
+  --color-orange-500: #ED6F00;
+  --color-orange-600: #A76E04;
+  --color-orange-700: #823A00;
+  --color-orange-800: #6B2F00;
+  --color-orange-900: #4A2100;
+}
+
+body {
+  background: #FFF4E8;
+  color: #1c1917;
+}
+
+::selection {
+  background: #ed6f00;
+  color: white;
 }

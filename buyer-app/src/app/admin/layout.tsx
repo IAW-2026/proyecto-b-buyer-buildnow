@@ -24,9 +24,9 @@ export default async function AdminLayout({
 
   if (user.role !== "admin") {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-stone-50 px-6">
-        <section className="max-w-md rounded-xl border border-stone-200 bg-white p-6 text-center shadow-sm">
-          <p className="text-sm font-medium text-orange-600">
+      <main className="flex min-h-screen items-center justify-center bg-[#FFF4E8] px-6">
+        <section className="max-w-md rounded-xl border border-[#A76E04] bg-white p-6 text-center shadow-sm">
+          <p className="text-sm font-medium text-[#ED6F00]">
             Acceso restringido
           </p>
           <h1 className="mt-2 text-2xl font-bold text-stone-950">
@@ -47,7 +47,7 @@ export default async function AdminLayout({
           </p>
           <Link
             href="/dashboard"
-            className="mt-5 inline-flex rounded-lg bg-orange-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-orange-600"
+            className="mt-5 inline-flex rounded-lg bg-[#ED6F00] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#A76E04]"
           >
             Volver al dashboard
           </Link>
@@ -57,14 +57,14 @@ export default async function AdminLayout({
   }
 
   return (
-    <main className="min-h-screen bg-stone-50">
-      <header className="border-b border-stone-200 bg-white">
+    <main className="min-h-screen bg-[#FFF4E8]">
+      <header className="border-b border-[#A76E04] bg-[#823A00]">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-sm font-medium text-orange-600">
+            <p className="text-sm font-medium text-[#F8C58D]">
               Buyer App
             </p>
-            <h1 className="text-2xl font-bold text-stone-950">
+            <h1 className="text-2xl font-bold text-white">
               Panel de administración
             </h1>
           </div>
@@ -75,7 +75,7 @@ export default async function AdminLayout({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-lg border border-stone-200 px-3 py-2 text-sm font-medium text-stone-700 transition hover:border-orange-300 hover:text-orange-700"
+                  className="rounded-lg border border-[#A76E04] px-3 py-2 text-sm font-medium text-[#FFF4E8] transition hover:bg-[#A76E04] hover:text-white"
                 >
                   {item.label}
                 </Link>
@@ -85,7 +85,7 @@ export default async function AdminLayout({
             <SignOutButton redirectUrl="/login">
               <button
                 type="button"
-                className="rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-700 transition hover:bg-red-50"
+                className="rounded-lg border border-[#F8C58D] px-3 py-2 text-sm font-medium text-white transition hover:bg-[#A76E04]"
               >
                 Cerrar sesión
               </button>

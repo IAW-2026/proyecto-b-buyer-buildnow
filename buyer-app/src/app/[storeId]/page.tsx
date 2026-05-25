@@ -117,7 +117,7 @@ export default async function StorePage({
       <div className="flex items-center justify-between gap-4">
         <Link
           href={backHref}
-          className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-orange-300 hover:bg-orange-50"
+          className="rounded-2xl border border-[#A76E04] bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-[#823A00] hover:bg-[#FFF4E8]"
         >
           ← Volver al dashboard
         </Link>

@@ -223,8 +223,8 @@ export default function StoreQuickViewRow({
 
   if (loading) {
     return (
-      <section className="rounded-2xl border border-stone-200 bg-white p-5">
-        <div className="text-stone-400">
+      <section className="rounded-2xl border border-[#A76E04] bg-white p-5 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
+        <div className="text-[#A76E04]">
           Cargando productos...
         </div>
       </section>
@@ -237,9 +237,9 @@ export default function StoreQuickViewRow({
 
   if (status === "CLOSE") {
     return (
-      <section className="rounded-2xl border border-stone-200 bg-white p-5 opacity-50">
+      <section className="rounded-2xl border border-[#A76E04] bg-white p-5 opacity-50 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
         <div className="mb-5">
-          <h2 className="text-lg font-semibold text-stone-900">
+          <h2 className="text-lg font-semibold text-[#823A00]">
             {name}
           </h2>
 
@@ -256,15 +256,15 @@ export default function StoreQuickViewRow({
   // ==============================
 
   return (
-    <section className="rounded-2xl border border-stone-200 bg-white p-5">
+    <section className="rounded-2xl border border-[#A76E04] bg-white p-5 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
       {/* HEADER */}
       <div className="mb-5 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-stone-900">
+          <h2 className="text-lg font-semibold text-[#823A00]">
             {name}
           </h2>
 
-          <p className="text-sm text-stone-500">
+          <p className="text-sm text-[#A76E04]">
             Productos destacados
           </p>
         </div>
@@ -275,7 +275,7 @@ export default function StoreQuickViewRow({
               ? `/${storeId}?fromStoresPage=${dashboardPage}`
               : `/${storeId}`
           }
-          className="text-sm font-medium text-orange-500 hover:underline"
+          className="text-sm font-semibold text-[#ED6F00] transition hover:text-[#823A00] hover:underline"
         >
           Ver tienda
         </Link>
@@ -329,12 +329,12 @@ export default function StoreQuickViewRow({
             justify-center
             rounded-full
             border
-            border-stone-200
+            border-[#A76E04]
             bg-white
-            text-stone-600
+            text-[#823A00]
             transition
-            hover:enabled:border-orange-300
-            hover:enabled:bg-orange-50
+            hover:enabled:border-[#A76E04]
+            hover:enabled:bg-[#FFF4E8]
             disabled:cursor-not-allowed
             disabled:opacity-30
           "
@@ -398,12 +398,12 @@ export default function StoreQuickViewRow({
             justify-center
             rounded-full
             border
-            border-stone-200
+            border-[#A76E04]
             bg-white
-            text-stone-600
+            text-[#823A00]
             transition
-            hover:enabled:border-orange-300
-            hover:enabled:bg-orange-50
+            hover:enabled:border-[#A76E04]
+            hover:enabled:bg-[#FFF4E8]
             disabled:cursor-not-allowed
             disabled:opacity-30
           "

@@ -57,7 +57,7 @@ export default function AddressForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white border border-stone-200 rounded-xl p-6 space-y-4"
+      className="bg-white border border-[#A76E04] rounded-xl p-6 space-y-4"
     >
       <h3 className="font-semibold text-stone-900">
         {initialAddress ? "Editar dirección" : "Agregar nueva dirección"}
@@ -73,7 +73,7 @@ export default function AddressForm({
           value={formData.street}
           onChange={handleChange}
           required
-          className="w-full rounded-lg border border-stone-300 px-4 py-2 outline-none transition focus:border-orange-500 focus:bg-white"
+          className="w-full rounded-lg border border-stone-300 px-4 py-2 outline-none transition focus:border-[#ED6F00] focus:bg-white"
           placeholder="Ej: Calle Principal 123"
         />
       </div>
@@ -87,7 +87,7 @@ export default function AddressForm({
           value={formData.city}
           onChange={handleChange}
           required
-          className="w-full rounded-lg border border-stone-300 px-4 py-2 outline-none transition focus:border-orange-500 focus:bg-white"
+          className="w-full rounded-lg border border-stone-300 px-4 py-2 outline-none transition focus:border-[#ED6F00] focus:bg-white"
           placeholder="Ej: Buenos Aires"
         />
       </div>
@@ -100,7 +100,7 @@ export default function AddressForm({
           name="notes"
           value={formData.notes}
           onChange={handleChange}
-          className="w-full rounded-lg border border-stone-300 px-4 py-2 outline-none transition focus:border-orange-500 focus:bg-white resize-none"
+          className="w-full rounded-lg border border-stone-300 px-4 py-2 outline-none transition focus:border-[#ED6F00] focus:bg-white resize-none"
           placeholder="Ej: Apartamento 4B, dejar en portería"
           rows={3}
         />
@@ -111,7 +111,7 @@ export default function AddressForm({
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 rounded-lg border border-stone-300 text-stone-700 hover:bg-stone-50 transition"
+            className="px-4 py-2 rounded-lg border border-stone-300 text-stone-700 hover:bg-[#FFF4E8] transition"
           >
             Cancelar
           </button>
@@ -119,7 +119,7 @@ export default function AddressForm({
         <button
           type="submit"
           disabled={isLoading}
-          className="px-4 py-2 rounded-lg bg-orange-500 text-white hover:opacity-90 transition disabled:opacity-50"
+          className="px-4 py-2 rounded-lg bg-[#ED6F00] text-white hover:bg-[#A76E04] transition disabled:opacity-50"
         >
           {isLoading ? "Guardando..." : initialAddress ? "Actualizar" : "Agregar"}
         </button>

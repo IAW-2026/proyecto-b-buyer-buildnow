@@ -34,7 +34,7 @@ export default async function AdminCartDetailPage({
     <div className="space-y-6">
       <Link
         href="/admin/carts"
-        className="text-sm font-medium text-orange-600 hover:underline"
+        className="text-sm font-medium text-[#ED6F00] hover:underline"
       >
         Volver a carritos
       </Link>
@@ -47,7 +47,7 @@ export default async function AdminCartDetailPage({
           Comprador:{" "}
           <Link
             href={`/admin/buyers/${cart.buyer.id}`}
-            className="font-medium text-orange-600 hover:underline"
+            className="font-medium text-[#ED6F00] hover:underline"
           >
             {cart.buyer.name || cart.buyer.email}
           </Link>

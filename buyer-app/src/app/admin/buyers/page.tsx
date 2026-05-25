@@ -65,7 +65,7 @@ export default async function AdminBuyersPage() {
                     <td className="px-4 py-3">
                       <Link
                         href={`/admin/buyers/${buyer.id}`}
-                        className="font-medium text-orange-600 hover:underline"
+                        className="font-medium text-[#ED6F00] hover:underline"
                       >
                         Ver detalle
                       </Link>

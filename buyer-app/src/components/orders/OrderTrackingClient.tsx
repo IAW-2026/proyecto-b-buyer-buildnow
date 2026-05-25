@@ -62,21 +62,33 @@ function formatMoney(value: number) {
 }
 
 function formatDate(value: string | Date) {
-  return new Date(value).toLocaleDateString("es-AR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+  const date = getArgentinaDateParts(value);
+
+  return `${date.day}/${date.month}/${date.year}`;
 }
 
 function formatDateTime(value: string | Date) {
-  return new Date(value).toLocaleString("es-AR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const date = getArgentinaDateParts(value);
+
+  return `${date.day}/${date.month}/${date.year}, ${date.hour}:${date.minute}`;
+}
+
+function getArgentinaDateParts(value: string | Date) {
+  const date = new Date(value);
+  const argentinaOffsetMs = 3 * 60 * 60 * 1000;
+  const argentinaDate = new Date(
+    date.getTime() - argentinaOffsetMs
+  );
+  const pad = (part: number) =>
+    String(part).padStart(2, "0");
+
+  return {
+    day: pad(argentinaDate.getUTCDate()),
+    month: pad(argentinaDate.getUTCMonth() + 1),
+    year: String(argentinaDate.getUTCFullYear()),
+    hour: pad(argentinaDate.getUTCHours()),
+    minute: pad(argentinaDate.getUTCMinutes()),
+  };
 }
 
 function getStepDate(
@@ -105,13 +117,13 @@ export default function OrderTrackingClient({
   const isCancelled = order.status === "CANCELLED";
 
   return (
-    <div className="min-h-screen bg-stone-50 p-4 md:p-8">
+    <div className="min-h-screen bg-[#FFF4E8] p-4 md:p-8">
       <div className="mx-auto max-w-4xl">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
             <Link
               href="/dashboard"
-              className="mb-2 inline-block text-sm text-orange-600 hover:text-orange-700"
+              className="mb-2 inline-block text-sm text-[#ED6F00] hover:text-[#823A00]"
             >
               Volver a pedidos
             </Link>
@@ -126,7 +138,7 @@ export default function OrderTrackingClient({
           </div>
 
           <div className="md:text-right">
-            <p className="text-2xl font-bold text-orange-600">
+            <p className="text-2xl font-bold text-[#ED6F00]">
               {formatMoney(order.totalAmount)}
             </p>
 
@@ -152,7 +164,7 @@ export default function OrderTrackingClient({
                     <div
                       className={
                         index <= currentStepIndex
-                          ? "flex h-12 w-12 items-center justify-center rounded-full bg-orange-500 text-sm font-bold text-white"
+                          ? "flex h-12 w-12 items-center justify-center rounded-full bg-[#ED6F00] text-sm font-bold text-white"
                           : "flex h-12 w-12 items-center justify-center rounded-full bg-stone-200 text-sm font-bold text-stone-400"
                       }
                     >
@@ -182,7 +194,7 @@ export default function OrderTrackingClient({
 
               <div className="absolute left-0 right-0 top-6 h-1 bg-stone-200">
                 <div
-                  className="h-full bg-orange-500 transition-all"
+                  className="h-full bg-[#ED6F00] transition-all"
                   style={{
                     width: `${
                       currentStepIndex >= 0
@@ -196,8 +208,8 @@ export default function OrderTrackingClient({
               </div>
             </div>
 
-            <div className="mt-8 rounded-lg border border-orange-200 bg-orange-50 p-4">
-              <p className="text-sm text-orange-900">
+            <div className="mt-8 rounded-lg border border-[#A76E04] bg-[#FFF4E8] p-4">
+              <p className="text-sm text-[#823A00]">
                 {statusMessages[order.status] ?? ""}
               </p>
             </div>
@@ -254,7 +266,7 @@ export default function OrderTrackingClient({
                 <span className="text-stone-600">
                   Total:
                 </span>
-                <span className="text-base font-bold text-orange-600">
+                <span className="text-base font-bold text-[#ED6F00]">
                   {formatMoney(order.totalAmount)}
                 </span>
               </div>

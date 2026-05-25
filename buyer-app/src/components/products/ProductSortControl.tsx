@@ -19,7 +19,7 @@ export default function ProductSortControl({
         onChange={(event) =>
           onChange(event.target.value as ProductSort)
         }
-        className="rounded-lg border border-stone-300 bg-white px-2 py-1 text-sm outline-none transition focus:border-orange-500"
+        className="rounded-lg border border-stone-300 bg-white px-2 py-1 text-sm outline-none transition focus:border-[#ED6F00]"
       >
         <option value="default">Relevancia</option>
         <option value="price_asc">Menor precio</option>

@@ -118,7 +118,7 @@ export default function AiMaterialAssistant({
   };
 
   return (
-    <section className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
+    <section className="rounded-2xl border border-[#A76E04] bg-white p-5 shadow-sm">
       <div>
         <h2 className="text-lg font-bold text-stone-900">
           Asistente de materiales
@@ -141,7 +141,7 @@ export default function AiMaterialAssistant({
           }
           rows={4}
           placeholder="Ej: Necesito hacer una pared de ladrillos de 3 metros por 2 metros"
-          className="w-full resize-none rounded-xl border border-stone-300 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-orange-500 focus:bg-white"
+          className="w-full resize-none rounded-xl border border-stone-300 bg-[#FFF4E8] px-4 py-3 text-sm outline-none transition focus:border-[#ED6F00] focus:bg-white"
         />
 
         <div className="flex items-center justify-between gap-3">
@@ -152,7 +152,7 @@ export default function AiMaterialAssistant({
           <button
             type="submit"
             disabled={isLoading}
-            className="rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl bg-[#ED6F00] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#A76E04] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isLoading
               ? "Recomendando..."
@@ -175,7 +175,7 @@ export default function AiMaterialAssistant({
 
       {result ? (
         <div className="mt-5 space-y-4">
-          <p className="rounded-xl bg-orange-50 px-4 py-3 text-sm text-orange-900">
+          <p className="rounded-xl bg-[#FFF4E8] px-4 py-3 text-sm text-[#823A00]">
             {result.message}
           </p>
 
@@ -195,7 +195,7 @@ export default function AiMaterialAssistant({
                         {product.reason}
                       </p>
                     </div>
-                    <p className="shrink-0 text-sm font-bold text-orange-600">
+                    <p className="shrink-0 text-sm font-bold text-[#ED6F00]">
                       {formatMoney(product.price)}
                     </p>
                   </div>
@@ -206,7 +206,7 @@ export default function AiMaterialAssistant({
                     disabled={
                       addingProductId === product.productId
                     }
-                    className="mt-3 w-full rounded-xl bg-orange-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="mt-3 w-full rounded-xl bg-[#ED6F00] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#A76E04] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {addingProductId === product.productId
                       ? "Agregando..."
@@ -216,7 +216,7 @@ export default function AiMaterialAssistant({
               ))}
             </div>
           ) : (
-            <div className="rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-600">
+            <div className="rounded-xl border border-[#A76E04] bg-[#FFF4E8] px-4 py-3 text-sm text-stone-600">
               No encontré productos disponibles para esa necesidad en esta tienda.
             </div>
           )}

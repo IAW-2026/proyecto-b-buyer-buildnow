@@ -60,7 +60,7 @@ export default async function AdminPage() {
         ))}
       </section>
 
-      <section className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
+      <section className="rounded-xl border border-[#A76E04] bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="text-xl font-semibold text-stone-950">
@@ -72,14 +72,14 @@ export default async function AdminPage() {
           </div>
           <Link
             href="/admin/reports"
-            className="text-sm font-medium text-orange-600 hover:underline"
+            className="text-sm font-medium text-[#ED6F00] hover:underline"
           >
             Ver reporte completo
           </Link>
         </div>
 
         <div className="mt-5 grid gap-4 md:grid-cols-3">
-          <div className="rounded-lg bg-stone-50 p-4">
+          <div className="rounded-lg bg-[#FFF4E8] p-4">
             <p className="text-sm text-stone-600">
               Total estimado
             </p>
@@ -87,7 +87,7 @@ export default async function AdminPage() {
               {formatMoney(report.totalEstimated)}
             </p>
           </div>
-          <div className="rounded-lg bg-stone-50 p-4">
+          <div className="rounded-lg bg-[#FFF4E8] p-4">
             <p className="text-sm text-stone-600">
               Promedio de items
             </p>
@@ -95,7 +95,7 @@ export default async function AdminPage() {
               {report.averageItemsPerCart.toFixed(2)}
             </p>
           </div>
-          <div className="rounded-lg bg-stone-50 p-4">
+          <div className="rounded-lg bg-[#FFF4E8] p-4">
             <p className="text-sm text-stone-600">
               Producto más agregado
             </p>

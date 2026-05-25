@@ -76,10 +76,10 @@ export default function CartItemCard({
         rounded-xl
         border
         border-stone-200
-        bg-stone-50
+        bg-[#FFF4E8]
         p-3
         transition
-        hover:border-orange-300
+        hover:border-[#A76E04]
         hover:bg-stone-100
       "
     >
@@ -124,12 +124,12 @@ export default function CartItemCard({
               items-center
               justify-center
               rounded-full
-              bg-orange-500
+              bg-[#ED6F00]
               text-white
               text-xs
               font-bold
               transition
-              hover:bg-orange-600
+              hover:bg-[#A76E04]
             "
           >
             −
@@ -149,12 +149,12 @@ export default function CartItemCard({
               items-center
               justify-center
               rounded-full
-              bg-orange-500
+              bg-[#ED6F00]
               text-white
               text-xs
               font-bold
               transition
-              hover:bg-orange-600
+              hover:bg-[#A76E04]
             "
           >
             +
@@ -169,7 +169,7 @@ export default function CartItemCard({
             {formattedPrice}
           </p>
 
-          <p className="mt-1 text-lg font-bold text-orange-500">
+          <p className="mt-1 text-lg font-bold text-[#ED6F00]">
             {formattedSubtotal}
           </p>
         </div>

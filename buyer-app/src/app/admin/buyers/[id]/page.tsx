@@ -42,7 +42,7 @@ export default async function AdminBuyerDetailPage({
     <div className="space-y-6">
       <Link
         href="/admin/buyers"
-        className="text-sm font-medium text-orange-600 hover:underline"
+        className="text-sm font-medium text-[#ED6F00] hover:underline"
       >
         Volver a compradores
       </Link>
@@ -70,7 +70,7 @@ export default async function AdminBuyerDetailPage({
               name="name"
               required
               defaultValue={buyer.name ?? ""}
-              className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500"
+              className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-[#ED6F00]"
             />
           </label>
           <label className="text-sm font-medium text-stone-700">
@@ -81,13 +81,13 @@ export default async function AdminBuyerDetailPage({
               inputMode="numeric"
               pattern="[0-9]{8,15}"
               defaultValue={buyer.phone ?? ""}
-              className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-orange-500"
+              className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-[#ED6F00]"
             />
           </label>
           <div className="md:col-span-2">
             <button
               type="submit"
-              className="rounded-lg bg-orange-500 px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
+              className="rounded-lg bg-[#ED6F00] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#A76E04]"
             >
               Guardar cambios
             </button>
