@@ -40,7 +40,7 @@ export default function ProfileForm() {
         rounded-2xl
         shadow-sm
         border
-        border-stone-200
+        border-[#A76E04]
       "
     >
       {error && (
@@ -56,7 +56,7 @@ export default function ProfileForm() {
       )}
 
       <div>
-        <label className="block mb-2 font-medium text-stone-800">
+        <label className="block mb-2 font-medium text-[#823A00]">
           Nombre
         </label>
 
@@ -79,7 +79,7 @@ export default function ProfileForm() {
       </div>
 
       <div>
-        <label className="block mb-2 font-medium text-stone-800">
+        <label className="block mb-2 font-medium text-[#823A00]">
           Teléfono
         </label>
 
@@ -105,7 +105,7 @@ export default function ProfileForm() {
       </div>
 
       <div>
-        <label className="block mb-2 font-medium text-stone-800">
+        <label className="block mb-2 font-medium text-[#823A00]">
           Calle
         </label>
 
@@ -128,7 +128,7 @@ export default function ProfileForm() {
       </div>
 
       <div>
-        <label className="block mb-2 font-medium text-stone-800">
+        <label className="block mb-2 font-medium text-[#823A00]">
           Ciudad
         </label>
 
@@ -150,7 +150,7 @@ export default function ProfileForm() {
       </div>
 
       <div>
-        <label className="block mb-2 font-medium text-stone-800">
+        <label className="block mb-2 font-medium text-[#823A00]">
           Notas
         </label>
 

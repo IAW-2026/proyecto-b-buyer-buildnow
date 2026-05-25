@@ -21,6 +21,13 @@ export default async function OrderTrackingPage({
   let deliveryTracking: Awaited<
     ReturnType<typeof getOrderTracking>
   > = [];
+  let productDetailsById: Record<
+    string,
+    {
+      name: string;
+      weight: number;
+    }
+  > = {};
 
   try {
     const { userId } = await requireBuyer();
@@ -30,6 +37,24 @@ export default async function OrderTrackingPage({
     if (!order || order.buyerId !== buyer.id) {
       notFound();
     }
+
+    const productDetails = await Promise.all(
+      order.items.map(async (item) => {
+        const product = await sellerApi.getProductDetails(
+          item.productId
+        );
+
+        return [
+          item.productId,
+          {
+            name: product.name,
+            weight: product.weight,
+          },
+        ] as const;
+      })
+    );
+
+    productDetailsById = Object.fromEntries(productDetails);
 
     if (order.status === "ON_THE_WAY") {
       deliveryTracking = await getOrderTracking(order.id);
@@ -46,6 +71,7 @@ export default async function OrderTrackingPage({
     <OrderTrackingClient
       order={order}
       deliveryTracking={deliveryTracking[0] ?? null}
+      productDetailsById={productDetailsById}
     />
   );
 }

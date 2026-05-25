@@ -40,7 +40,7 @@ export default async function AdminCartDetailPage({
       </Link>
 
       <div>
-        <h2 className="text-xl font-semibold text-stone-950">
+        <h2 className="text-xl font-semibold text-[#823A00]">
           Carrito
         </h2>
         <p className="mt-1 text-sm text-stone-600">
@@ -55,36 +55,36 @@ export default async function AdminCartDetailPage({
       </div>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
           <p className="text-sm text-stone-600">
             Items distintos
           </p>
-          <p className="mt-2 text-2xl font-semibold text-stone-950">
+          <p className="mt-2 text-2xl font-semibold text-[#823A00]">
             {cart.items.length}
           </p>
         </div>
-        <div className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
           <p className="text-sm text-stone-600">
             Unidades
           </p>
-          <p className="mt-2 text-2xl font-semibold text-stone-950">
+          <p className="mt-2 text-2xl font-semibold text-[#823A00]">
             {cart.items.reduce(
               (sum, item) => sum + item.quantity,
               0
             )}
           </p>
         </div>
-        <div className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
           <p className="text-sm text-stone-600">
             Total estimado
           </p>
-          <p className="mt-2 text-2xl font-semibold text-stone-950">
+          <p className="mt-2 text-2xl font-semibold text-[#823A00]">
             {formatMoney(total)}
           </p>
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
+      <section className="overflow-hidden rounded-xl border border-[#A76E04] bg-white shadow-sm">
         {cart.items.length === 0 ? (
           <p className="p-6 text-sm text-stone-600">
             Este carrito no tiene items.
@@ -92,7 +92,7 @@ export default async function AdminCartDetailPage({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-stone-100 text-stone-700">
+              <thead className="bg-[#FFF4E8] text-[#823A00]">
                 <tr>
                   <th className="px-4 py-3 font-medium">
                     ProductId
@@ -118,7 +118,7 @@ export default async function AdminCartDetailPage({
 
                   return (
                     <tr key={item.id}>
-                      <td className="px-4 py-3 font-medium text-stone-950">
+                      <td className="px-4 py-3 font-medium text-[#823A00]">
                         {item.productId}
                       </td>
                       <td className="px-4 py-3 text-stone-700">

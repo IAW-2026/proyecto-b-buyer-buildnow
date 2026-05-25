@@ -277,7 +277,7 @@ export default function ProductCard({
           `
           rounded-2xl
           border
-          border-stone-200
+          border-[#F8C58D]
           p-4
           transition
           hover:border-[#823A00]

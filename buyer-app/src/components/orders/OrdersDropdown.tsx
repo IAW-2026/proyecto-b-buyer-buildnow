@@ -115,7 +115,7 @@ export default function OrdersDropdown({
           max-h-96
           bg-white
           border
-          border-stone-200
+          border-[#A76E04]
           rounded-xl
           shadow-xl
           overflow-hidden
@@ -126,7 +126,7 @@ export default function OrdersDropdown({
       >
         {/* HEADER */}
         <div className="bg-[#FFF4E8] px-4 py-3 border-b border-[#A76E04]">
-          <h3 className="font-semibold text-stone-900">
+          <h3 className="font-semibold text-[#823A00]">
             📦 Mis Pedidos
           </h3>
 
@@ -211,7 +211,7 @@ export default function OrdersDropdown({
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold text-stone-900 text-sm">
+                        <span className="font-semibold text-[#823A00] text-sm">
                           {order.storeName}
                         </span>
 
@@ -268,7 +268,7 @@ export default function OrdersDropdown({
                   w-full
                   text-sm
                   text-stone-600
-                  hover:text-stone-900
+                  hover:text-[#823A00]
                   font-medium
                   transition
                 "

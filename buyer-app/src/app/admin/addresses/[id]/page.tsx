@@ -41,7 +41,7 @@ export default async function AdminAddressDetailPage({
       </Link>
 
       <div>
-        <h2 className="text-xl font-semibold text-stone-950">
+        <h2 className="text-xl font-semibold text-[#823A00]">
           Dirección
         </h2>
         <p className="mt-1 text-sm text-stone-600">
@@ -55,15 +55,15 @@ export default async function AdminAddressDetailPage({
         </p>
       </div>
 
-      <section className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
-        <h3 className="font-semibold text-stone-950">
+      <section className="rounded-xl border border-[#A76E04] bg-white p-6 shadow-sm">
+        <h3 className="font-semibold text-[#823A00]">
           Editar dirección
         </h3>
         <form
           action={updateAddress}
           className="mt-4 grid gap-4"
         >
-          <label className="text-sm font-medium text-stone-700">
+          <label className="text-sm font-medium text-[#823A00]">
             Calle
             <input
               name="street"
@@ -72,7 +72,7 @@ export default async function AdminAddressDetailPage({
               className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-[#ED6F00]"
             />
           </label>
-          <label className="text-sm font-medium text-stone-700">
+          <label className="text-sm font-medium text-[#823A00]">
             Ciudad
             <input
               name="city"
@@ -81,7 +81,7 @@ export default async function AdminAddressDetailPage({
               className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-[#ED6F00]"
             />
           </label>
-          <label className="text-sm font-medium text-stone-700">
+          <label className="text-sm font-medium text-[#823A00]">
             Notas
             <textarea
               name="notes"

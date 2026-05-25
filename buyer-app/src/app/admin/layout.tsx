@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { SignOutButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import AdminSignOutButton from "@/components/admin/AdminSignOutButton";
 import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 
 const NAV_ITEMS = [
@@ -29,7 +29,7 @@ export default async function AdminLayout({
           <p className="text-sm font-medium text-[#ED6F00]">
             Acceso restringido
           </p>
-          <h1 className="mt-2 text-2xl font-bold text-stone-950">
+          <h1 className="mt-2 text-2xl font-bold text-[#823A00]">
             No tenés permisos de administrador
           </h1>
           <p className="mt-3 text-sm text-stone-600">
@@ -39,7 +39,7 @@ export default async function AdminLayout({
             </span>
             .
           </p>
-          <p className="mt-3 rounded-lg bg-stone-100 px-3 py-2 text-sm text-stone-700">
+          <p className="mt-3 rounded-lg bg-[#FFF4E8] px-3 py-2 text-sm text-stone-700">
             Rol detectado:{" "}
             <span className="font-medium">
               {user.role ?? "sin rol"}
@@ -82,14 +82,7 @@ export default async function AdminLayout({
               ))}
             </nav>
 
-            <SignOutButton redirectUrl="/login">
-              <button
-                type="button"
-                className="rounded-lg border border-[#F8C58D] px-3 py-2 text-sm font-medium text-white transition hover:bg-[#A76E04]"
-              >
-                Cerrar sesión
-              </button>
-            </SignOutButton>
+            <AdminSignOutButton />
           </div>
         </div>
       </header>

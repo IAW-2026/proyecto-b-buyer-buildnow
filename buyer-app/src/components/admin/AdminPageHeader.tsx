@@ -9,7 +9,7 @@ export default function AdminPageHeader({
 }: Props) {
   return (
     <div>
-      <h2 className="text-xl font-semibold text-stone-950">
+      <h2 className="text-xl font-semibold text-[#823A00]">
         {title}
       </h2>
       {description ? (

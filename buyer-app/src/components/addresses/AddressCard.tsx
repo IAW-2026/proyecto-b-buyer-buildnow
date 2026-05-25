@@ -24,7 +24,7 @@ export default function AddressCard({
     <div className="bg-white border border-[#A76E04] rounded-xl p-4 hover:border-[#823A00] transition">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <h3 className="font-medium text-stone-900 mb-2">
+          <h3 className="font-medium text-[#823A00] mb-2">
             📍 {address.street}
           </h3>
           <p className="text-sm text-stone-600 mb-2">

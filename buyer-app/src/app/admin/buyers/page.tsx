@@ -12,7 +12,7 @@ export default async function AdminBuyersPage() {
         description="Listado de usuarios dados de alta como buyers."
       />
 
-      <div className="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-[#A76E04] bg-white shadow-sm">
         {buyers.length === 0 ? (
           <p className="p-6 text-sm text-stone-600">
             No hay compradores registrados.
@@ -20,7 +20,7 @@ export default async function AdminBuyersPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-stone-100 text-stone-700">
+              <thead className="bg-[#FFF4E8] text-[#823A00]">
                 <tr>
                   <th className="px-4 py-3 font-medium">
                     Nombre
@@ -45,7 +45,7 @@ export default async function AdminBuyersPage() {
               <tbody className="divide-y divide-stone-200">
                 {buyers.map((buyer) => (
                   <tr key={buyer.id}>
-                    <td className="px-4 py-3 text-stone-950">
+                    <td className="px-4 py-3 text-[#823A00]">
                       {buyer.name || "Sin nombre"}
                     </td>
                     <td className="px-4 py-3 text-stone-700">

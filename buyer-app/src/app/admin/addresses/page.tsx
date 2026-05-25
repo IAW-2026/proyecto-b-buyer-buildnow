@@ -12,7 +12,7 @@ export default async function AdminAddressesPage() {
         description="Direcciones registradas por compradores."
       />
 
-      <div className="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-[#A76E04] bg-white shadow-sm">
         {addresses.length === 0 ? (
           <p className="p-6 text-sm text-stone-600">
             No hay direcciones registradas.
@@ -20,7 +20,7 @@ export default async function AdminAddressesPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-stone-100 text-stone-700">
+              <thead className="bg-[#FFF4E8] text-[#823A00]">
                 <tr>
                   <th className="px-4 py-3 font-medium">
                     Comprador
@@ -45,7 +45,7 @@ export default async function AdminAddressesPage() {
                     <td className="px-4 py-3">
                       <Link
                         href={`/admin/buyers/${address.buyer.id}`}
-                        className="font-medium text-stone-950 hover:text-[#823A00]"
+                        className="font-medium text-[#823A00] hover:underline"
                       >
                         {address.buyer.name ||
                           address.buyer.email}

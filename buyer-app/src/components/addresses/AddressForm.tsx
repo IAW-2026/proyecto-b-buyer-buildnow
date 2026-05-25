@@ -59,7 +59,7 @@ export default function AddressForm({
       onSubmit={handleSubmit}
       className="bg-white border border-[#A76E04] rounded-xl p-6 space-y-4"
     >
-      <h3 className="font-semibold text-stone-900">
+      <h3 className="font-semibold text-[#823A00]">
         {initialAddress ? "Editar dirección" : "Agregar nueva dirección"}
       </h3>
 

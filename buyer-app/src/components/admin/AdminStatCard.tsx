@@ -14,7 +14,7 @@ export default function AdminStatCard({
   const content = (
     <>
       <p className="text-sm text-stone-600">{label}</p>
-      <p className="mt-3 text-3xl font-bold text-stone-950">
+      <p className="mt-3 text-3xl font-bold text-[#823A00]">
         {value}
       </p>
     </>

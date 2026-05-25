@@ -22,7 +22,7 @@ export default function AdminRouteRetry() {
         <p className="text-sm font-medium text-[#ED6F00]">
           Panel de administracion
         </p>
-        <h1 className="mt-2 text-2xl font-bold text-stone-950">
+        <h1 className="mt-2 text-2xl font-bold text-[#823A00]">
           Cargando acceso
         </h1>
         <p className="mt-3 text-sm text-stone-600">

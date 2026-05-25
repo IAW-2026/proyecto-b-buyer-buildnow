@@ -75,12 +75,12 @@ export default function CartItemCard({
         gap-3
         rounded-xl
         border
-        border-stone-200
+        border-[#F8C58D]
         bg-[#FFF4E8]
         p-3
         transition
         hover:border-[#A76E04]
-        hover:bg-stone-100
+        hover:bg-[#FFF4E8]
       "
     >
       {/* IMAGE */}
@@ -103,7 +103,7 @@ export default function CartItemCard({
       <div className="flex flex-1 flex-col justify-between py-1">
         {/* NAME & WEIGHT */}
         <div>
-          <h3 className="text-sm font-medium text-stone-900">
+          <h3 className="text-sm font-medium text-[#823A00]">
             {name}
           </h3>
 
@@ -135,7 +135,7 @@ export default function CartItemCard({
             −
           </button>
 
-          <span className="text-xs font-semibold text-stone-900 w-4 text-center">
+          <span className="text-xs font-semibold text-[#823A00] w-4 text-center">
             {quantity}
           </span>
 

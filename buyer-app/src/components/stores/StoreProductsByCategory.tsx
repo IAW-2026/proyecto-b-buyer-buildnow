@@ -45,7 +45,7 @@ export default function StoreProductsByCategory({
               Productos por categoría
             </p>
 
-            <h1 className="mt-1 text-2xl font-bold text-stone-800">
+            <h1 className="mt-1 text-2xl font-bold text-[#823A00]">
               No se encontraron productos
             </h1>
           </div>
@@ -73,12 +73,12 @@ export default function StoreProductsByCategory({
                 Categoría
               </p>
 
-              <h2 className="mt-1 text-2xl font-bold text-stone-800">
+              <h2 className="mt-1 text-2xl font-bold text-[#823A00]">
                 {category.name}
               </h2>
             </div>
 
-            <div className="rounded-xl bg-stone-100 px-4 py-2 text-sm text-stone-600">
+            <div className="rounded-xl bg-[#FFF4E8] px-4 py-2 text-sm font-medium text-[#823A00]">
               {products.length} producto{products.length !== 1 ? "s" : ""}
             </div>
           </div>

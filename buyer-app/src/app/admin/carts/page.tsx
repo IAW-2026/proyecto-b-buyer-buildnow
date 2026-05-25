@@ -19,7 +19,7 @@ export default async function AdminCartsPage() {
         description="Carritos activos con totales estimados desde CART_ITEM."
       />
 
-      <div className="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-[#A76E04] bg-white shadow-sm">
         {carts.length === 0 ? (
           <p className="p-6 text-sm text-stone-600">
             No hay carritos activos.
@@ -27,7 +27,7 @@ export default async function AdminCartsPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-stone-100 text-stone-700">
+              <thead className="bg-[#FFF4E8] text-[#823A00]">
                 <tr>
                   <th className="px-4 py-3 font-medium">
                     Comprador
@@ -64,7 +64,7 @@ export default async function AdminCartsPage() {
                       <td className="px-4 py-3">
                         <Link
                           href={`/admin/buyers/${cart.buyer.id}`}
-                          className="font-medium text-stone-950 hover:text-[#823A00]"
+                          className="font-medium text-[#823A00] hover:underline"
                         >
                           {cart.buyer.name ||
                             cart.buyer.email}

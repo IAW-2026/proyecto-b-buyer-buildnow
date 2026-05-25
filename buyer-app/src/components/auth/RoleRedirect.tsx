@@ -19,7 +19,7 @@ export default function RoleRedirect({
         <p className="text-sm font-medium text-[#ED6F00]">
           BuildNow
         </p>
-        <h1 className="mt-2 text-2xl font-bold text-stone-950">
+        <h1 className="mt-2 text-2xl font-bold text-[#823A00]">
           Redirigiendo
         </h1>
         <p className="mt-3 text-sm text-stone-600">

@@ -19,35 +19,35 @@ export default async function AdminReportsPage() {
       />
 
       <section className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
           <p className="text-sm text-stone-600">
             Total de carritos
           </p>
-          <p className="mt-2 text-2xl font-semibold text-stone-950">
+          <p className="mt-2 text-2xl font-semibold text-[#823A00]">
             {report.totalCarts}
           </p>
         </div>
-        <div className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
           <p className="text-sm text-stone-600">
             Total estimado acumulado
           </p>
-          <p className="mt-2 text-2xl font-semibold text-stone-950">
+          <p className="mt-2 text-2xl font-semibold text-[#823A00]">
             {formatMoney(report.totalEstimated)}
           </p>
         </div>
-        <div className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
           <p className="text-sm text-stone-600">
             Promedio de items por carrito
           </p>
-          <p className="mt-2 text-2xl font-semibold text-stone-950">
+          <p className="mt-2 text-2xl font-semibold text-[#823A00]">
             {report.averageItemsPerCart.toFixed(2)}
           </p>
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
-        <div className="border-b border-stone-200 px-6 py-4">
-          <h3 className="font-semibold text-stone-950">
+      <section className="overflow-hidden rounded-xl border border-[#A76E04] bg-white shadow-sm">
+        <div className="border-b border-[#A76E04] px-6 py-4">
+          <h3 className="font-semibold text-[#823A00]">
             Top productId más agregados
           </h3>
         </div>
@@ -57,7 +57,7 @@ export default async function AdminReportsPage() {
           </p>
         ) : (
           <table className="w-full text-left text-sm">
-            <thead className="bg-stone-100 text-stone-700">
+            <thead className="bg-[#FFF4E8] text-[#823A00]">
               <tr>
                 <th className="px-4 py-3 font-medium">
                   ProductId
@@ -70,7 +70,7 @@ export default async function AdminReportsPage() {
             <tbody className="divide-y divide-stone-200">
               {report.topProducts.map((product) => (
                 <tr key={product.productId}>
-                  <td className="px-4 py-3 font-medium text-stone-950">
+                  <td className="px-4 py-3 font-medium text-[#823A00]">
                     {product.productId}
                   </td>
                   <td className="px-4 py-3 text-stone-700">

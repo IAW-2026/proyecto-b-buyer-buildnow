@@ -63,7 +63,7 @@ export default async function AdminPage() {
       <section className="rounded-xl border border-[#A76E04] bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-stone-950">
+            <h2 className="text-xl font-semibold text-[#823A00]">
               Reporte de carritos activos
             </h2>
             <p className="text-sm text-stone-600">
@@ -83,7 +83,7 @@ export default async function AdminPage() {
             <p className="text-sm text-stone-600">
               Total estimado
             </p>
-            <p className="mt-2 text-2xl font-semibold text-stone-950">
+            <p className="mt-2 text-2xl font-semibold text-[#823A00]">
               {formatMoney(report.totalEstimated)}
             </p>
           </div>
@@ -91,7 +91,7 @@ export default async function AdminPage() {
             <p className="text-sm text-stone-600">
               Promedio de items
             </p>
-            <p className="mt-2 text-2xl font-semibold text-stone-950">
+            <p className="mt-2 text-2xl font-semibold text-[#823A00]">
               {report.averageItemsPerCart.toFixed(2)}
             </p>
           </div>
@@ -99,7 +99,7 @@ export default async function AdminPage() {
             <p className="text-sm text-stone-600">
               Producto más agregado
             </p>
-            <p className="mt-2 text-lg font-semibold text-stone-950">
+            <p className="mt-2 text-lg font-semibold text-[#823A00]">
               {report.topProducts[0]?.productId ?? "Sin datos"}
             </p>
           </div>

@@ -33,7 +33,7 @@ export default async function ProtectedLayout({
             <p className="text-sm font-medium text-[#ED6F00]">
               Acceso restringido
             </p>
-            <h1 className="mt-2 text-2xl font-bold text-stone-950">
+            <h1 className="mt-2 text-2xl font-bold text-[#823A00]">
               No tenés permisos de comprador
             </h1>
             <p className="mt-3 text-sm text-stone-600">
@@ -43,7 +43,7 @@ export default async function ProtectedLayout({
               </span>
               .
             </p>
-            <p className="mt-3 rounded-lg bg-stone-100 px-3 py-2 text-sm text-stone-700">
+            <p className="mt-3 rounded-lg bg-[#FFF4E8] px-3 py-2 text-sm text-stone-700">
               Rol detectado:{" "}
               <span className="font-medium">
                 {user.role ?? "sin rol"}

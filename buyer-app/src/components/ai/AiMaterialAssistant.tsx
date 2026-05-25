@@ -120,7 +120,7 @@ export default function AiMaterialAssistant({
   return (
     <section className="rounded-2xl border border-[#A76E04] bg-white p-5 shadow-sm">
       <div>
-        <h2 className="text-lg font-bold text-stone-900">
+        <h2 className="text-lg font-bold text-[#823A00]">
           Asistente de materiales
         </h2>
         <p className="mt-1 text-sm text-stone-500">
@@ -184,11 +184,11 @@ export default function AiMaterialAssistant({
               {result.recommendedProducts.map((product) => (
                 <article
                   key={product.productId}
-                  className="rounded-xl border border-stone-200 p-4"
+                  className="rounded-xl border border-[#A76E04] p-4"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="font-semibold text-stone-900">
+                      <h3 className="font-semibold text-[#823A00]">
                         {product.name}
                       </h3>
                       <p className="mt-1 text-sm text-stone-600">

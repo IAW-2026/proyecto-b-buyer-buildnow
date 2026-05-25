@@ -48,7 +48,7 @@ export default async function AdminBuyerDetailPage({
       </Link>
 
       <div>
-        <h2 className="text-xl font-semibold text-stone-950">
+        <h2 className="text-xl font-semibold text-[#823A00]">
           {buyer.name || "Comprador sin nombre"}
         </h2>
         <p className="mt-1 text-sm text-stone-600">
@@ -56,15 +56,15 @@ export default async function AdminBuyerDetailPage({
         </p>
       </div>
 
-      <section className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
-        <h3 className="font-semibold text-stone-950">
+      <section className="rounded-xl border border-[#A76E04] bg-white p-6 shadow-sm">
+        <h3 className="font-semibold text-[#823A00]">
           Editar datos básicos
         </h3>
         <form
           action={updateBuyer}
           className="mt-4 grid gap-4 md:grid-cols-2"
         >
-          <label className="text-sm font-medium text-stone-700">
+          <label className="text-sm font-medium text-[#823A00]">
             Nombre
             <input
               name="name"
@@ -73,7 +73,7 @@ export default async function AdminBuyerDetailPage({
               className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-[#ED6F00]"
             />
           </label>
-          <label className="text-sm font-medium text-stone-700">
+          <label className="text-sm font-medium text-[#823A00]">
             Teléfono
             <input
               name="phone"
@@ -96,34 +96,34 @@ export default async function AdminBuyerDetailPage({
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
           <p className="text-sm text-stone-600">
             Direcciones
           </p>
-          <p className="mt-2 text-2xl font-semibold text-stone-950">
+          <p className="mt-2 text-2xl font-semibold text-[#823A00]">
             {buyer.addresses.length}
           </p>
         </div>
-        <div className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
           <p className="text-sm text-stone-600">
             Items en carrito
           </p>
-          <p className="mt-2 text-2xl font-semibold text-stone-950">
+          <p className="mt-2 text-2xl font-semibold text-[#823A00]">
             {buyer.cart?.items.length ?? 0}
           </p>
         </div>
-        <div className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
           <p className="text-sm text-stone-600">
             Total estimado
           </p>
-          <p className="mt-2 text-2xl font-semibold text-stone-950">
+          <p className="mt-2 text-2xl font-semibold text-[#823A00]">
             {formatMoney(cartTotal)}
           </p>
         </div>
       </section>
 
-      <section className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
-        <h3 className="font-semibold text-stone-950">
+      <section className="rounded-xl border border-[#A76E04] bg-white p-6 shadow-sm">
+        <h3 className="font-semibold text-[#823A00]">
           Direcciones
         </h3>
         {buyer.addresses.length === 0 ? (
@@ -135,9 +135,9 @@ export default async function AdminBuyerDetailPage({
             {buyer.addresses.map((address) => (
               <div
                 key={address.id}
-                className="rounded-lg border border-stone-200 p-4"
+                className="rounded-lg border border-[#F8C58D] p-4"
               >
-                <p className="font-medium text-stone-950">
+                <p className="font-medium text-[#823A00]">
                   {address.street}
                 </p>
                 <p className="text-sm text-stone-600">
