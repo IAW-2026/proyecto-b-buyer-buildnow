@@ -6,6 +6,9 @@ import Image from "next/image";
 import { SignOutButton } from "@clerk/nextjs";
 import OrdersDropdown from "@/components/orders/OrdersDropdown";
 
+const SEARCH_HISTORY_KEY = "buildnow:search-history";
+const MAX_SEARCH_HISTORY = 6;
+
 interface TopSearchBarProps {
   showCartButton?: boolean;
   onCartClick?: () => void;
@@ -26,7 +29,39 @@ export default function TopSearchBar({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isOrdersDropdownOpen, setIsOrdersDropdownOpen] = useState(false);
   const [localSearchText, setLocalSearchText] = useState("");
+  const [isSearchHistoryOpen, setIsSearchHistoryOpen] =
+    useState(false);
+  const [searchHistory, setSearchHistory] = useState<string[]>(
+    () => {
+      if (typeof window === "undefined") {
+        return [];
+      }
+
+      try {
+        const stored = window.localStorage.getItem(
+          SEARCH_HISTORY_KEY
+        );
+
+        if (!stored) return [];
+
+        const parsed = JSON.parse(stored) as unknown;
+
+        if (!Array.isArray(parsed)) return [];
+
+        return parsed
+          .filter(
+            (item): item is string =>
+              typeof item === "string" &&
+              item.trim().length > 0
+          )
+          .slice(0, MAX_SEARCH_HISTORY);
+      } catch {
+        return [];
+      }
+    }
+  );
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLFormElement>(null);
   const searchText = searchValue ?? localSearchText;
 
   useEffect(() => {
@@ -37,6 +72,13 @@ export default function TopSearchBar({
       ) {
         setIsDropdownOpen(false);
       }
+
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setIsSearchHistoryOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -44,11 +86,45 @@ export default function TopSearchBar({
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const persistSearchHistory = (history: string[]) => {
+    setSearchHistory(history);
+    window.localStorage.setItem(
+      SEARCH_HISTORY_KEY,
+      JSON.stringify(history)
+    );
+  };
+
+  const addSearchToHistory = (search: string) => {
+    const normalizedSearch = search.trim();
+
+    if (!normalizedSearch) return;
+
+    const nextHistory = [
+      normalizedSearch,
+      ...searchHistory.filter(
+        (item) =>
+          item.toLocaleLowerCase() !==
+          normalizedSearch.toLocaleLowerCase()
+      ),
+    ].slice(0, MAX_SEARCH_HISTORY);
+
+    persistSearchHistory(nextHistory);
+  };
+
+  const removeSearchFromHistory = (search: string) => {
+    persistSearchHistory(
+      searchHistory.filter((item) => item !== search)
+    );
+  };
+
   const handleSearchSubmit = (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
-    onSearch?.(searchText.trim());
+    const nextSearch = searchText.trim();
+    addSearchToHistory(nextSearch);
+    setIsSearchHistoryOpen(false);
+    onSearch?.(nextSearch);
   };
 
   const handleSearchTextChange = (value: string) => {
@@ -61,7 +137,15 @@ export default function TopSearchBar({
 
   const handleClearSearch = () => {
     handleSearchTextChange("");
+    setIsSearchHistoryOpen(false);
     onSearch?.("");
+  };
+
+  const handleHistorySearch = (search: string) => {
+    handleSearchTextChange(search);
+    addSearchToHistory(search);
+    setIsSearchHistoryOpen(false);
+    onSearch?.(search);
   };
 
   return (
@@ -109,6 +193,7 @@ export default function TopSearchBar({
 
       {showSearch ? (
         <form
+          ref={searchRef}
           onSubmit={handleSearchSubmit}
           className="order-3 flex w-full gap-2 sm:order-none sm:flex-1 sm:max-w-2xl"
         >
@@ -116,6 +201,7 @@ export default function TopSearchBar({
             <input
               type="text"
               value={searchText}
+              onFocus={() => setIsSearchHistoryOpen(true)}
               onChange={(event) =>
                 handleSearchTextChange(event.target.value)
               }
@@ -166,6 +252,49 @@ export default function TopSearchBar({
                 ×
               </button>
             )}
+
+            {isSearchHistoryOpen && searchHistory.length > 0 ? (
+              <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg">
+                <div className="border-b border-stone-100 px-4 py-2 text-xs font-medium uppercase tracking-wide text-stone-500">
+                  Búsquedas recientes
+                </div>
+                <div className="max-h-64 overflow-y-auto">
+                  {searchHistory.map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-center gap-2 border-b border-stone-100 last:border-b-0"
+                    >
+                      <button
+                        type="button"
+                        onMouseDown={(event) =>
+                          event.preventDefault()
+                        }
+                        onClick={() =>
+                          handleHistorySearch(item)
+                        }
+                        className="min-w-0 flex-1 truncate px-4 py-3 text-left text-sm text-stone-700 transition hover:bg-orange-50 hover:text-orange-700"
+                        title={item}
+                      >
+                        {item}
+                      </button>
+                      <button
+                        type="button"
+                        onMouseDown={(event) =>
+                          event.preventDefault()
+                        }
+                        onClick={() =>
+                          removeSearchFromHistory(item)
+                        }
+                        className="mr-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-stone-400 transition hover:bg-stone-100 hover:text-red-600"
+                        aria-label={`Eliminar busqueda ${item}`}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <button

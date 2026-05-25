@@ -3,6 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 
 import ProductCard from "@/components/products/ProductCard";
+import ProductSortControl, {
+  sortProducts,
+  type ProductSort,
+} from "@/components/products/ProductSortControl";
 
 import {
   fetchCategoryProductsAction,
@@ -39,6 +43,8 @@ export default function CategoryLayout({
   const [loading, setLoading] =
     useState(true);
   const [stores, setStores] = useState<Store[]>([]);
+  const [sort, setSort] =
+    useState<ProductSort>("default");
 
   const {
     addItem,
@@ -114,6 +120,10 @@ export default function CategoryLayout({
       stores.map((store) => [store.id, store.name])
     );
   }, [stores]);
+
+  const sortedProducts = useMemo(() => {
+    return sortProducts(result.data, sort);
+  }, [result.data, sort]);
 
   const firstVisible =
     result.total === 0
@@ -214,9 +224,16 @@ export default function CategoryLayout({
         </div>
       </div>
 
+      <div className="mt-4 flex justify-end">
+        <ProductSortControl
+          value={sort}
+          onChange={setSort}
+        />
+      </div>
+
       {/* PRODUCTS */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-3">
-        {result.data.map((product) => (
+        {sortedProducts.map((product) => (
           <ProductCard
             key={product.id}
             id={product.id}

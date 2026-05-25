@@ -7,6 +7,10 @@ import {
   searchProductsAction,
 } from "@/actions/buyerActions";
 import ProductCard from "@/components/products/ProductCard";
+import ProductSortControl, {
+  sortProducts,
+  type ProductSort,
+} from "@/components/products/ProductSortControl";
 import { useCart } from "@/context/CartContext";
 
 import type {
@@ -35,6 +39,8 @@ export default function ProductSearchResults({
       data: [],
     });
   const [stores, setStores] = useState<Store[]>([]);
+  const [sort, setSort] =
+    useState<ProductSort>("default");
 
   const {
     addItem,
@@ -107,6 +113,10 @@ export default function ProductSearchResults({
     );
   }, [stores]);
 
+  const sortedProducts = useMemo(() => {
+    return sortProducts(result.data, sort);
+  }, [result.data, sort]);
+
   const handleAdd = async (productId: string) => {
     await addItem(productId);
   };
@@ -161,6 +171,13 @@ export default function ProductSearchResults({
         </div>
       </div>
 
+      <div className="mt-4 flex justify-end">
+        <ProductSortControl
+          value={sort}
+          onChange={setSort}
+        />
+      </div>
+
       {loading ? (
         <div className="mt-6 rounded-xl border border-dashed border-stone-300 p-8 text-center">
           <p className="text-stone-500">
@@ -176,7 +193,7 @@ export default function ProductSearchResults({
       ) : (
         <>
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-3">
-            {result.data.map(renderProduct)}
+            {sortedProducts.map(renderProduct)}
           </div>
 
           <div className="mt-6 flex flex-col gap-3 border-t border-stone-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
