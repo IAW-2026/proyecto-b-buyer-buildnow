@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   useCallback,
   useEffect,
@@ -8,9 +9,11 @@ import {
 
 type Props = {
   id: string;
+  img: string;
   name: string;
   storeId: string;
   storeName?: string;
+  categoryName?: string;
   price: number;
   weight: number;
   available?: boolean;
@@ -21,7 +24,9 @@ type Props = {
 
 export default function ProductCard({
   id,
+  img,
   name,
+  categoryName,
   storeName,
   price,
   weight,
@@ -32,6 +37,8 @@ export default function ProductCard({
 }: Props) {
   const [isModalOpen, setIsModalOpen] =
     useState(false);
+  const [imageFailed, setImageFailed] =
+    useState(false);
 
   // ==============================
   // FORMATTERS
@@ -40,6 +47,42 @@ export default function ProductCard({
   const formattedPrice = `$${price.toFixed(2)}`;
 
   const formattedWeight = `${weight} g`;
+
+  const fallbackLabel =
+    categoryName ?? name.split(" ")[0] ?? "Producto";
+
+  const fallbackInitial = fallbackLabel
+    .charAt(0)
+    .toUpperCase();
+
+  const renderImage = (sizes: string) => {
+    if (imageFailed) {
+      return (
+        <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-stone-100 via-orange-50 to-stone-200 px-4 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-orange-500 shadow-sm">
+            {fallbackInitial}
+          </div>
+          <p className="mt-3 line-clamp-2 text-sm font-semibold text-stone-700">
+            {name}
+          </p>
+          <p className="mt-1 text-xs text-stone-500">
+            {fallbackLabel}
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <Image
+        src={img}
+        alt={name}
+        fill
+        sizes={sizes}
+        className="object-cover"
+        onError={() => setImageFailed(true)}
+      />
+    );
+  };
 
   // ==============================
   // MODAL HANDLERS
@@ -244,14 +287,9 @@ export default function ProductCard({
         }
       >
         {/* IMAGE */}
-        <div
-          className="
-            mb-4
-            aspect-square
-            rounded-xl
-            bg-stone-100
-          "
-        />
+        <div className="relative mb-4 aspect-square overflow-hidden rounded-xl bg-stone-100">
+          {renderImage("(max-width: 640px) 100vw, 256px")}
+        </div>
 
         {/* INFO */}
         <div className="space-y-2">
@@ -321,14 +359,9 @@ export default function ProductCard({
             </button>
 
             {/* IMAGE */}
-            <div
-              className="
-                mb-6
-                aspect-square
-                rounded-xl
-                bg-stone-100
-              "
-            />
+            <div className="relative mb-6 aspect-square overflow-hidden rounded-xl bg-stone-100">
+              {renderImage("(max-width: 640px) 100vw, 448px")}
+            </div>
 
             {/* CONTENT */}
             <div className="space-y-5">

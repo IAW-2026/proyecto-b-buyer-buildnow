@@ -106,7 +106,7 @@ function getPaginatedStores(
   stores: Store[],
   pageNumber: number,
   pageSize: number
-) {
+): Store[] {
   const safePageSize = Math.max(1, pageSize);
   const safePageNumber = Math.max(1, pageNumber);
   const start = (safePageNumber - 1) * safePageSize;
@@ -126,7 +126,7 @@ setSellerApiDependencies({
 
 export async function getStores(
   params?: StoresQuery
-) {
+): Promise<Store[]> {
   if (useMock) {
     if (!params) {
       return sellerApp.stores;

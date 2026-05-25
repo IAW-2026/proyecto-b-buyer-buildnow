@@ -22,6 +22,7 @@ type Props = {
   storeId: string;
   name: string;
   status: "OPEN" | "CLOSE";
+  dashboardPage?: number;
 };
 
 type ProductWithQuantity = Product & {
@@ -32,6 +33,7 @@ export default function StoreQuickViewRow({
   storeId,
   name,
   status,
+  dashboardPage = 1,
 }: Props) {
   const scrollContainerRef =
     useRef<HTMLDivElement>(null);
@@ -268,7 +270,11 @@ export default function StoreQuickViewRow({
         </div>
 
         <Link
-          href={`/${storeId}`}
+          href={
+            dashboardPage > 1
+              ? `/${storeId}?fromStoresPage=${dashboardPage}`
+              : `/${storeId}`
+          }
           className="text-sm font-medium text-orange-500 hover:underline"
         >
           Ver tienda
@@ -359,9 +365,11 @@ export default function StoreQuickViewRow({
             >
               <ProductCard
                 id={product.id}
+                img={product.img}
                 name={product.name}
                 storeId={product.storeId}
                 storeName={name}
+                categoryName={product.categoryName}
                 price={product.price}
                 weight={product.weight}
                 available={product.available}

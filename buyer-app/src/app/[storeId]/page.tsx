@@ -92,11 +92,21 @@ async function getStoreData(storeId: string) {
 
 export default async function StorePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ storeId: string }>;
+  searchParams: Promise<{
+    fromStoresPage?: string;
+  }>;
 }) {
   const { storeId } = await params;
+  const { fromStoresPage } = await searchParams;
   const data = await getStoreData(storeId);
+  const storesPage = Number(fromStoresPage);
+  const backHref =
+    Number.isFinite(storesPage) && storesPage > 1
+      ? `/dashboard?storesPage=${storesPage}`
+      : "/dashboard";
 
   if (!data) {
     notFound();
@@ -106,7 +116,7 @@ export default async function StorePage({
     <main className="space-y-8 px-4 py-6 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between gap-4">
         <Link
-          href="/dashboard"
+          href={backHref}
           className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-orange-300 hover:bg-orange-50"
         >
           ← Volver al dashboard

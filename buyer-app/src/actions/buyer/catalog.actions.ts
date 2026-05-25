@@ -9,6 +9,7 @@ import {
   getStoreProductsService,
   getStoreProductsWithCartQuantity,
   getStoresPage,
+  getStoresPageResponse,
   searchProductsService,
 } from "@/server/services/catalog.service";
 import { requireBuyer } from "@/lib/auth/requireBuyer";
@@ -24,6 +25,19 @@ export async function fetchStoresAction(params?: {
     }
 
     return await getAllStores();
+  } catch (error) {
+    console.error("Error fetching stores:", error);
+    throw new Error("FAILED_TO_FETCH_STORES");
+  }
+}
+
+export async function fetchStoresPageAction(params: {
+  search?: string;
+  pageNumber?: number;
+  pageSize?: number;
+}) {
+  try {
+    return await getStoresPageResponse(params);
   } catch (error) {
     console.error("Error fetching stores:", error);
     throw new Error("FAILED_TO_FETCH_STORES");

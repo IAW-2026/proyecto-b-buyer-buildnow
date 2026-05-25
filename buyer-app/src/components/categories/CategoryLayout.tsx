@@ -220,9 +220,11 @@ export default function CategoryLayout({
           <ProductCard
             key={product.id}
             id={product.id}
+            img={product.img}
             name={product.name}
             storeId={product.storeId}
             storeName={storeNamesById.get(product.storeId)}
+            categoryName={product.categoryName}
             price={product.price}
             weight={product.weight}
             available={product.available}

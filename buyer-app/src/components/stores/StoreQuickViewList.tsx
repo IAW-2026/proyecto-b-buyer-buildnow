@@ -1,16 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import StoreQuickViewRow from "./StoreQuickViewRow";
-import { fetchStoresAction } from "@/actions/buyerActions";
+import { fetchStoresPageAction } from "@/actions/buyerActions";
 import type { Store } from "@/server/integrations/seller/seller.types";
 
 const PAGE_SIZE = 4;
 
 export default function StoreQuickViewList() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const storesPageParam = Number(
+    searchParams.get("storesPage")
+  );
   const [stores, setStores] = useState<Store[]>([]);
-  const [page, setPage] = useState(1);
-  const [maxKnownPage, setMaxKnownPage] = useState(1);
+  const page =
+    Number.isFinite(storesPageParam) &&
+      storesPageParam > 0
+      ? storesPageParam
+      : 1;
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalStores, setTotalStores] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,24 +29,20 @@ export default function StoreQuickViewList() {
       try {
         setLoading(true);
 
-        const data = await fetchStoresAction({
+        const data = await fetchStoresPageAction({
           search: "",
           pageNumber: page,
           pageSize: PAGE_SIZE,
         });
 
-        setStores(data);
-        setMaxKnownPage((current) =>
-          data.length === PAGE_SIZE
-            ? Math.max(current, page + 1)
-            : Math.max(current, page)
-        );
+        setStores(data.data);
+        setTotalPages(data.totalPages);
+        setTotalStores(data.total);
       } catch (error) {
         console.error("Failed to load stores:", error);
         setStores([]);
-        setMaxKnownPage((current) =>
-          Math.max(current, page)
-        );
+        setTotalPages(1);
+        setTotalStores(0);
       } finally {
         setLoading(false);
       }
@@ -45,11 +52,35 @@ export default function StoreQuickViewList() {
   }, [page]);
 
   const canGoPrevious = page > 1;
-  const canGoNext = stores.length === PAGE_SIZE;
+  const canGoNext = page < totalPages;
   const pages = Array.from(
-    { length: maxKnownPage },
+    { length: totalPages },
     (_, index) => index + 1
   );
+
+  const updatePage = (nextPage: number) => {
+    const safePage = Math.min(
+      Math.max(1, nextPage),
+      totalPages
+    );
+    const params = new URLSearchParams(
+      searchParams.toString()
+    );
+
+    if (safePage === 1) {
+      params.delete("storesPage");
+    } else {
+      params.set("storesPage", String(safePage));
+    }
+
+    const query = params.toString();
+    router.replace(
+      query ? `/dashboard?${query}` : "/dashboard",
+      {
+        scroll: false,
+      }
+    );
+  };
 
   if (loading) {
     return <div className="text-stone-400">Cargando tiendas...</div>;
@@ -70,22 +101,21 @@ export default function StoreQuickViewList() {
             storeId={store.id}
             name={store.name}
             status={store.status}
+            dashboardPage={page}
           />
         ))
       )}
 
       <div className="flex flex-col gap-3 rounded-2xl border border-stone-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-stone-500">
-          Pagina {page}
+          Pagina {page} de {totalPages} · {totalStores} tiendas
         </p>
 
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() =>
-              setPage((current) =>
-                Math.max(1, current - 1)
-              )
+              updatePage(page - 1)
             }
             disabled={!canGoPrevious}
             className="rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-700 transition hover:border-orange-300 hover:text-orange-600 disabled:cursor-not-allowed disabled:opacity-40"
@@ -98,7 +128,7 @@ export default function StoreQuickViewList() {
               <button
                 key={pageNumber}
                 type="button"
-                onClick={() => setPage(pageNumber)}
+                onClick={() => updatePage(pageNumber)}
                 className={
                   pageNumber === page
                     ? "h-10 w-10 rounded-xl bg-orange-500 text-sm font-semibold text-white"
@@ -113,7 +143,7 @@ export default function StoreQuickViewList() {
           <button
             type="button"
             onClick={() =>
-              setPage((current) => current + 1)
+              updatePage(page + 1)
             }
             disabled={!canGoNext}
             className="rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-700 transition hover:border-orange-300 hover:text-orange-600 disabled:cursor-not-allowed disabled:opacity-40"

@@ -31,6 +31,48 @@ export async function getStoresPage(params: {
   return getStores(params);
 }
 
+export async function getStoresPageResponse(params: {
+  search?: string;
+  pageNumber?: number;
+  pageSize?: number;
+}) {
+  const { search = "", pageNumber = 1 } = params;
+  const pageSize = Math.max(1, params.pageSize ?? 4);
+  const normalizedSearch = search
+    .trim()
+    .toLocaleLowerCase();
+  const allStores = await getStores();
+  const filteredStores = allStores.filter((store) =>
+    normalizedSearch
+      ? store.name
+          .toLocaleLowerCase()
+          .includes(normalizedSearch)
+      : true
+  );
+  const total = filteredStores.length;
+  const totalPages = Math.max(
+    1,
+    Math.ceil(total / pageSize)
+  );
+  const safePage = Math.min(
+    Math.max(1, pageNumber),
+    totalPages
+  );
+  const data = await getStores({
+    search,
+    pageNumber: safePage,
+    pageSize,
+  });
+
+  return {
+    total,
+    page: safePage,
+    pageSize,
+    totalPages,
+    data,
+  };
+}
+
 export async function getCatalogCategories(): Promise<
   Category[]
 > {
