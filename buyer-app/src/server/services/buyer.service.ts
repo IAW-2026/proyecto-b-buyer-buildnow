@@ -3,6 +3,7 @@ import { serializeDecimal } from "@/lib/utils/serializeDecimal";
 import {
   createBuyer,
   decrementCartItem,
+  findBuyerByEmail,
   findBuyerByClerkId,
   getCartItem,
   deleteCartItem,
@@ -13,11 +14,13 @@ import {
   getCartItemsDetailed,
   findCartItemFromDifferentStore,
   updateBuyer,
+  updateBuyerIdentity,
   createAddress,
   updateAddress,
   deleteAddress,
   getAddressesByBuyerId,
   clearCartByBuyerId,
+  deleteBuyerCascade,
 } from "../repositories/buyer.repository";
 import { getProductDetails } from "@/server/services/catalog.service";
 
@@ -42,7 +45,32 @@ export async function registerBuyer(data: {
   );
 
   if (existingBuyer) {
-    throw new Error("BUYER_ALREADY_EXISTS");
+    return existingBuyer;
+  }
+
+  const existingBuyerByEmail = await findBuyerByEmail(
+    data.email
+  );
+
+  if (existingBuyerByEmail) {
+    const updatedBuyer = await updateBuyerIdentity(
+      existingBuyerByEmail.id,
+      {
+        clerkId: data.clerkId,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+      }
+    );
+
+    if (updatedBuyer.addresses.length === 0) {
+      await createAddress({
+        buyerId: updatedBuyer.id,
+        ...data.address,
+      });
+    }
+
+    return findBuyerByClerkId(data.clerkId);
   }
 
   return createBuyer(data);
@@ -333,6 +361,18 @@ export async function removeAddress(
   }
 
   await deleteAddress(addressId);
+
+  return { success: true };
+}
+
+export async function deleteBuyerAccount(clerkId: string) {
+  const buyer = await findBuyerByClerkId(clerkId);
+
+  if (!buyer) {
+    throw new Error("BUYER_NOT_FOUND");
+  }
+
+  await deleteBuyerCascade(buyer.id);
 
   return { success: true };
 }

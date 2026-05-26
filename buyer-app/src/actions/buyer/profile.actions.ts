@@ -6,6 +6,7 @@ import {
 } from "@clerk/nextjs/server";
 import {
   findCurrentBuyer,
+  deleteBuyerAccount,
   getCurrentBuyer,
   registerBuyer,
   updateBuyerProfile,
@@ -18,6 +19,24 @@ import {
   validatePhone,
 } from "@/lib/validation/buyerValidation";
 import type { ActionResponse } from "@/types/action-response";
+
+function getPrimaryEmailFromClerkUser(
+  user: Awaited<ReturnType<typeof currentUser>>
+) {
+  if (!user) return null;
+
+  const primaryEmail = user.emailAddresses.find(
+    (emailAddress) =>
+      emailAddress.id === user.primaryEmailAddressId
+  )?.emailAddress;
+
+  return (
+    primaryEmail ??
+    user.primaryEmailAddress?.emailAddress ??
+    user.emailAddresses[0]?.emailAddress ??
+    null
+  );
+}
 
 export async function createBuyerAction(
   formData: FormData
@@ -110,7 +129,7 @@ export async function createBuyerAction(
       };
     }
 
-    const email = user.emailAddresses?.[0]?.emailAddress;
+    const email = getPrimaryEmailFromClerkUser(user);
 
     if (!email) {
       return {
@@ -252,6 +271,35 @@ export async function updateBuyerProfileAction(
     return {
       success: false,
       error: "Ocurrió un error al actualizar el perfil",
+    };
+  }
+}
+
+export async function deleteBuyerAccountAction(): Promise<ActionResponse> {
+  try {
+    const { userId } = await requireBuyer();
+
+    await deleteBuyerAccount(userId);
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+
+    if (
+      error instanceof Error &&
+      error.message === "BUYER_NOT_FOUND"
+    ) {
+      return {
+        success: false,
+        error: "Comprador no encontrado",
+      };
+    }
+
+    return {
+      success: false,
+      error: "Ocurrió un error al eliminar la cuenta",
     };
   }
 }

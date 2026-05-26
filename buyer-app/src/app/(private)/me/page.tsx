@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useClerk } from "@clerk/nextjs";
 import TopSearchBar from "@/components/search/TopSearchBar";
 import {
   getCurrentBuyerAction,
@@ -9,6 +10,7 @@ import {
   addAddressAction,
   editAddressAction,
   removeAddressAction,
+  deleteBuyerAccountAction,
 } from "@/actions/buyerActions";
 import AddressCard from "@/components/addresses/AddressCard";
 import AddressForm from "@/components/addresses/AddressForm";
@@ -27,6 +29,7 @@ interface Buyer {
 }
 
 export default function MePage() {
+  const { signOut } = useClerk();
   const [buyer, setBuyer] = useState<Buyer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -40,6 +43,12 @@ export default function MePage() {
   const [addressToDelete, setAddressToDelete] = useState<
     Buyer["addresses"][0] | null
   >(null);
+  const [isDeletingAccount, setIsDeletingAccount] =
+    useState(false);
+  const [
+    isDeleteAccountModalOpen,
+    setIsDeleteAccountModalOpen,
+  ] = useState(false);
   const [formError, setFormError] = useState<string | null>(
     null
   );
@@ -210,6 +219,32 @@ export default function MePage() {
       setFormError("Error al eliminar la dirección");
     } finally {
       setIsDeletingAddress(false);
+    }
+  };
+
+  const confirmDeleteAccount = async () => {
+    setIsDeletingAccount(true);
+    setFormError(null);
+
+    try {
+      const response = await deleteBuyerAccountAction();
+
+      if (!response.success) {
+        setFormError(
+          response.error ||
+          "Error al eliminar la cuenta"
+        );
+        setIsDeleteAccountModalOpen(false);
+        return;
+      }
+
+      await signOut({ redirectUrl: "/login" });
+    } catch (error) {
+      console.error(error);
+      setFormError("Error al eliminar la cuenta");
+      setIsDeleteAccountModalOpen(false);
+    } finally {
+      setIsDeletingAccount(false);
     }
   };
 
@@ -454,6 +489,26 @@ export default function MePage() {
             ← Volver al dashboard
           </Link>
         </div>
+
+        <section className="rounded-2xl border border-red-200 bg-white p-6">
+          <h2 className="text-lg font-semibold text-red-700">
+            Eliminar cuenta
+          </h2>
+          <p className="mt-2 text-sm text-stone-600">
+            Esta accion elimina tu comprador, direcciones,
+            carrito e items del carrito en Buyer App.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setFormError(null);
+              setIsDeleteAccountModalOpen(true);
+            }}
+            className="mt-4 rounded-xl border border-red-300 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-50"
+          >
+            Eliminar cuenta
+          </button>
+        </section>
       </div>
 
       {addressToDelete ? (
@@ -489,6 +544,46 @@ export default function MePage() {
                 {isDeletingAddress
                   ? "Eliminando..."
                   : "Eliminar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {isDeleteAccountModalOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-2xl border border-red-200 bg-white p-6 shadow-xl">
+            <h3 className="text-lg font-semibold text-red-700">
+              Eliminar cuenta
+            </h3>
+            <p className="mt-2 text-sm text-stone-600">
+              Estas seguro de que queres eliminar tu cuenta?
+              Esta accion borra tus datos de comprador,
+              direcciones, carrito e items del carrito.
+            </p>
+            <div className="mt-4 rounded-xl bg-red-50 p-4 text-sm text-red-700">
+              Esta accion no se puede deshacer.
+            </div>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() =>
+                  setIsDeleteAccountModalOpen(false)
+                }
+                disabled={isDeletingAccount}
+                className="rounded-xl border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:bg-[#FFF4E8] disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={confirmDeleteAccount}
+                disabled={isDeletingAccount}
+                className="rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 disabled:opacity-50"
+              >
+                {isDeletingAccount
+                  ? "Eliminando..."
+                  : "Eliminar cuenta"}
               </button>
             </div>
           </div>

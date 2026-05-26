@@ -50,6 +50,38 @@ export async function findBuyerByClerkId(clerkId: string) {
   });
 }
 
+export async function findBuyerByEmail(email: string) {
+  return prisma.buyer.findUnique({
+    where: {
+      email,
+    },
+
+    include: {
+      addresses: true,
+    },
+  });
+}
+
+export async function updateBuyerIdentity(
+  buyerId: string,
+  data: {
+    clerkId: string;
+    name: string;
+    email: string;
+    phone?: string;
+  }
+) {
+  return prisma.buyer.update({
+    where: {
+      id: buyerId,
+    },
+    data,
+    include: {
+      addresses: true,
+    },
+  });
+}
+
 //CART
 export async function getCartByBuyerId(buyerId: string) {
   return prisma.cart.findFirst({
@@ -224,5 +256,41 @@ export async function getAddressesByBuyerId(buyerId: string) {
     orderBy: {
       createdAt: "desc",
     },
+  });
+}
+
+export async function deleteBuyerCascade(buyerId: string) {
+  return prisma.$transaction(async (tx) => {
+    const cart = await tx.cart.findUnique({
+      where: {
+        buyerId,
+      },
+    });
+
+    if (cart) {
+      await tx.cartItem.deleteMany({
+        where: {
+          cartId: cart.id,
+        },
+      });
+
+      await tx.cart.delete({
+        where: {
+          id: cart.id,
+        },
+      });
+    }
+
+    await tx.address.deleteMany({
+      where: {
+        buyerId,
+      },
+    });
+
+    return tx.buyer.delete({
+      where: {
+        id: buyerId,
+      },
+    });
   });
 }
