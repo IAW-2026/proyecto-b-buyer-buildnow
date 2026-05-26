@@ -46,7 +46,7 @@ export default function StoreProductsByCategory({
 
   if (categories.length === 0) {
     return (
-      <div className="rounded-2xl bg-white border border-[#A76E04] p-6">
+      <div className="brand-card p-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm uppercase tracking-wide text-[#ED6F00] font-semibold">
@@ -73,7 +73,7 @@ export default function StoreProductsByCategory({
       {categories.map(({ category, products }) => (
         <section
           key={category.id}
-          className="rounded-2xl bg-white border border-[#A76E04] p-6"
+          className="brand-card p-6"
         >
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>

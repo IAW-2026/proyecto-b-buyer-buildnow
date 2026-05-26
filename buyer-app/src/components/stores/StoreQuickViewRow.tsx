@@ -251,7 +251,7 @@ export default function StoreQuickViewRow({
 
   if (loading) {
     return (
-      <section className="rounded-2xl border border-[#A76E04] bg-white p-5 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
+      <section className="brand-card p-5">
         <div className="text-[#A76E04]">
           Cargando productos...
         </div>
@@ -265,7 +265,7 @@ export default function StoreQuickViewRow({
 
   if (status === "CLOSE") {
     return (
-      <section className="rounded-2xl border border-[#A76E04] bg-white p-5 opacity-50 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
+      <section className="brand-card p-5 opacity-50">
         <div className="mb-5">
           <h2 className="text-lg font-semibold text-[#823A00]">
             {name}
@@ -284,11 +284,11 @@ export default function StoreQuickViewRow({
   // ==============================
 
   return (
-    <section className="rounded-2xl border border-[#A76E04] bg-white p-5 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
+    <section className="brand-card brand-card-hover bg-[#fffdf9] p-5">
       {/* HEADER */}
       <div className="mb-5 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-[#823A00]">
+          <h2 className="text-lg font-bold text-[#823A00]">
             {name}
           </h2>
 
@@ -357,12 +357,15 @@ export default function StoreQuickViewRow({
             justify-center
             rounded-full
             border
-            border-[#A76E04]
+            border-orange-200
             bg-white
             text-[#823A00]
-            transition
+            transition-[background-color,border-color,transform,opacity]
+            duration-200
+            ease-out
             hover:enabled:border-[#A76E04]
             hover:enabled:bg-[#FFF4E8]
+            hover:enabled:-translate-x-0.5
             disabled:cursor-not-allowed
             disabled:opacity-30
           "
@@ -428,12 +431,15 @@ export default function StoreQuickViewRow({
             justify-center
             rounded-full
             border
-            border-[#A76E04]
+            border-orange-200
             bg-white
             text-[#823A00]
-            transition
+            transition-[background-color,border-color,transform,opacity]
+            duration-200
+            ease-out
             hover:enabled:border-[#A76E04]
             hover:enabled:bg-[#FFF4E8]
+            hover:enabled:translate-x-0.5
             disabled:cursor-not-allowed
             disabled:opacity-30
           "

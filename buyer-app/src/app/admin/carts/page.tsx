@@ -19,7 +19,7 @@ export default async function AdminCartsPage() {
         description="Carritos activos con totales estimados desde CART_ITEM."
       />
 
-      <div className="overflow-hidden rounded-xl border border-[#A76E04] bg-white shadow-sm">
+      <div className="brand-card overflow-hidden rounded-xl">
         {carts.length === 0 ? (
           <p className="p-6 text-sm text-stone-600">
             No hay carritos activos.

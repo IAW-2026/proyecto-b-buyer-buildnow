@@ -1,6 +1,7 @@
 "use client";
 
 import { CartProvider } from "@/context/CartContext";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
@@ -12,12 +13,14 @@ export function Providers({ children }: { children: ReactNode }) {
     !pathname.startsWith("/register");
 
   if (!shouldUseCart) {
-    return <>{children}</>;
+    return <ThemeProvider>{children}</ThemeProvider>;
   }
 
   return (
-    <CartProvider>
-      {children}
-    </CartProvider>
+    <ThemeProvider>
+      <CartProvider>
+        {children}
+      </CartProvider>
+    </ThemeProvider>
   );
 }

@@ -125,7 +125,7 @@ export default function OrdersDropdown({
         onClick={(e) => e.stopPropagation()}
       >
         {/* HEADER */}
-        <div className="bg-[#FFF4E8] px-4 py-3 border-b border-[#A76E04]">
+        <div className="bg-[#FFF4E8] px-4 py-3 border-b border-orange-200">
           <h3 className="font-semibold text-[#823A00]">
             📦 Mis Pedidos
           </h3>
@@ -261,7 +261,7 @@ export default function OrdersDropdown({
         {!isLoading &&
           !hasError &&
           orders.length > 0 && (
-            <div className="border-t border-[#A76E04] px-4 py-2 bg-[#FFF4E8]">
+            <div className="border-t border-orange-200 px-4 py-2 bg-[#FFF4E8]">
               <button
                 onClick={onClose}
                 className="

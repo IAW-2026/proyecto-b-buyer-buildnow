@@ -35,12 +35,9 @@ export default function ProfileForm() {
       action={handleCreateBuyer}
       className="
         space-y-6
-        bg-white
+        brand-card
         p-6
         rounded-2xl
-        shadow-sm
-        border
-        border-[#A76E04]
       "
     >
       {error && (
@@ -176,15 +173,9 @@ export default function ProfileForm() {
         type="submit"
         disabled={isRedirecting}
         className="
-          bg-[var(--color-brand-accent)]
-          hover:opacity-90
-          text-white
+          brand-button-primary
           px-6
           py-3
-          rounded-xl
-          font-medium
-          transition
-          disabled:opacity-60
         "
       >
         {isRedirecting ? "Redirigiendo..." : "Guardar perfil"}

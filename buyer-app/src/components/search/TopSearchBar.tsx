@@ -172,20 +172,19 @@ export default function TopSearchBar({
         items-center
         justify-between
         gap-3
-        rounded-2xl
-        bg-white
-        border
-        border-[#823A00]
+        brand-card
+        bg-[#fffdf9]
+        ring-1
+        ring-white/70
         p-3
         sm:gap-4
         sm:p-4
-        shadow-[0_10px_28px_rgba(130,58,0,0.10)]
       "
     >
       {/* LOGO */}
       <Link
         href="/dashboard"
-        className="flex min-w-0 flex-1 items-center gap-2 rounded-xl transition hover:opacity-85 sm:flex-none"
+        className="flex min-w-0 flex-1 items-center gap-2 rounded-xl transition-[opacity,transform] duration-200 hover:-translate-y-0.5 hover:opacity-90 sm:flex-none"
         aria-label="Ir al dashboard"
       >
         <Image
@@ -193,7 +192,7 @@ export default function TopSearchBar({
           alt="BuildNow"
           width={40}
           height={40}
-          className="h-9 w-9 shrink-0 rounded-xl object-cover sm:h-10 sm:w-10"
+          className="h-9 w-9 shrink-0 rounded-xl object-cover shadow-sm sm:h-10 sm:w-10"
           priority
         />
 
@@ -228,16 +227,19 @@ export default function TopSearchBar({
                 w-full
                 rounded-xl
                 border
-                border-[#A76E04]
+                border-orange-200
                 bg-[#FFF4E8]
                 px-4
                 pr-11
                 text-sm
                 text-[#823A00]
                 outline-none
-                transition
-                focus:border-[#823A00]
+                transition-[background-color,border-color,box-shadow]
+                duration-200
+                ease-out
+                focus:border-[#A76E04]
                 focus:bg-white
+                focus:shadow-[0_0_0_3px_rgba(237,111,0,0.12)]
                 sm:h-12
                 sm:text-base
               "
@@ -326,8 +328,12 @@ export default function TopSearchBar({
               text-sm
               font-semibold
               text-white
-              transition
+              transition-[background-color,box-shadow,transform]
+              duration-200
+              ease-out
               hover:bg-[#A76E04]
+              hover:shadow-md
+              active:translate-y-px
               sm:h-12
               sm:px-5
             "
@@ -353,14 +359,17 @@ export default function TopSearchBar({
             max-[420px]:w-9
             rounded-full
             border
-            border-[#A76E04]
+            border-orange-200
             bg-[#FFF4E8]
             flex
             items-center
             justify-center
             text-[#823A00]
-            hover:bg-[#F8C58D]
-            transition
+            hover:bg-[#FFE5C7]
+            transition-[background-color,border-color,transform]
+            duration-200
+            ease-out
+            active:translate-y-px
             text-lg
           "
           title="Ver mis pedidos"
@@ -378,14 +387,17 @@ export default function TopSearchBar({
               max-[420px]:w-9
               rounded-full
               border
-              border-[#A76E04]
+              border-orange-200
               bg-[#FFF4E8]
               flex
               items-center
               justify-center
               text-[#823A00]
-              hover:bg-[#F8C58D]
-              transition
+              hover:bg-[#FFE5C7]
+              transition-[background-color,border-color,transform]
+              duration-200
+              ease-out
+              active:translate-y-px
             "
           >
             🛒
@@ -405,7 +417,10 @@ export default function TopSearchBar({
               p-2
               hover:bg-[#FFF4E8]
               rounded-xl
-              transition
+              transition-[background-color,transform]
+              duration-200
+              ease-out
+              active:translate-y-px
             "
           >
             <div
@@ -416,7 +431,7 @@ export default function TopSearchBar({
                 max-[420px]:w-9
                 rounded-full
                 border
-                border-[#A76E04]
+                border-orange-200
                 bg-[#FFF4E8]
                 text-[#823A00]
                 flex

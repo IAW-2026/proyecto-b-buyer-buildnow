@@ -161,7 +161,7 @@ export default function OrderTrackingClient({
         </div>
 
         {!isCancelled ? (
-          <div className="mb-8 rounded-2xl border border-[#823A00] bg-white p-8 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
+          <div className="brand-card mb-8 p-8">
             <h2 className="mb-8 text-lg font-semibold text-[#823A00]">
               Estado del pedido
             </h2>
@@ -206,7 +206,7 @@ export default function OrderTrackingClient({
 
               <div className="absolute left-0 right-0 top-6 h-1 bg-stone-200">
                 <div
-                  className="h-full bg-[#ED6F00] transition-all"
+                  className="h-full bg-[#ED6F00] transition-[width] duration-500 ease-out"
                   style={{
                     width: `${
                       currentStepIndex >= 0
@@ -220,7 +220,7 @@ export default function OrderTrackingClient({
               </div>
             </div>
 
-            <div className="mt-8 rounded-lg border border-[#A76E04] bg-[#FFF4E8] p-4">
+            <div className="mt-8 rounded-lg border border-orange-200 bg-[#FFF4E8] p-4">
               <p className="text-sm text-[#823A00]">
                 {statusMessages[order.status] ?? ""}
               </p>
@@ -238,7 +238,7 @@ export default function OrderTrackingClient({
         )}
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <div className="rounded-2xl border border-[#823A00] bg-white p-6 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
+          <div className="brand-card p-6">
             <h3 className="mb-4 text-lg font-semibold text-[#823A00]">
               Detalles del pedido
             </h3>
@@ -272,7 +272,7 @@ export default function OrderTrackingClient({
                 </span>
               </div>
 
-              <div className="border-t border-[#A76E04] pt-4">
+              <div className="border-t border-orange-200 pt-4">
                 <div className="max-h-48 space-y-3 overflow-y-auto pr-2">
                   {order.items.map((item) => {
                     const productDetail =
@@ -289,7 +289,7 @@ export default function OrderTrackingClient({
                     return (
                       <div
                         key={item.id}
-                        className="rounded-xl border border-[#F8C58D] bg-[#FFF4E8] p-3"
+                        className="rounded-xl border border-orange-200 bg-[#FFF4E8] p-3"
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div>
@@ -329,7 +329,7 @@ export default function OrderTrackingClient({
                 </div>
               </div>
 
-              <hr className="my-2 border-[#A76E04]" />
+              <hr className="my-2 border-orange-200" />
 
               <div className="flex justify-between gap-4 text-sm">
                 <span className="font-semibold text-[#823A00]">
@@ -351,7 +351,7 @@ export default function OrderTrackingClient({
             </div>
           </div>
 
-          <div className="rounded-2xl border border-[#823A00] bg-white p-6 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
+          <div className="brand-card p-6">
             <h3 className="mb-4 text-lg font-semibold text-[#823A00]">
               Información de entrega
             </h3>
@@ -366,7 +366,7 @@ export default function OrderTrackingClient({
                 </p>
               </div>
 
-              <div className="border-t border-[#A76E04] pt-4">
+              <div className="border-t border-orange-200 pt-4">
                 <p className="mb-2 text-sm text-stone-600">
                   Repartidor
                 </p>
@@ -377,7 +377,7 @@ export default function OrderTrackingClient({
               </div>
 
               {deliveryTracking ? (
-                <div className="border-t border-[#A76E04] pt-4">
+                <div className="border-t border-orange-200 pt-4">
                   <p className="mb-1 text-sm text-stone-600">
                     Llegada estimada
                   </p>

@@ -56,7 +56,7 @@ export default async function AdminBuyerDetailPage({
         </p>
       </div>
 
-      <section className="rounded-xl border border-[#A76E04] bg-white p-6 shadow-sm">
+      <section className="brand-card rounded-xl p-6">
         <h3 className="font-semibold text-[#823A00]">
           Editar datos básicos
         </h3>
@@ -87,7 +87,7 @@ export default async function AdminBuyerDetailPage({
           <div className="md:col-span-2">
             <button
               type="submit"
-              className="rounded-lg bg-[#ED6F00] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#A76E04]"
+              className="brand-button-primary rounded-lg px-4 py-2 text-sm"
             >
               Guardar cambios
             </button>
@@ -96,7 +96,7 @@ export default async function AdminBuyerDetailPage({
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
+        <div className="brand-card rounded-xl p-5">
           <p className="text-sm text-stone-600">
             Direcciones
           </p>
@@ -104,7 +104,7 @@ export default async function AdminBuyerDetailPage({
             {buyer.addresses.length}
           </p>
         </div>
-        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
+        <div className="brand-card rounded-xl p-5">
           <p className="text-sm text-stone-600">
             Items en carrito
           </p>
@@ -112,7 +112,7 @@ export default async function AdminBuyerDetailPage({
             {buyer.cart?.items.length ?? 0}
           </p>
         </div>
-        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
+        <div className="brand-card rounded-xl p-5">
           <p className="text-sm text-stone-600">
             Total estimado
           </p>
@@ -122,7 +122,7 @@ export default async function AdminBuyerDetailPage({
         </div>
       </section>
 
-      <section className="rounded-xl border border-[#A76E04] bg-white p-6 shadow-sm">
+      <section className="brand-card rounded-xl p-6">
         <h3 className="font-semibold text-[#823A00]">
           Direcciones
         </h3>

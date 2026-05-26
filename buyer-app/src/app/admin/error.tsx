@@ -8,7 +8,7 @@ export default function AdminError({
 }) {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#FFF4E8] px-6">
-      <section className="w-full max-w-md rounded-xl border border-[#A76E04] bg-white p-6 text-center shadow-sm">
+      <section className="w-full max-w-md rounded-xl border border-orange-200 bg-white p-6 text-center shadow-sm">
         <p className="text-sm font-medium text-[#ED6F00]">
           Panel de administracion
         </p>
@@ -21,7 +21,7 @@ export default function AdminError({
         <button
           type="button"
           onClick={reset}
-          className="mt-5 rounded-lg bg-[#ED6F00] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#A76E04]"
+          className="mt-5 brand-button-primary rounded-lg px-4 py-2 text-sm"
         >
           Reintentar
         </button>

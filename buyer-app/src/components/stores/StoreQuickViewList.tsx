@@ -89,7 +89,7 @@ export default function StoreQuickViewList() {
   return (
     <div className="space-y-4">
       {stores.length === 0 ? (
-        <section className="rounded-2xl border border-[#823A00] bg-white p-6 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
+        <section className="brand-card p-6">
           <p className="text-stone-500">
             No se encontraron tiendas para mostrar.
           </p>
@@ -106,7 +106,7 @@ export default function StoreQuickViewList() {
         ))
       )}
 
-      <div className="flex flex-col gap-3 rounded-2xl border border-[#823A00] bg-white p-4 shadow-[0_8px_24px_rgba(130,58,0,0.08)] sm:flex-row sm:items-center sm:justify-between">
+      <div className="brand-card flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm font-medium text-[#823A00]">
           Pagina {page} de {totalPages} · {totalStores} tiendas
         </p>
@@ -118,7 +118,7 @@ export default function StoreQuickViewList() {
               updatePage(page - 1)
             }
             disabled={!canGoPrevious}
-            className="rounded-xl border border-[#A76E04] bg-white px-3 py-2 text-sm font-medium text-[#823A00] transition hover:bg-[#FFF4E8] disabled:cursor-not-allowed disabled:opacity-40"
+            className="brand-button-soft px-3 py-2 text-sm"
           >
             {"<"} Anterior
           </button>
@@ -131,8 +131,8 @@ export default function StoreQuickViewList() {
                 onClick={() => updatePage(pageNumber)}
                 className={
                   pageNumber === page
-                    ? "h-10 w-10 rounded-xl bg-[#ED6F00] text-sm font-semibold text-white"
-                    : "h-10 w-10 rounded-xl border border-[#A76E04] bg-white text-sm font-medium text-[#823A00] transition hover:bg-[#FFF4E8]"
+                    ? "brand-button-primary flex h-10 w-10 items-center justify-center text-sm"
+                    : "brand-button-soft flex h-10 w-10 items-center justify-center text-sm"
                 }
               >
                 {pageNumber}
@@ -146,7 +146,7 @@ export default function StoreQuickViewList() {
               updatePage(page + 1)
             }
             disabled={!canGoNext}
-            className="rounded-xl border border-[#A76E04] bg-white px-3 py-2 text-sm font-medium text-[#823A00] transition hover:bg-[#FFF4E8] disabled:cursor-not-allowed disabled:opacity-40"
+            className="brand-button-soft px-3 py-2 text-sm"
           >
             Siguiente {">"}
           </button>

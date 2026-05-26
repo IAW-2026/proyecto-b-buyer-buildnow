@@ -95,10 +95,7 @@ export default function CartSidebar() {
     return (
       <div
         className="
-          rounded-2xl
-          bg-white
-          border
-          border-[#A76E04]
+          brand-card
           p-5
         "
       >
@@ -125,13 +122,10 @@ export default function CartSidebar() {
   return (
     <div
       className="
-        rounded-2xl
-        bg-white
-        border
-        border-[#823A00]
+        brand-card
+        bg-[#fffdf9]
         p-5
         space-y-4
-        shadow-[0_10px_28px_rgba(130,58,0,0.10)]
       "
     >
       {/* HEADER */}
@@ -205,7 +199,7 @@ export default function CartSidebar() {
           </div>
 
           {/* TOTALS */}
-          <div className="border-t border-[#A76E04] pt-4 space-y-3">
+          <div className="border-t border-orange-200 pt-4 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-stone-600">
                 Peso total
@@ -230,17 +224,9 @@ export default function CartSidebar() {
               disabled={isCheckingOut}
               className="
                 w-full
-                rounded-xl
-                bg-[#ED6F00]
+                brand-button-primary
                 px-4
                 py-3
-                font-medium
-                text-white
-                transition
-                hover:opacity-90
-                hover:bg-[#A76E04]
-                disabled:opacity-50
-                disabled:cursor-not-allowed
               "
             >
               {isCheckingOut ? "Procesando..." : "Ir al checkout"}

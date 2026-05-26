@@ -19,7 +19,7 @@ export default async function AdminReportsPage() {
       />
 
       <section className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
+        <div className="brand-card rounded-xl p-5">
           <p className="text-sm text-stone-600">
             Total de carritos
           </p>
@@ -27,7 +27,7 @@ export default async function AdminReportsPage() {
             {report.totalCarts}
           </p>
         </div>
-        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
+        <div className="brand-card rounded-xl p-5">
           <p className="text-sm text-stone-600">
             Total estimado acumulado
           </p>
@@ -35,7 +35,7 @@ export default async function AdminReportsPage() {
             {formatMoney(report.totalEstimated)}
           </p>
         </div>
-        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
+        <div className="brand-card rounded-xl p-5">
           <p className="text-sm text-stone-600">
             Promedio de items por carrito
           </p>
@@ -45,8 +45,8 @@ export default async function AdminReportsPage() {
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-xl border border-[#A76E04] bg-white shadow-sm">
-        <div className="border-b border-[#A76E04] px-6 py-4">
+      <section className="brand-card overflow-hidden rounded-xl">
+        <div className="border-b border-orange-200 px-6 py-4">
           <h3 className="font-semibold text-[#823A00]">
             Top productId más agregados
           </h3>

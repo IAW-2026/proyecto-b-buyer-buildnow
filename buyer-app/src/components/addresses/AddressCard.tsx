@@ -21,7 +21,7 @@ export default function AddressCard({
   isDeleting,
 }: AddressCardProps) {
   return (
-    <div className="bg-white border border-[#A76E04] rounded-xl p-4 hover:border-[#823A00] transition">
+    <div className="brand-card brand-card-hover rounded-xl p-4 hover:-translate-y-0.5">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
           <h3 className="font-medium text-[#823A00] mb-2">

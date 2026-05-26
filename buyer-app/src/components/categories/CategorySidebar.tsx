@@ -78,13 +78,15 @@ export default function CategorySidebar({
       px-3
       py-2
       text-sm
-      transition
+      transition-[background-color,border-color,color,transform]
+      duration-200
+      ease-out
       whitespace-nowrap
       text-left
       w-full
       ${
         isSelected
-          ? "border border-[#A76E04] bg-[#FFF4E8] text-[#823A00] font-semibold"
+          ? "border border-orange-200 bg-[#FFF4E8] text-[#823A00] font-semibold"
           : "text-stone-700 hover:bg-[#FFF4E8] hover:text-[#823A00]"
       }
     `;
@@ -92,7 +94,7 @@ export default function CategorySidebar({
 
   if (loading) {
     return (
-      <div className="rounded-2xl bg-white border border-[#823A00] p-5 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
+      <div className="brand-card bg-[#fffdf9] p-5">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-[#823A00] mb-4">
           Categorías
         </h2>
@@ -103,7 +105,7 @@ export default function CategorySidebar({
   }
 
   return (
-    <div className="rounded-2xl bg-white border border-[#823A00] p-5 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
+    <div className="brand-card bg-[#fffdf9] p-5">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-[#823A00] mb-4">
         Categorías
       </h2>
@@ -129,7 +131,9 @@ export default function CategorySidebar({
             border-[#A76E04]
             text-[#823A00]
             text-sm
-            transition
+            transition-[background-color,border-color,transform,opacity]
+            duration-200
+            ease-out
             hover:enabled:bg-[#FFF4E8]
             hover:enabled:border-[#A76E04]
             disabled:opacity-30
@@ -185,7 +189,9 @@ export default function CategorySidebar({
             border-[#A76E04]
             text-[#823A00]
             text-sm
-            transition
+            transition-[background-color,border-color,transform,opacity]
+            duration-200
+            ease-out
             hover:enabled:bg-[#FFF4E8]
             hover:enabled:border-[#A76E04]
             disabled:opacity-30

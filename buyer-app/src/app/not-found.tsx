@@ -10,7 +10,7 @@ export default async function NotFound() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#FFF4E8] px-6 py-12">
-      <section className="w-full max-w-lg rounded-2xl border border-[#A76E04] bg-white p-8 text-center shadow-sm">
+      <section className="w-full max-w-lg rounded-2xl border border-orange-200 bg-white p-8 text-center shadow-sm">
         <Image
           src="/buildnow-logo.png"
           alt="BuildNow"

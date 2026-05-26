@@ -32,7 +32,7 @@ export default function DashboardLayout() {
   };
 
   return (
-    <main className="min-h-screen bg-[#FFF4E8]">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(237,111,0,0.12),transparent_30rem),linear-gradient(180deg,#fffaf5_0%,#fff4e8_45%,#fff8f1_100%)]">
       <div className="mx-auto max-w-[1600px] p-4">
         <TopSearchBar
           showCartButton={true}

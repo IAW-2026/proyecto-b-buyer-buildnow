@@ -268,7 +268,7 @@ export default function ProductCard({
                 commitDraftQuantity();
               }
             }}
-            className="h-10 w-20 rounded-xl border border-[#A76E04] bg-white px-3 text-center text-sm font-semibold text-[#823A00] outline-none transition focus:border-[#823A00]"
+            className="h-10 w-20 rounded-xl border border-orange-200 bg-white px-3 text-center text-sm font-semibold text-[#823A00] outline-none transition-[border-color,box-shadow] duration-200 focus:border-[#A76E04] focus:shadow-[0_0_0_3px_rgba(237,111,0,0.12)]"
             aria-label="Cantidad a agregar"
           />
           <button
@@ -278,17 +278,10 @@ export default function ProductCard({
             className="
               min-w-0
               flex-1
-              rounded-xl
-              bg-[#ED6F00]
+              brand-button-primary
               px-3
               py-2
               text-sm
-              font-medium
-              text-white
-              transition
-              hover:opacity-90
-              disabled:cursor-not-allowed
-              disabled:opacity-60
             "
           >
             Agregar
@@ -327,8 +320,11 @@ export default function ProductCard({
             bg-white/20
             text-lg
             font-bold
-            transition
+            transition-[background-color,opacity,transform]
+            duration-150
+            ease-out
             hover:bg-white/30
+            active:scale-95
             disabled:cursor-not-allowed
             disabled:opacity-50
           "
@@ -350,7 +346,7 @@ export default function ProductCard({
             }
           }}
           disabled={isUpdatingQuantity || isAdjustingQuantity}
-          className="h-7 w-14 rounded-lg border border-white/30 bg-white text-center text-sm font-semibold text-[#823A00] outline-none disabled:opacity-70"
+          className="h-7 w-14 rounded-lg border border-white/30 bg-white text-center text-sm font-semibold text-[#823A00] outline-none transition-[box-shadow] duration-150 focus:shadow-[0_0_0_3px_rgba(255,255,255,0.24)] disabled:opacity-70"
           aria-label="Cantidad en carrito"
         />
 
@@ -368,8 +364,11 @@ export default function ProductCard({
             bg-white/20
             text-lg
             font-bold
-            transition
+            transition-[background-color,opacity,transform]
+            duration-150
+            ease-out
             hover:bg-white/30
+            active:scale-95
             disabled:cursor-not-allowed
             disabled:opacity-50
           "
@@ -391,19 +390,17 @@ export default function ProductCard({
         onClick={openModal}
         className={
           `
-          rounded-2xl
-          border
-          border-[#F8C58D]
+          brand-card
+          brand-card-hover
+          bg-[#fffdf9]
           p-4
-          transition
-          hover:border-[#823A00]
-          hover:shadow-md
+          hover:-translate-y-1
           ${available ? "cursor-pointer" : "opacity-70"}
         `
         }
       >
         {/* IMAGE */}
-        <div className="relative mb-4 aspect-square overflow-hidden rounded-xl bg-stone-100">
+        <div className="relative mb-4 aspect-square overflow-hidden rounded-xl bg-stone-100 shadow-inner">
           {renderImage("(max-width: 640px) 100vw, 256px")}
         </div>
 

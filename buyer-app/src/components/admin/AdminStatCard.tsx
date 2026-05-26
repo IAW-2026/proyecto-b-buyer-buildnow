@@ -24,7 +24,7 @@ export default function AdminStatCard({
     return (
       <Link
         href={href}
-        className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm transition hover:border-[#823A00]"
+        className="brand-card brand-card-hover rounded-xl p-5 hover:-translate-y-0.5"
       >
         {content}
       </Link>
@@ -32,7 +32,7 @@ export default function AdminStatCard({
   }
 
   return (
-    <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
+    <div className="brand-card rounded-xl p-5">
       {content}
     </div>
   );

@@ -118,7 +118,7 @@ export default function AiMaterialAssistant({
   };
 
   return (
-    <section className="rounded-2xl border border-[#A76E04] bg-white p-5 shadow-sm">
+    <section className="brand-card p-5">
       <div>
         <h2 className="text-lg font-bold text-[#823A00]">
           Asistente de materiales
@@ -141,7 +141,7 @@ export default function AiMaterialAssistant({
           }
           rows={4}
           placeholder="Ej: Necesito hacer una pared de ladrillos de 3 metros por 2 metros"
-          className="w-full resize-none rounded-xl border border-stone-300 bg-[#FFF4E8] px-4 py-3 text-sm outline-none transition focus:border-[#ED6F00] focus:bg-white"
+          className="w-full resize-none rounded-xl border border-orange-200 bg-[#FFF4E8] px-4 py-3 text-sm outline-none transition-[background-color,border-color,box-shadow] duration-200 focus:border-[#A76E04] focus:bg-white focus:shadow-[0_0_0_3px_rgba(237,111,0,0.12)]"
         />
 
         <div className="flex items-center justify-between gap-3">
@@ -152,7 +152,7 @@ export default function AiMaterialAssistant({
           <button
             type="submit"
             disabled={isLoading}
-            className="rounded-xl bg-[#ED6F00] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#A76E04] disabled:cursor-not-allowed disabled:opacity-50"
+            className="brand-button-primary px-4 py-2 text-sm"
           >
             {isLoading
               ? "Recomendando..."
@@ -184,7 +184,7 @@ export default function AiMaterialAssistant({
               {result.recommendedProducts.map((product) => (
                 <article
                   key={product.productId}
-                  className="rounded-xl border border-[#A76E04] p-4"
+                  className="rounded-xl border border-orange-200 p-4"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -206,7 +206,7 @@ export default function AiMaterialAssistant({
                     disabled={
                       addingProductId === product.productId
                     }
-                    className="mt-3 w-full rounded-xl bg-[#ED6F00] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#A76E04] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="brand-button-primary mt-3 w-full px-4 py-2 text-sm"
                   >
                     {addingProductId === product.productId
                       ? "Agregando..."
@@ -216,7 +216,7 @@ export default function AiMaterialAssistant({
               ))}
             </div>
           ) : (
-            <div className="rounded-xl border border-[#A76E04] bg-[#FFF4E8] px-4 py-3 text-sm text-stone-600">
+            <div className="rounded-xl border border-orange-200 bg-[#FFF4E8] px-4 py-3 text-sm text-stone-600">
               No encontré productos disponibles para esa necesidad en esta tienda.
             </div>
           )}

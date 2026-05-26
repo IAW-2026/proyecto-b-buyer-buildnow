@@ -12,7 +12,7 @@ export default async function AdminBuyersPage() {
         description="Listado de usuarios dados de alta como buyers."
       />
 
-      <div className="overflow-hidden rounded-xl border border-[#A76E04] bg-white shadow-sm">
+      <div className="brand-card overflow-hidden rounded-xl">
         {buyers.length === 0 ? (
           <p className="p-6 text-sm text-stone-600">
             No hay compradores registrados.

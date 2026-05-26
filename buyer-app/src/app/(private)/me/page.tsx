@@ -301,7 +301,7 @@ export default function MePage() {
               onClick={() =>
                 setIsEditing(!isEditing)
               }
-              className="px-4 py-2 rounded-lg bg-[#ED6F00] text-white hover:bg-[#A76E04] transition"
+              className="brand-button-primary rounded-lg px-4 py-2 text-sm"
             >
               {isEditing
                 ? "Cancelar"
@@ -357,7 +357,7 @@ export default function MePage() {
 
               <button
                 type="submit"
-                className="w-full px-4 py-2 rounded-lg bg-[#ED6F00] text-white hover:bg-[#A76E04] transition"
+                className="brand-button-primary w-full rounded-lg px-4 py-2 text-sm"
               >
                 Guardar cambios
               </button>
@@ -471,7 +471,7 @@ export default function MePage() {
                   onClick={() =>
                     setIsAddingAddress(true)
                   }
-                  className="inline-block px-6 py-3 bg-[#ED6F00] text-white rounded-xl hover:bg-[#A76E04] transition font-medium"
+                  className="brand-button-primary inline-block px-6 py-3 text-sm"
                 >
                   Agregar primera dirección
                 </button>

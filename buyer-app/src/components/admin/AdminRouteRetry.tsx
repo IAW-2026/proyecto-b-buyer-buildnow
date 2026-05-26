@@ -18,7 +18,7 @@ export default function AdminRouteRetry() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#FFF4E8] px-6">
-      <section className="w-full max-w-md rounded-xl border border-[#A76E04] bg-white p-6 text-center shadow-sm">
+      <section className="w-full max-w-md rounded-xl border border-orange-200 bg-white p-6 text-center shadow-sm">
         <p className="text-sm font-medium text-[#ED6F00]">
           Panel de administracion
         </p>

@@ -163,7 +163,7 @@ export default function ProductSearchResults({
   );
 
   return (
-    <div className="rounded-2xl bg-white border border-[#823A00] p-6 shadow-[0_8px_24px_rgba(130,58,0,0.08)]">
+    <div className="brand-card p-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm uppercase tracking-wide text-[#A76E04] font-semibold">
@@ -175,7 +175,7 @@ export default function ProductSearchResults({
           </h1>
         </div>
 
-        <div className="rounded-xl bg-[#FFF4E8] px-4 py-2 text-sm font-medium text-[#823A00]">
+        <div className="brand-panel px-4 py-2 text-sm font-medium">
           {result.total} producto
           {result.total !== 1 ? "s" : ""}
         </div>
@@ -206,7 +206,7 @@ export default function ProductSearchResults({
             {sortedProducts.map(renderProduct)}
           </div>
 
-          <div className="mt-6 flex flex-col gap-3 border-t border-[#A76E04] pt-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-6 flex flex-col gap-3 border-t border-orange-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-stone-500">
               Mostrando {firstVisible}-{lastVisible} de{" "}
               {result.total}
@@ -221,7 +221,7 @@ export default function ProductSearchResults({
                   )
                 }
                 disabled={result.page <= 1}
-                className="rounded-xl border border-[#A76E04] bg-white px-3 py-2 text-sm font-medium text-[#823A00] transition hover:bg-[#FFF4E8] disabled:cursor-not-allowed disabled:opacity-40"
+                className="brand-button-soft px-3 py-2 text-sm"
               >
                 {"<"} Anterior
               </button>
@@ -234,8 +234,8 @@ export default function ProductSearchResults({
                     onClick={() => setPage(pageNumber)}
                     className={
                       pageNumber === result.page
-                        ? "h-10 w-10 rounded-xl bg-[#ED6F00] text-sm font-semibold text-white"
-                        : "h-10 w-10 rounded-xl border border-[#A76E04] bg-white text-sm font-medium text-[#823A00] transition hover:bg-[#FFF4E8]"
+                        ? "brand-button-primary flex h-10 w-10 items-center justify-center text-sm"
+                        : "brand-button-soft flex h-10 w-10 items-center justify-center text-sm"
                     }
                   >
                     {pageNumber}
@@ -251,7 +251,7 @@ export default function ProductSearchResults({
                   )
                 }
                 disabled={result.page >= result.totalPages}
-                className="rounded-xl border border-[#A76E04] bg-white px-3 py-2 text-sm font-medium text-[#823A00] transition hover:bg-[#FFF4E8] disabled:cursor-not-allowed disabled:opacity-40"
+                className="brand-button-soft px-3 py-2 text-sm"
               >
                 Siguiente {">"}
               </button>

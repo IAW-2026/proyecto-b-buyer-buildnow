@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function AdminNotFound() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#FFF4E8] px-6 py-12">
-      <section className="w-full max-w-lg rounded-2xl border border-[#A76E04] bg-white p-8 text-center shadow-sm">
+      <section className="w-full max-w-lg rounded-2xl border border-orange-200 bg-white p-8 text-center shadow-sm">
         <Image
           src="/buildnow-logo.png"
           alt="BuildNow"
@@ -30,7 +30,7 @@ export default function AdminNotFound() {
         <div className="mt-6 flex justify-center">
           <Link
             href="/admin"
-            className="rounded-xl bg-[#ED6F00] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#A76E04]"
+            className="brand-button-primary px-5 py-3 text-sm"
           >
             Ir al panel admin
           </Link>

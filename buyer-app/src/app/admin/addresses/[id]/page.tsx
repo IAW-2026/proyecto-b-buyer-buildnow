@@ -55,7 +55,7 @@ export default async function AdminAddressDetailPage({
         </p>
       </div>
 
-      <section className="rounded-xl border border-[#A76E04] bg-white p-6 shadow-sm">
+      <section className="brand-card rounded-xl p-6">
         <h3 className="font-semibold text-[#823A00]">
           Editar dirección
         </h3>
@@ -93,7 +93,7 @@ export default async function AdminAddressDetailPage({
           <div className="flex flex-wrap gap-3">
             <button
               type="submit"
-              className="rounded-lg bg-[#ED6F00] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#A76E04]"
+              className="brand-button-primary rounded-lg px-4 py-2 text-sm"
             >
               Guardar cambios
             </button>

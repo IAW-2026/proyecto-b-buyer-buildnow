@@ -55,7 +55,7 @@ export default async function AdminCartDetailPage({
       </div>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
+        <div className="brand-card rounded-xl p-5">
           <p className="text-sm text-stone-600">
             Items distintos
           </p>
@@ -63,7 +63,7 @@ export default async function AdminCartDetailPage({
             {cart.items.length}
           </p>
         </div>
-        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
+        <div className="brand-card rounded-xl p-5">
           <p className="text-sm text-stone-600">
             Unidades
           </p>
@@ -74,7 +74,7 @@ export default async function AdminCartDetailPage({
             )}
           </p>
         </div>
-        <div className="rounded-xl border border-[#A76E04] bg-white p-5 shadow-sm">
+        <div className="brand-card rounded-xl p-5">
           <p className="text-sm text-stone-600">
             Total estimado
           </p>
@@ -84,7 +84,7 @@ export default async function AdminCartDetailPage({
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-xl border border-[#A76E04] bg-white shadow-sm">
+      <section className="brand-card overflow-hidden rounded-xl">
         {cart.items.length === 0 ? (
           <p className="p-6 text-sm text-stone-600">
             Este carrito no tiene items.

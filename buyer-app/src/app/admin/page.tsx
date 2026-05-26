@@ -60,7 +60,7 @@ export default async function AdminPage() {
         ))}
       </section>
 
-      <section className="rounded-xl border border-[#A76E04] bg-white p-6 shadow-sm">
+      <section className="brand-card rounded-xl p-6">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="text-xl font-semibold text-[#823A00]">

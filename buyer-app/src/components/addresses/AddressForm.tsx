@@ -57,7 +57,7 @@ export default function AddressForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white border border-[#A76E04] rounded-xl p-6 space-y-4"
+      className="brand-card rounded-xl p-6 space-y-4"
     >
       <h3 className="font-semibold text-[#823A00]">
         {initialAddress ? "Editar dirección" : "Agregar nueva dirección"}
@@ -119,7 +119,7 @@ export default function AddressForm({
         <button
           type="submit"
           disabled={isLoading}
-          className="px-4 py-2 rounded-lg bg-[#ED6F00] text-white hover:bg-[#A76E04] transition disabled:opacity-50"
+          className="brand-button-primary rounded-lg px-4 py-2 text-sm"
         >
           {isLoading ? "Guardando..." : initialAddress ? "Actualizar" : "Agregar"}
         </button>

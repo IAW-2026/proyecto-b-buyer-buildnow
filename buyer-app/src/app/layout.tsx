@@ -26,8 +26,8 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className="bg-[#FFF4E8] text-stone-900">
+      <html lang="en" suppressHydrationWarning>
+        <body className="bg-[#FFF4E8] text-stone-900 transition-colors duration-200">
           <Providers>
             {children}
           </Providers>
