@@ -45,6 +45,7 @@ export default function ProductSearchResults({
   const {
     addItem,
     decreaseItem,
+    setItemQuantity,
     getProductQuantity,
   } = useCart();
 
@@ -125,6 +126,13 @@ export default function ProductSearchResults({
     await decreaseItem(productId);
   };
 
+  const handleSetQuantity = async (
+    productId: string,
+    quantity: number
+  ) => {
+    await setItemQuantity(productId, quantity);
+  };
+
   const renderProduct = (product: Product) => (
     <ProductCard
       key={product.id}
@@ -136,10 +144,12 @@ export default function ProductSearchResults({
       categoryName={product.categoryName}
       price={product.price}
       weight={product.weight}
+      stock={product.stock}
       available={product.available}
       quantity={getProductQuantity(product.id)}
       onAdd={handleAdd}
       onDecrease={handleDecrease}
+      onSetQuantity={handleSetQuantity}
     />
   );
 

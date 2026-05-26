@@ -7,6 +7,7 @@ import {
   findBuyerByClerkId,
   getCartItem,
   deleteCartItem,
+  updateCartItemQuantity,
   createCartItem,
   incrementCartItem,
   getCartByBuyerId,
@@ -200,6 +201,64 @@ export async function decreaseProductQuantity(
   return serializeDecimal(
     await decrementCartItem(existingItem.id)
   );
+}
+
+export async function setProductQuantity(
+  clerkId: string,
+  productId: string,
+  quantity: number
+) {
+  const safeQuantity = Math.max(0, Math.floor(quantity));
+  const cart = await getOrCreateCart(clerkId);
+
+  const existingItem = await getCartItem(
+    cart.id,
+    productId
+  );
+
+  if (safeQuantity === 0) {
+    if (!existingItem) {
+      return { success: true };
+    }
+
+    return serializeDecimal(
+      await deleteCartItem(existingItem.id)
+    );
+  }
+
+  const product = await getProductDetails(productId);
+
+  if (safeQuantity > product.stock) {
+    throw new Error("INSUFFICIENT_STOCK");
+  }
+
+  const sameStore = await checkSameStore(
+    cart.id,
+    product.storeId
+  );
+
+  if (!sameStore) {
+    throw new Error("DIFFERENT_STORE_CART");
+  }
+
+  if (existingItem) {
+    return serializeDecimal(
+      await updateCartItemQuantity(
+        existingItem.id,
+        safeQuantity
+      )
+    );
+  }
+
+  const newCartItem = await createCartItem({
+    cartId: cart.id,
+    productId: product.id,
+    storeId: product.storeId,
+    quantity: safeQuantity,
+    price: product.price,
+  });
+
+  return serializeDecimal(newCartItem);
 }
 
 // ==============================

@@ -16,10 +16,15 @@ type Props = {
   categoryName?: string;
   price: number;
   weight: number;
+  stock?: number;
   available?: boolean;
   quantity: number;
-  onAdd: (id: string) => void;
-  onDecrease: (id: string) => void;
+  onAdd: (id: string) => void | Promise<void>;
+  onDecrease: (id: string) => void | Promise<void>;
+  onSetQuantity: (
+    id: string,
+    quantity: number
+  ) => void | Promise<void>;
 };
 
 export default function ProductCard({
@@ -30,14 +35,22 @@ export default function ProductCard({
   storeName,
   price,
   weight,
+  stock,
   available = true,
   quantity,
   onAdd,
   onDecrease,
+  onSetQuantity,
 }: Props) {
   const [isModalOpen, setIsModalOpen] =
     useState(false);
   const [imageFailed, setImageFailed] =
+    useState(false);
+  const [draftQuantity, setDraftQuantity] =
+    useState<string | null>(null);
+  const [isUpdatingQuantity, setIsUpdatingQuantity] =
+    useState(false);
+  const [isAdjustingQuantity, setIsAdjustingQuantity] =
     useState(false);
 
   // ==============================
@@ -47,6 +60,9 @@ export default function ProductCard({
   const formattedPrice = `$${price.toFixed(2)}`;
 
   const formattedWeight = `${weight} g`;
+  const maxQuantity = stock ?? 999;
+  const quantityInputValue =
+    draftQuantity ?? String(quantity > 0 ? quantity : 1);
 
   const fallbackLabel =
     categoryName ?? name.split(" ")[0] ?? "Producto";
@@ -101,26 +117,75 @@ export default function ProductCard({
   // ==============================
 
   const handleAdd = useCallback(
-    (
+    async (
       event?: React.MouseEvent<HTMLButtonElement>
     ) => {
       event?.stopPropagation();
 
-      onAdd(id);
+      if (isAdjustingQuantity) return;
+
+      setIsAdjustingQuantity(true);
+
+      try {
+        await onAdd(id);
+        setDraftQuantity(null);
+      } finally {
+        setIsAdjustingQuantity(false);
+      }
     },
-    [id, onAdd]
+    [id, isAdjustingQuantity, onAdd]
   );
 
   const handleDecrease = useCallback(
-    (
+    async (
       event?: React.MouseEvent<HTMLButtonElement>
     ) => {
       event?.stopPropagation();
 
-      onDecrease(id);
+      if (isAdjustingQuantity) return;
+
+      setIsAdjustingQuantity(true);
+
+      try {
+        await onDecrease(id);
+        setDraftQuantity(null);
+      } finally {
+        setIsAdjustingQuantity(false);
+      }
     },
-    [id, onDecrease]
+    [id, isAdjustingQuantity, onDecrease]
   );
+
+  const handleSetQuantity = useCallback(
+    async (nextQuantity: number) => {
+      const safeQuantity = Math.min(
+        Math.max(0, Math.floor(nextQuantity)),
+        maxQuantity
+      );
+
+      setIsUpdatingQuantity(true);
+
+      try {
+        await onSetQuantity(id, safeQuantity);
+        setDraftQuantity(null);
+      } finally {
+        setIsUpdatingQuantity(false);
+      }
+    },
+    [id, maxQuantity, onSetQuantity]
+  );
+
+  const handleQuantityInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value.replace(/\D/g, "");
+    setDraftQuantity(value);
+  };
+
+  const commitDraftQuantity = () => {
+    const nextQuantity = Number(quantityInputValue || "0");
+    void handleSetQuantity(nextQuantity);
+  };
 
   // ==============================
   // ESC TO CLOSE
@@ -180,24 +245,55 @@ export default function ProductCard({
 
     if (quantity <= 0) {
       return (
-        <button
-          type="button"
-          onClick={handleAdd}
-          className="
-            w-full
-            rounded-xl
-            bg-[#ED6F00]
-            px-4
-            py-2
-            text-sm
-            font-medium
-            text-white
-            transition
-            hover:opacity-90
-          "
+        <div
+          onClick={(event) =>
+            event.stopPropagation()
+          }
+          className="flex gap-2"
         >
-          Agregar
-        </button>
+          <input
+            type="number"
+            min={1}
+            max={maxQuantity}
+            value={quantityInputValue}
+            onChange={handleQuantityInputChange}
+            onBlur={() => {
+              if (!draftQuantity) {
+                setDraftQuantity("1");
+              }
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                commitDraftQuantity();
+              }
+            }}
+            className="h-10 w-20 rounded-xl border border-[#A76E04] bg-white px-3 text-center text-sm font-semibold text-[#823A00] outline-none transition focus:border-[#823A00]"
+            aria-label="Cantidad a agregar"
+          />
+          <button
+            type="button"
+            onClick={() => commitDraftQuantity()}
+            disabled={isUpdatingQuantity || isAdjustingQuantity}
+            className="
+              min-w-0
+              flex-1
+              rounded-xl
+              bg-[#ED6F00]
+              px-3
+              py-2
+              text-sm
+              font-medium
+              text-white
+              transition
+              hover:opacity-90
+              disabled:cursor-not-allowed
+              disabled:opacity-60
+            "
+          >
+            Agregar
+          </button>
+        </div>
       );
     }
 
@@ -220,6 +316,7 @@ export default function ProductCard({
         <button
           type="button"
           onClick={handleDecrease}
+          disabled={isUpdatingQuantity || isAdjustingQuantity}
           className="
             flex
             h-6
@@ -232,18 +329,35 @@ export default function ProductCard({
             font-bold
             transition
             hover:bg-white/30
+            disabled:cursor-not-allowed
+            disabled:opacity-50
           "
         >
           −
         </button>
 
-        <span className="text-sm font-semibold">
-          {quantity}
-        </span>
+        <input
+          type="number"
+          min={0}
+          max={maxQuantity}
+          value={quantityInputValue}
+          onChange={handleQuantityInputChange}
+          onBlur={commitDraftQuantity}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              commitDraftQuantity();
+            }
+          }}
+          disabled={isUpdatingQuantity || isAdjustingQuantity}
+          className="h-7 w-14 rounded-lg border border-white/30 bg-white text-center text-sm font-semibold text-[#823A00] outline-none disabled:opacity-70"
+          aria-label="Cantidad en carrito"
+        />
 
         <button
           type="button"
           onClick={handleAdd}
+          disabled={isUpdatingQuantity || isAdjustingQuantity}
           className="
             flex
             h-6
@@ -256,6 +370,8 @@ export default function ProductCard({
             font-bold
             transition
             hover:bg-white/30
+            disabled:cursor-not-allowed
+            disabled:opacity-50
           "
         >
           +

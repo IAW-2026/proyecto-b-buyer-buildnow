@@ -49,6 +49,7 @@ export default function CategoryLayout({
   const {
     addItem,
     decreaseItem,
+    setItemQuantity,
     getProductQuantity,
   } = useCart();
 
@@ -150,6 +151,13 @@ export default function CategoryLayout({
     await decreaseItem(productId);
   };
 
+  const handleSetQuantity = async (
+    productId: string,
+    quantity: number
+  ) => {
+    await setItemQuantity(productId, quantity);
+  };
+
   // ==============================
   // LOADING
   // ==============================
@@ -244,12 +252,14 @@ export default function CategoryLayout({
             categoryName={product.categoryName}
             price={product.price}
             weight={product.weight}
+            stock={product.stock}
             available={product.available}
             quantity={getProductQuantity(
               product.id
             )}
             onAdd={handleAdd}
             onDecrease={handleDecrease}
+            onSetQuantity={handleSetQuantity}
           />
         ))}
       </div>

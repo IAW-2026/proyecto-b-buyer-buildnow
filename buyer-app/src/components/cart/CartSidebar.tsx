@@ -42,7 +42,7 @@ export default function CartSidebar() {
 
   const formattedTotalPrice = `$${totalPrice.toFixed(2)}`;
 
-  const formattedTotalWeight = `${totalWeight} g`;
+  const formattedTotalWeight = `${totalWeight.toFixed(2)} g`;
 
   // ==============================
   // HANDLERS

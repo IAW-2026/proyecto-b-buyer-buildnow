@@ -137,7 +137,7 @@ export default function OrderTrackingClient({
               href="/dashboard"
               className="mb-2 inline-block text-sm text-[#ED6F00] hover:text-[#823A00]"
             >
-              Volver a pedidos
+              Volver al dashboard
             </Link>
 
             <h1 className="text-3xl font-bold text-[#823A00]">

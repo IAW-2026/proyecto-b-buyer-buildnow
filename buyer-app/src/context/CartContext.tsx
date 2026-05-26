@@ -13,6 +13,7 @@ import {
   fetchCartItemsAction,
   addToCartAction,
   decreaseCartItemAction,
+  setCartItemQuantityAction,
 } from "@/actions/buyerActions";
 
 type CartItem = {
@@ -152,6 +153,11 @@ interface CartContextType
 
   decreaseItem: (
     productId: string
+  ) => Promise<ActionResult>;
+
+  setItemQuantity: (
+    productId: string,
+    quantity: number
   ) => Promise<ActionResult>;
 
   refetch: () => Promise<void>;
@@ -352,6 +358,53 @@ export function CartProvider({
     [refetch, dispatchError]
   );
 
+  const setItemQuantity = useCallback(
+    async (
+      productId: string,
+      quantity: number
+    ): Promise<ActionResult> => {
+      try {
+        const result =
+          await setCartItemQuantityAction(
+            productId,
+            quantity
+          );
+
+        if (!result.success) {
+          const errorMessage =
+            result.error ||
+            "Error al actualizar carrito";
+
+          dispatchError(errorMessage);
+
+          return {
+            success: false,
+            error: errorMessage,
+          };
+        }
+
+        await refetch();
+
+        return {
+          success: true,
+        };
+      } catch (error) {
+        console.error(error);
+
+        const errorMessage =
+          "Error al actualizar carrito";
+
+        dispatchError(errorMessage);
+
+        return {
+          success: false,
+          error: errorMessage,
+        };
+      }
+    },
+    [refetch, dispatchError]
+  );
+
   // ==============================
   // HELPERS
   // ==============================
@@ -372,6 +425,7 @@ export function CartProvider({
     ...state,
     addItem,
     decreaseItem,
+    setItemQuantity,
     refetch,
     getProductQuantity,
   };

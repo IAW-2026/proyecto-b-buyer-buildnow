@@ -63,6 +63,7 @@ export default function StoreQuickViewRow({
     getProductQuantity,
     addItem,
     decreaseItem,
+    setItemQuantity,
   } = useCart();
 
   // ==============================
@@ -176,6 +177,33 @@ export default function StoreQuickViewRow({
       );
     },
     [decreaseItem, showMessage]
+  );
+
+  const handleSetQuantity = useCallback(
+    async (productId: string, quantity: number) => {
+      const result = await setItemQuantity(
+        productId,
+        quantity
+      );
+
+      if (!result.success) {
+        showMessage(
+          "error",
+          result.error ||
+            "Error al actualizar carrito"
+        );
+
+        return;
+      }
+
+      showMessage(
+        "success",
+        quantity > 0
+          ? "Cantidad actualizada"
+          : "Producto quitado del carrito"
+      );
+    },
+    [setItemQuantity, showMessage]
   );
 
   // ==============================
@@ -372,12 +400,14 @@ export default function StoreQuickViewRow({
                 categoryName={product.categoryName}
                 price={product.price}
                 weight={product.weight}
+                stock={product.stock}
                 available={product.available}
                 quantity={getProductQuantity(
                   product.id
                 )}
                 onAdd={handleAdd}
                 onDecrease={handleDecrease}
+                onSetQuantity={handleSetQuantity}
               />
             </div>
           ))}

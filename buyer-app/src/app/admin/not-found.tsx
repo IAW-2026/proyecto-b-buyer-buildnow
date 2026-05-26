@@ -1,13 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 
-export default async function NotFound() {
-  const user = await getCurrentUser();
-  const homeHref = user.role === "admin" ? "/admin" : "/dashboard";
-  const homeLabel =
-    user.role === "admin" ? "Ir al panel admin" : "Ir al dashboard";
-
+export default function AdminNotFound() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#FFF4E8] px-6 py-12">
       <section className="w-full max-w-lg rounded-2xl border border-[#A76E04] bg-white p-8 text-center shadow-sm">
@@ -29,16 +23,16 @@ export default async function NotFound() {
         </h1>
 
         <p className="mt-3 text-sm leading-6 text-stone-600">
-          La página que estás buscando no existe, fue movida o
-          ya no está disponible.
+          La página de administración que buscás no existe o ya no
+          está disponible.
         </p>
 
         <div className="mt-6 flex justify-center">
           <Link
-            href={homeHref}
+            href="/admin"
             className="rounded-xl bg-[#ED6F00] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#A76E04]"
           >
-            {homeLabel}
+            Ir al panel admin
           </Link>
         </div>
       </section>

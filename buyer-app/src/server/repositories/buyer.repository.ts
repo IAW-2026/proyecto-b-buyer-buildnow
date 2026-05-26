@@ -163,6 +163,18 @@ export async function decrementCartItem(id: string) {
   });
 }
 
+export async function updateCartItemQuantity(
+  id: string,
+  quantity: number
+) {
+  return prisma.cartItem.update({
+    where: { id },
+    data: {
+      quantity,
+    },
+  });
+}
+
 export async function deleteCartItem(id: string) {
   return prisma.cartItem.delete({
     where: { id },

@@ -25,6 +25,7 @@ export default function StoreProductsByCategory({
   const {
     addItem,
     decreaseItem,
+    setItemQuantity,
     getProductQuantity,
   } = useCart();
 
@@ -34,6 +35,13 @@ export default function StoreProductsByCategory({
 
   const handleDecrease = async (productId: string) => {
     await decreaseItem(productId);
+  };
+
+  const handleSetQuantity = async (
+    productId: string,
+    quantity: number
+  ) => {
+    await setItemQuantity(productId, quantity);
   };
 
   if (categories.length === 0) {
@@ -95,10 +103,12 @@ export default function StoreProductsByCategory({
                 categoryName={product.categoryName}
                 price={product.price}
                 weight={product.weight}
+                stock={product.stock}
                 available={product.available}
                 quantity={getProductQuantity(product.id)}
                 onAdd={handleAdd}
                 onDecrease={handleDecrease}
+                onSetQuantity={handleSetQuantity}
               />
             ))}
           </div>

@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { SignOutButton } from "@clerk/nextjs";
+import { SignOutButton, useUser } from "@clerk/nextjs";
 import OrdersDropdown from "@/components/orders/OrdersDropdown";
 
 const SEARCH_HISTORY_KEY = "buildnow:search-history";
@@ -26,43 +26,19 @@ export default function TopSearchBar({
   onSearchValueChange,
   showSearch = true,
 }: TopSearchBarProps) {
+  const { user } = useUser();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isOrdersDropdownOpen, setIsOrdersDropdownOpen] = useState(false);
   const [localSearchText, setLocalSearchText] = useState("");
   const [isSearchHistoryOpen, setIsSearchHistoryOpen] =
     useState(false);
-  const [searchHistory, setSearchHistory] = useState<string[]>(
-    () => {
-      if (typeof window === "undefined") {
-        return [];
-      }
-
-      try {
-        const stored = window.localStorage.getItem(
-          SEARCH_HISTORY_KEY
-        );
-
-        if (!stored) return [];
-
-        const parsed = JSON.parse(stored) as unknown;
-
-        if (!Array.isArray(parsed)) return [];
-
-        return parsed
-          .filter(
-            (item): item is string =>
-              typeof item === "string" &&
-              item.trim().length > 0
-          )
-          .slice(0, MAX_SEARCH_HISTORY);
-      } catch {
-        return [];
-      }
-    }
-  );
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLFormElement>(null);
   const searchText = searchValue ?? localSearchText;
+  const searchHistoryKey = user?.id
+    ? `${SEARCH_HISTORY_KEY}:${user.id}`
+    : SEARCH_HISTORY_KEY;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -86,10 +62,50 @@ export default function TopSearchBar({
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      try {
+        const stored = window.localStorage.getItem(
+          searchHistoryKey
+        );
+
+        if (!stored) {
+          setSearchHistory([]);
+          return;
+        }
+
+        const parsed = JSON.parse(stored) as unknown;
+
+        if (!Array.isArray(parsed)) {
+          setSearchHistory([]);
+          return;
+        }
+
+        setSearchHistory(
+          parsed
+            .filter(
+              (item): item is string =>
+                typeof item === "string" &&
+                item.trim().length > 0
+            )
+            .slice(0, MAX_SEARCH_HISTORY)
+        );
+      } catch {
+        setSearchHistory([]);
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [searchHistoryKey]);
+
   const persistSearchHistory = (history: string[]) => {
     setSearchHistory(history);
     window.localStorage.setItem(
-      SEARCH_HISTORY_KEY,
+      searchHistoryKey,
       JSON.stringify(history)
     );
   };

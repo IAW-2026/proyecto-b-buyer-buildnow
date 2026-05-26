@@ -5,6 +5,7 @@ import {
   clearBuyerCart,
   decreaseProductQuantity,
   getCartItemsWithProductDetails,
+  setProductQuantity,
 } from "@/server/services/buyer.service";
 import {
   ForbiddenError,
@@ -92,6 +93,59 @@ export async function decreaseCartItemAction(
     return {
       success: false,
       error: "Ocurrió un error al actualizar el carrito",
+    };
+  }
+}
+
+export async function setCartItemQuantityAction(
+  productId: string,
+  quantity: number
+): Promise<ActionResponse> {
+  try {
+    const { userId } = await requireBuyer();
+
+    await setProductQuantity(userId, productId, quantity);
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    if (
+      error instanceof UnauthorizedError ||
+      error instanceof ForbiddenError
+    ) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+
+    console.error(error);
+
+    if (
+      error instanceof Error &&
+      error.message === "DIFFERENT_STORE_CART"
+    ) {
+      return {
+        success: false,
+        error:
+          "No puedes agregar productos de distintas tiendas",
+      };
+    }
+
+    if (
+      error instanceof Error &&
+      error.message === "INSUFFICIENT_STOCK"
+    ) {
+      return {
+        success: false,
+        error: "No hay stock suficiente para esa cantidad",
+      };
+    }
+
+    return {
+      success: false,
+      error: "OcurriÃ³ un error al actualizar el carrito",
     };
   }
 }
