@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import type { OrderResponseDto } from "@/server/mockSeller";
-import type { DeliveryTracking } from "@/server/integrations/delivery/delivery.types";
+import type { DeliveryTracking } from "@/types/delivery";
+import type { OrderResponseDto } from "@/types/order";
 
 const statusSteps = [
   {

@@ -19,7 +19,7 @@ import type {
   Category,
   ProductsSearchResponse,
   Store,
-} from "@/server/integrations/seller/seller.types";
+} from "@/types/catalog";
 
 const PAGE_SIZE = 9;
 

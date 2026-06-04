@@ -13,7 +13,7 @@ import {
 import type {
   Category,
   Product,
-} from "@/server/integrations/seller/seller.types";
+} from "@/types/catalog";
 
 type CategoryGroup = {
   category: Category;

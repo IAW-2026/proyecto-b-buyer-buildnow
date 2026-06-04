@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import StoreQuickViewRow from "./StoreQuickViewRow";
 import { fetchStoresPageAction } from "@/actions/buyerActions";
-import type { Store } from "@/server/integrations/seller/seller.types";
+import type { Store } from "@/types/catalog";
 
 const PAGE_SIZE = 4;
 

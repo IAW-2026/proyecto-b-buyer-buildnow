@@ -1,37 +1,30 @@
 "use server";
 
-import {
-  clearBuyerCart,
-  findCurrentBuyer,
-  getCartItemsWithProductDetails,
-} from "@/server/services/buyer.service";
-import {
-  createOrder,
-  getBuyerOrders,
-} from "@/server/integrations/seller/seller.client";
 import { requireBuyer } from "@/lib/auth/requireBuyer";
+import {
+  checkoutBuyerCartService,
+  createBuyerOrderService,
+  getBuyerOrdersService,
+} from "@/server/services/order.service";
 import type { ActionResponse } from "@/types/action-response";
 import type {
   BuyerOrderDto,
   OrderResponseDto,
-} from "@/server/mockSeller";
+} from "@/types/order";
+
+function buyerNotFoundResponse<T>(): ActionResponse<T> {
+  return {
+    success: false,
+    error: "Comprador no encontrado",
+  };
+}
 
 export async function fetchBuyerOrdersAction(): Promise<
   ActionResponse<BuyerOrderDto[]>
 > {
   try {
     const { userId } = await requireBuyer();
-    const buyer = await findCurrentBuyer(userId);
-
-    if (!buyer) {
-      return {
-        success: false,
-        error: "Comprador no encontrado",
-        data: [],
-      };
-    }
-
-    const orders = await getBuyerOrders(buyer.id);
+    const orders = await getBuyerOrdersService(userId);
 
     return {
       success: true,
@@ -40,9 +33,19 @@ export async function fetchBuyerOrdersAction(): Promise<
   } catch (error) {
     console.error("Error fetching buyer orders:", error);
 
+    if (
+      error instanceof Error &&
+      error.message === "BUYER_NOT_FOUND"
+    ) {
+      return {
+        ...buyerNotFoundResponse<BuyerOrderDto[]>(),
+        data: [],
+      };
+    }
+
     return {
       success: false,
-      error: "Ocurrió un error al obtener los pedidos",
+      error: "Ocurrio un error al obtener los pedidos",
       data: [],
     };
   }
@@ -55,21 +58,12 @@ export async function createOrderAction(
 ): Promise<ActionResponse<OrderResponseDto>> {
   try {
     const { userId } = await requireBuyer();
-    const buyer = await findCurrentBuyer(userId);
-
-    if (!buyer) {
-      return {
-        success: false,
-        error: "Comprador no encontrado",
-      };
-    }
-
-    const order = await createOrder({
-      buyerId: buyer.id,
+    const order = await createBuyerOrderService(
+      userId,
       storeId,
       deliveryAddress,
-      items,
-    });
+      items
+    );
 
     return {
       success: true,
@@ -78,9 +72,16 @@ export async function createOrderAction(
   } catch (error) {
     console.error("Error creating order:", error);
 
+    if (
+      error instanceof Error &&
+      error.message === "BUYER_NOT_FOUND"
+    ) {
+      return buyerNotFoundResponse<OrderResponseDto>();
+    }
+
     return {
       success: false,
-      error: "Ocurrió un error al crear la orden",
+      error: "Ocurrio un error al crear la orden",
     };
   }
 }
@@ -95,85 +96,51 @@ export async function checkoutAction(
 > {
   try {
     const { userId } = await requireBuyer();
-    const buyer = await findCurrentBuyer(userId);
-
-    if (!buyer) {
-      return {
-        success: false,
-        error: "Comprador no encontrado",
-      };
-    }
-
-    const defaultAddress = buyer.addresses[0];
-    const resolvedDeliveryAddress =
-      deliveryAddress.trim() &&
-      deliveryAddress !== "Dirección de entrega"
-        ? deliveryAddress.trim()
-        : defaultAddress
-          ? `${defaultAddress.street}, ${defaultAddress.city}`
-          : deliveryAddress.trim();
-
-    const cartItems =
-      await getCartItemsWithProductDetails(userId);
-
-    if (cartItems.length === 0) {
-      return {
-        success: false,
-        error: "El carrito está vacío",
-      };
-    }
-
-    const itemsByStore: Record<
-      string,
-      Array<{ productId: string; quantity: number; price: number }>
-    > = {};
-
-    for (const item of cartItems) {
-      itemsByStore[item.storeId] ??= [];
-      itemsByStore[item.storeId].push({
-        productId: item.productId,
-        quantity: item.quantity,
-        price: item.price,
-      });
-    }
-
-    const createdOrders: OrderResponseDto[] = [];
-
-    for (const [storeId, items] of Object.entries(
-      itemsByStore
-    )) {
-      const order = await createOrder({
-        buyerId: buyer.id,
-        storeId,
-        deliveryAddress: resolvedDeliveryAddress,
-        items,
-      });
-
-      createdOrders.push(order);
-    }
-
-    if (createdOrders.length === 0) {
-      return {
-        success: false,
-        error: "No se pudieron crear las órdenes",
-      };
-    }
-
-    await clearBuyerCart(userId);
+    const checkout = await checkoutBuyerCartService(
+      userId,
+      deliveryAddress
+    );
 
     return {
       success: true,
-      data: {
-        orderId: createdOrders[0].id,
-        orders: createdOrders,
-      },
+      data: checkout,
     };
   } catch (error) {
     console.error("Error in checkout:", error);
 
+    if (
+      error instanceof Error &&
+      error.message === "BUYER_NOT_FOUND"
+    ) {
+      return buyerNotFoundResponse<{
+        orderId: string;
+        orders: OrderResponseDto[];
+      }>();
+    }
+
+    if (
+      error instanceof Error &&
+      error.message === "EMPTY_CART"
+    ) {
+      return {
+        success: false,
+        error: "El carrito esta vacio",
+      };
+    }
+
+    if (
+      error instanceof Error &&
+      error.message === "ORDER_CREATION_FAILED"
+    ) {
+      return {
+        success: false,
+        error: "No se pudieron crear las ordenes",
+      };
+    }
+
     return {
       success: false,
-      error: "Ocurrió un error al procesar el checkout",
+      error: "Ocurrio un error al procesar el checkout",
     };
   }
 }

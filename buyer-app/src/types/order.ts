@@ -1,25 +1,57 @@
-export interface OrderItem {
+export type OrderStatus =
+  | "PENDING_PAYMENT"
+  | "CONFIRMED"
+  | "READY"
+  | "ON_THE_WAY"
+  | "DELIVERED"
+  | "CANCELLED";
+
+export interface CreateOrderItemDto {
   productId: string;
   quantity: number;
 }
 
-export interface Order {
+export interface CreateOrderDto {
+  buyerId: string;
+  storeId: string;
+  deliveryAddress: string;
+  items: CreateOrderItemDto[];
+}
+
+export interface UpdateOrderStatusDto {
+  orderId: string;
+  status: OrderStatus;
+}
+
+export interface OrderItemResponseDto {
+  id: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  price: number;
+}
+
+export interface OrderResponseDto {
   id: string;
   buyerId: string;
   storeId: string;
-  storeName?: string;
+  storeName: string;
   totalAmount: number;
-  status:
-    | "PENDING_PAYMENT"
-    | "CONFIRMED"
-    | "READY"
-    | "ON_THE_WAY"
-    | "DELIVERED"
-    | "CANCELLED";
+  totalWeight: number;
+  status: OrderStatus;
   deliveryAddress: string;
-  items?: OrderItem[];
+  items: OrderItemResponseDto[];
   createdAt: string;
-  updatedAt?: string;
+  updatedAt: string;
 }
 
-export type OrderStatus = Order["status"];
+export interface BuyerOrderDto {
+  id: string;
+  storeId: string;
+  storeName: string;
+  totalAmount: number;
+  status: OrderStatus;
+  deliveryAddress: string;
+  createdAt: string;
+  updatedAt: string;
+}

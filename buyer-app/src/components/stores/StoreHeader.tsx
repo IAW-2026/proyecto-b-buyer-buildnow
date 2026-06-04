@@ -1,4 +1,4 @@
-import type { Store } from "@/server/integrations/seller/seller.types";
+import type { Store } from "@/types/catalog";
 
 type Props = {
   store: Store;

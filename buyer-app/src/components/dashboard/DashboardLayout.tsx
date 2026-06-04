@@ -10,7 +10,7 @@ import ProductSearchResults from "@/components/products/ProductSearchResults";
 import StoreQuickViewList from "@/components/stores/StoreQuickViewList";
 import CartSidebar from "@/components/cart/CartSidebar";
 
-import type { Category } from "@/server/integrations/seller/seller.types";
+import type { Category } from "@/types/catalog";
 
 export default function DashboardLayout() {
   const [cartOpen, setCartOpen] = useState(false);

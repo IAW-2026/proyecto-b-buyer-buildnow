@@ -4,7 +4,7 @@
 
 export { orderMapper } from "./orderMapper";
 export { orderRepository } from "./orderRepository";
-export { orderService, setSellerApiDependencies } from "./orderService";
+export { mockSellerOrderService } from "./mockSellerOrderService";
 export type {
   CreateOrderDto,
   CreateOrderItemDto,

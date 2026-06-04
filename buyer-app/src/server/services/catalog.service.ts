@@ -11,7 +11,7 @@ import {
   type Product,
   type ProductsSearchResponse,
   type Store,
-} from "@/server/integrations/seller/seller.client";
+} from "@/server/integrations/seller";
 import {
   createCart,
   findBuyerByClerkId,

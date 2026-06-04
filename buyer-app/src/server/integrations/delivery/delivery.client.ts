@@ -1,6 +1,6 @@
 import "server-only";
 
-import { apiClient } from "@/lib/apiClients/baseClient";
+import { apiClient } from "@/server/integrations/baseClient";
 import type { DeliveryTracking } from "./delivery.types";
 
 const DELIVERY_API_URL =
