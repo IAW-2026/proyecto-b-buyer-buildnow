@@ -338,7 +338,7 @@ export default function MePage() {
                   required
                   inputMode="numeric"
                   pattern="[0-9]{8,15}"
-                  title="Ingresá entre 8 y 15 números, sin espacios ni guiones."
+                  title="Formato aceptado: entre 8 y 15 números, sin espacios ni guiones."
                   className="w-full rounded-lg border border-stone-300 px-4 py-2 outline-none transition focus:border-[#ED6F00] focus:bg-white"
                 />
               </div>

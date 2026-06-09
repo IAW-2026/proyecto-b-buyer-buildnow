@@ -12,6 +12,7 @@ import {
 import {
   fetchCartItemsAction,
   addToCartAction,
+  clearCartAction,
   decreaseCartItemAction,
   setCartItemQuantityAction,
 } from "@/actions/buyerActions";
@@ -147,6 +148,8 @@ function cartReducer(
 
 interface CartContextType
   extends CartState {
+  cartStoreId: string | null;
+
   addItem: (
     productId: string
   ) => Promise<ActionResult>;
@@ -159,6 +162,8 @@ interface CartContextType
     productId: string,
     quantity: number
   ) => Promise<ActionResult>;
+
+  clearCart: () => Promise<ActionResult>;
 
   refetch: () => Promise<void>;
 
@@ -405,6 +410,40 @@ export function CartProvider({
     [refetch, dispatchError]
   );
 
+  const clearCart = useCallback(async (): Promise<ActionResult> => {
+    try {
+      const result = await clearCartAction();
+
+      if (!result.success) {
+        const errorMessage =
+          result.error || "Error al vaciar el carrito";
+
+        dispatchError(errorMessage);
+
+        return {
+          success: false,
+          error: errorMessage,
+        };
+      }
+
+      await refetch();
+
+      return {
+        success: true,
+      };
+    } catch (error) {
+      console.error(error);
+
+      const errorMessage = "Error al vaciar el carrito";
+      dispatchError(errorMessage);
+
+      return {
+        success: false,
+        error: errorMessage,
+      };
+    }
+  }, [dispatchError, refetch]);
+
   // ==============================
   // HELPERS
   // ==============================
@@ -423,9 +462,11 @@ export function CartProvider({
 
   const value: CartContextType = {
     ...state,
+    cartStoreId: state.items[0]?.storeId ?? null,
     addItem,
     decreaseItem,
     setItemQuantity,
+    clearCart,
     refetch,
     getProductQuantity,
   };

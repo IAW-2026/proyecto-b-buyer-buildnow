@@ -130,6 +130,16 @@ export async function checkoutAction(
 
     if (
       error instanceof Error &&
+      error.message === "DELIVERY_ADDRESS_REQUIRED"
+    ) {
+      return {
+        success: false,
+        error: "Debes seleccionar una direccion de entrega",
+      };
+    }
+
+    if (
+      error instanceof Error &&
       error.message === "ORDER_CREATION_FAILED"
     ) {
       return {

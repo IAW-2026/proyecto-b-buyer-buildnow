@@ -8,7 +8,6 @@ import {
   getProductDetails,
 } from "@/server/integrations/seller";
 import {
-  clearBuyerCart,
   findCurrentBuyer,
   getCartItemsWithProductDetails,
   getCurrentBuyer,
@@ -85,6 +84,10 @@ export async function checkoutBuyerCartService(
         ? `${defaultAddress.street}, ${defaultAddress.city}`
         : deliveryAddress.trim();
 
+  if (!resolvedDeliveryAddress) {
+    throw new Error("DELIVERY_ADDRESS_REQUIRED");
+  }
+
   const cartItems =
     await getCartItemsWithProductDetails(clerkId);
 
@@ -124,8 +127,6 @@ export async function checkoutBuyerCartService(
   if (createdOrders.length === 0) {
     throw new Error("ORDER_CREATION_FAILED");
   }
-
-  await clearBuyerCart(clerkId);
 
   return {
     orderId: createdOrders[0].id,

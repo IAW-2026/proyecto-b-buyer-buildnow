@@ -80,6 +80,7 @@ export default async function AdminBuyerDetailPage({
               required
               inputMode="numeric"
               pattern="[0-9]{8,15}"
+              title="Formato aceptado: entre 8 y 15 números, sin espacios ni guiones."
               defaultValue={buyer.phone ?? ""}
               className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-[#ED6F00]"
             />

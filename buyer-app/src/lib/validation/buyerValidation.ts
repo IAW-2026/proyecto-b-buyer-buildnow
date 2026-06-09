@@ -55,7 +55,8 @@ export function validatePhone(
   if (!/^\d+$/.test(phone)) {
     return {
       success: false,
-      error: "El telefono debe contener solo numeros.",
+      error:
+        "Formato de telefono invalido. Ingresa entre 8 y 15 numeros, sin espacios, guiones ni otros caracteres.",
     };
   }
 
@@ -66,7 +67,7 @@ export function validatePhone(
     return {
       success: false,
       error:
-        "El telefono debe tener entre 8 y 15 digitos.",
+        "Formato de telefono invalido. Ingresa entre 8 y 15 numeros, sin espacios, guiones ni otros caracteres.",
     };
   }
 

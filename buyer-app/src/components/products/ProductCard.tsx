@@ -18,6 +18,7 @@ type Props = {
   weight: number;
   stock?: number;
   available?: boolean;
+  blockedReason?: string;
   quantity: number;
   onAdd: (id: string) => void | Promise<void>;
   onDecrease: (id: string) => void | Promise<void>;
@@ -37,6 +38,7 @@ export default function ProductCard({
   weight,
   stock,
   available = true,
+  blockedReason,
   quantity,
   onAdd,
   onDecrease,
@@ -52,6 +54,8 @@ export default function ProductCard({
     useState(false);
   const [isAdjustingQuantity, setIsAdjustingQuantity] =
     useState(false);
+  const [blockedTooltipTarget, setBlockedTooltipTarget] =
+    useState<"card" | "modal" | null>(null);
 
   // ==============================
   // FORMATTERS
@@ -223,7 +227,7 @@ export default function ProductCard({
   // CART CONTROLS
   // ==============================
 
-  const renderCartControls = () => {
+  const renderCartControls = (target: "card" | "modal") => {
     if (!available) {
       return (
         <div className="
@@ -239,6 +243,36 @@ export default function ProductCard({
             text-stone-500
           ">
           No disponible
+        </div>
+      );
+    }
+
+    if (quantity <= 0 && blockedReason) {
+      return (
+        <div
+          onClick={(event) => event.stopPropagation()}
+          className="relative"
+        >
+          <button
+            type="button"
+            aria-disabled="true"
+            aria-describedby={`blocked-product-${id}-${target}`}
+            onClick={() => setBlockedTooltipTarget(target)}
+            onBlur={() => setBlockedTooltipTarget(null)}
+            className="w-full cursor-not-allowed rounded-xl border border-stone-300 bg-stone-100 px-3 py-2 text-sm font-semibold text-stone-500"
+          >
+            Agregar
+          </button>
+
+          {blockedTooltipTarget === target ? (
+            <div
+              id={`blocked-product-${id}-${target}`}
+              role="tooltip"
+              className="absolute bottom-full left-1/2 z-20 mb-2 w-64 max-w-[calc(100vw-3rem)] -translate-x-1/2 rounded-lg bg-stone-900 px-3 py-2 text-center text-xs font-medium text-white shadow-lg"
+            >
+              {blockedReason}
+            </div>
+          ) : null}
         </div>
       );
     }
@@ -410,11 +444,17 @@ export default function ProductCard({
             {name}
           </h3>
 
+          {storeName ? (
+            <p className="text-xs text-stone-500">
+              Vendido por {storeName}
+            </p>
+          ) : null}
+
           <p className="text-lg font-bold text-[#ED6F00]">
             {formattedPrice}
           </p>
 
-          {renderCartControls()}
+          {renderCartControls("card")}
         </div>
       </article>
 
@@ -515,7 +555,7 @@ export default function ProductCard({
 
               {/* ACTIONS */}
               <div className="pt-2">
-                {renderCartControls()}
+                {renderCartControls("modal")}
               </div>
             </div>
           </div>

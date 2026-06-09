@@ -47,6 +47,7 @@ export default function ProductSearchResults({
     decreaseItem,
     setItemQuantity,
     getProductQuantity,
+    cartStoreId,
   } = useCart();
 
   useEffect(() => {
@@ -146,6 +147,11 @@ export default function ProductSearchResults({
       weight={product.weight}
       stock={product.stock}
       available={product.available}
+      blockedReason={
+        cartStoreId && cartStoreId !== product.storeId
+          ? "El producto no pertenece a la tienda en la que está comprando"
+          : undefined
+      }
       quantity={getProductQuantity(product.id)}
       onAdd={handleAdd}
       onDecrease={handleDecrease}
