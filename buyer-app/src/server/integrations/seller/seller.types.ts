@@ -3,6 +3,7 @@ export type {
   Product,
   ProductsSearchResponse,
   Store,
+  StoresSearchResponse,
   StoresQuery,
 } from "@/types/catalog";
 

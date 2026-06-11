@@ -20,6 +20,7 @@ export default async function OrderTrackingPage({
 
   try {
     const { userId } = await requireBuyer();
+    console.log("Fetching tracking data for order ID:", id);
     trackingData = await getBuyerOrderTrackingService(
       userId,
       id
@@ -33,9 +34,10 @@ export default async function OrderTrackingPage({
   }
 
   if (!trackingData) {
+    console.error("Order tracking data not found", trackingData);
     notFound();
   }
-
+  console.log("trackingData:", trackingData);
   return (
     <OrderTrackingClient
       order={trackingData.order}

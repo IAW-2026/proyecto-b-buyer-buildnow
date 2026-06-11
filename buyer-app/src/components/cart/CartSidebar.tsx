@@ -127,9 +127,16 @@ export default function CartSidebar() {
         return;
       }
 
-      router.push(`/orders/${result.data.orderId}/tracking`);
+      // Check for a payment redirect URL
+      const payment = result.data.payment;
+      const redirectUrl = payment?.data?.initPoint || payment?.checkoutUrl || payment?.redirectUrl || payment?.url;
+
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      } else {
+        router.push(`/orders/${result.data.orderId}/tracking`);
+      }
     } catch (error) {
-      console.error("Checkout error:", error);
       setCheckoutError("Ocurrió un error al procesar el checkout");
     } finally {
       setIsCheckingOut(false);

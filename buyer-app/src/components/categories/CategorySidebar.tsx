@@ -165,7 +165,11 @@ export default function CategorySidebar({
               onClick={() => handleSelectCategory(category)}
               className={getCategoryButtonClassName(category)}
             >
-              {category.name}
+
+              <span className="truncate block w-full" title={category.name}>
+                {category.name}
+              </span>
+
             </button>
           ))}
         </div>
@@ -210,7 +214,9 @@ export default function CategorySidebar({
             onClick={() => handleSelectCategory(category)}
             className={getCategoryButtonClassName(category)}
           >
-            {category.name}
+            <span className="truncate block w-full" title={category.name}>
+              {category.name}
+            </span>
           </button>
         ))}
       </div>

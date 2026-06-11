@@ -7,6 +7,7 @@ import {
   getOrderById,
   getProductDetails,
 } from "@/server/integrations/seller";
+import { createPayment } from "@/server/integrations/payment";
 import {
   findCurrentBuyer,
   getCartItemsWithProductDetails,
@@ -39,7 +40,7 @@ export async function getBuyerOrdersService(
     throw new Error("BUYER_NOT_FOUND");
   }
 
-  return getBuyerOrders(buyer.id);
+  return getBuyerOrders(clerkId);
 }
 
 export async function createBuyerOrderService(
@@ -55,7 +56,7 @@ export async function createBuyerOrderService(
   }
 
   return createOrder({
-    buyerId: buyer.id,
+    buyerId: clerkId,
     storeId,
     deliveryAddress,
     items,
@@ -68,6 +69,7 @@ export async function checkoutBuyerCartService(
 ): Promise<{
   orderId: string;
   orders: OrderResponseDto[];
+  payment?: import("@/server/integrations/payment").PaymentResponseDto;
 }> {
   const buyer = await findCurrentBuyer(clerkId);
 
@@ -78,7 +80,7 @@ export async function checkoutBuyerCartService(
   const defaultAddress = buyer.addresses[0];
   const resolvedDeliveryAddress =
     deliveryAddress.trim() &&
-    deliveryAddress !== "Dirección de entrega"
+      deliveryAddress !== "Dirección de entrega"
       ? deliveryAddress.trim()
       : defaultAddress
         ? `${defaultAddress.street}, ${defaultAddress.city}`
@@ -115,7 +117,7 @@ export async function checkoutBuyerCartService(
     itemsByStore
   )) {
     const order = await createOrder({
-      buyerId: buyer.id,
+      buyerId: clerkId,
       storeId,
       deliveryAddress: resolvedDeliveryAddress,
       items,
@@ -128,9 +130,37 @@ export async function checkoutBuyerCartService(
     throw new Error("ORDER_CREATION_FAILED");
   }
 
+  const mainOrderId = createdOrders[0].orderId || createdOrders[0].id;
+
+  // Calculate total amount from cart items
+  const totalAmount = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  let payment;
+  try {
+    const itemsForPayment = cartItems.map((item) => ({
+      title: item.product.name,
+      quantity: item.quantity,
+      unit_price: Number(item.price),
+    }));
+    
+    payment = await createPayment({
+      orderId: mainOrderId,
+      totalAmount: totalAmount,
+      items: itemsForPayment,
+      // urlReturn: `/orders/${mainOrderId}/tracking`, // Disabled for now
+    });
+  } catch (error) {
+    console.error("Error creating payment:", error);
+    throw new Error("PAYMENT_CREATION_FAILED");
+  }
+
   return {
-    orderId: createdOrders[0].id,
+    orderId: mainOrderId, // Fallback to 'id' if 'orderId' is not available
     orders: createdOrders,
+    payment,
   };
 }
 
@@ -138,21 +168,17 @@ export async function getBuyerOrderTrackingService(
   clerkId: string,
   orderId: string
 ): Promise<OrderTrackingData | null> {
-  const buyer = await getCurrentBuyer(clerkId);
+  //const buyer = await getCurrentBuyer(clerkId);
   const order = await getOrderById(orderId);
 
-  if (!order || order.buyerId !== buyer.id) {
-    return null;
-  }
-
   const productDetails = await Promise.all(
-    order.items.map(async (item) => {
+    order.itemsOrders.map(async (itemsOrders) => {
       const product = await getProductDetails(
-        item.productId
+        itemsOrders.productId
       );
-
+      console.log("Product details for tracking:", product.name);
       return [
-        item.productId,
+        itemsOrders.productId,
         {
           name: product.name,
           weight: product.weight,
@@ -162,8 +188,8 @@ export async function getBuyerOrderTrackingService(
   );
 
   const deliveryTracking =
-    order.status === "ON_THE_WAY"
-      ? await getOrderTracking(order.id)
+    order.estadoDelPedido === "ON_THE_WAY"
+      ? await getOrderTracking(order.orderId)
       : [];
 
   return {

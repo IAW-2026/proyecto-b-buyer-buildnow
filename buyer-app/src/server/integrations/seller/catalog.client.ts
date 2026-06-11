@@ -8,6 +8,7 @@ import type {
   Product,
   ProductsSearchResponse,
   Store,
+  StoresSearchResponse,
   StoresQuery,
 } from "./seller.types";
 
@@ -83,28 +84,38 @@ function getPaginatedStores(
   stores: Store[],
   pageNumber: number,
   pageSize: number
-): Store[] {
+): StoresSearchResponse {
   const safePageSize = Math.max(1, pageSize);
-  const safePageNumber = Math.max(1, pageNumber);
+  const total = stores.length;
+  const totalPages = Math.max(
+    1,
+    Math.ceil(total / safePageSize)
+  );
+  const safePageNumber = Math.min(
+    Math.max(1, pageNumber),
+    totalPages
+  );
   const start = (safePageNumber - 1) * safePageSize;
 
-  return stores.slice(start, start + safePageSize);
+  return {
+    total,
+    page: safePageNumber,
+    pageSize: safePageSize,
+    totalPages,
+    data: stores.slice(start, start + safePageSize),
+  };
 }
 
-export async function getStores(
-  params?: StoresQuery
-): Promise<Store[]> {
+export async function getStoresPage(
+  params: StoresQuery = {}
+): Promise<StoresSearchResponse> {
+  const {
+    search = "",
+    pageNumber = 1,
+    pageSize = 4,
+  } = params;
+
   if (useSellerMock) {
-    if (!params) {
-      return sellerApp.stores;
-    }
-
-    const {
-      search = "",
-      pageNumber = 1,
-      pageSize = 4,
-    } = params;
-
     const normalizedSearch = search
       .trim()
       .toLocaleLowerCase();
@@ -126,17 +137,41 @@ export async function getStores(
 
   const query = new URLSearchParams();
 
-  query.set("search", params?.search?.trim() ?? "");
-  query.set(
-    "pageNumber",
-    String(params?.pageNumber ?? 1)
-  );
-  query.set("pageSize", String(params?.pageSize ?? 4));
+  query.set("search", search.trim());
+  query.set("pageNumber", String(pageNumber));
+  query.set("pageSize", String(pageSize));
 
   return apiClient(`/api/stores?${query.toString()}`, {
     method: "GET",
     serviceUrl: SELLER_API_URL,
-  }) as Promise<Store[]>;
+  }) as Promise<StoresSearchResponse>;
+}
+
+export async function getStores(): Promise<Store[]> {
+  const firstPage = await getStoresPage({
+    pageNumber: 1,
+    pageSize: 100,
+  });
+
+  if (firstPage.totalPages <= 1) {
+    return firstPage.data;
+  }
+
+  const remainingPages = await Promise.all(
+    Array.from(
+      { length: firstPage.totalPages - 1 },
+      (_, index) =>
+        getStoresPage({
+          pageNumber: index + 2,
+          pageSize: firstPage.pageSize,
+        })
+    )
+  );
+
+  return [
+    ...firstPage.data,
+    ...remainingPages.flatMap((page) => page.data),
+  ];
 }
 
 export async function getStoreProducts(
@@ -183,13 +218,19 @@ export async function getProductDetails(
     return product;
   }
 
-  return apiClient(
+  console.log("aaaaa")
+  const response = await apiClient(
     `/api/products/${encodeURIComponent(productId)}`,
     {
       method: "GET",
       serviceUrl: SELLER_API_URL,
     }
-  ) as Promise<Product>;
+  );
+  
+  const product: Product = response.data ?? response;
+
+  console.log("Product details response:", product);
+  return product;
 }
 
 export async function getProduct(

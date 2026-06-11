@@ -24,7 +24,7 @@ export interface UpdateOrderStatusDto {
 }
 
 export interface OrderItemResponseDto {
-  id: string;
+  orderId: string;
   productId: string;
   productName: string;
   quantity: number;
@@ -32,21 +32,22 @@ export interface OrderItemResponseDto {
 }
 
 export interface OrderResponseDto {
-  id: string;
+  orderId: string;
+  id: string; // Added 'id' field to match the expected structure from the server response
   buyerId: string;
   storeId: string;
   storeName: string;
-  totalAmount: number;
-  totalWeight: number;
-  status: OrderStatus;
+  precioTotal: number;
+  pesoTotal: number;
+  estadoDelPedido: OrderStatus;
   deliveryAddress: string;
-  items: OrderItemResponseDto[];
+  itemsOrders: OrderItemResponseDto[];
   createdAt: string;
   updatedAt: string;
 }
 
 export interface BuyerOrderDto {
-  id: string;
+  orderId: string;
   storeId: string;
   storeName: string;
   totalAmount: number;

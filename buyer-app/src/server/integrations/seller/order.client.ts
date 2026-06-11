@@ -2,7 +2,10 @@ import "server-only";
 
 import { apiClient } from "@/server/integrations/baseClient";
 import { mockSellerOrderService } from "@/server/mockSeller";
-import { SELLER_API_URL, useSellerMock } from "./seller.config";
+import {
+  SELLER_API_URL,
+  useSellerOrderMock,
+} from "./seller.config";
 import type {
   BuyerOrderDto,
   CreateOrderDto,
@@ -13,12 +16,16 @@ import type {
 export async function createOrder(
   dto: CreateOrderDto
 ): Promise<OrderResponseDto> {
-  if (!useSellerMock) {
-    return apiClient("/api/orders", {
+  if (!useSellerOrderMock) {
+    const response = await apiClient("/api/orders", {
       method: "POST",
       serviceUrl: SELLER_API_URL,
       body: JSON.stringify(dto),
-    }) as Promise<OrderResponseDto>;
+    });
+    const order: OrderResponseDto = response.data ?? response;
+    console.log("Create order response");
+    console.log(order);
+    return order;
   }
 
   return mockSellerOrderService.createOrder(dto);
@@ -27,25 +34,34 @@ export async function createOrder(
 export async function getOrderById(
   orderId: string
 ): Promise<OrderResponseDto> {
-  if (!useSellerMock) {
-    return apiClient(`/api/orders/${orderId}`, {
+  console.log("orderId: ", orderId);
+  if (!useSellerOrderMock) {
+    const response = await apiClient(`/api/orders/${orderId}`, {
       method: "GET",
       serviceUrl: SELLER_API_URL,
-    }) as Promise<OrderResponseDto>;
-  }
-
+    });
+    const order: OrderResponseDto = response.data ?? response;
+    console.log("Order details response");
+    console.log(order);
+    return order;
+  } 
   return mockSellerOrderService.getOrderById(orderId);
 }
 
 export async function getBuyerOrders(
   buyerId: string
 ): Promise<BuyerOrderDto[]> {
-  if (!useSellerMock) {
-    return apiClient("/api/orders", {
-      method: "POST",
+  if (!useSellerOrderMock) {
+    console.log("Fetching buyer orders for buyer ID:", buyerId);
+    const response = await apiClient(
+      `/api/orders?buyerId=${encodeURIComponent(buyerId)}`, {
+      method: "GET",
       serviceUrl: SELLER_API_URL,
-      body: JSON.stringify({ buyerId }),
-    }) as Promise<BuyerOrderDto[]>;
+    });
+    const orders: BuyerOrderDto[] = response.data ?? response;
+    console.log("Buyer orders response");
+    console.log(orders);
+    return orders;
   }
 
   return mockSellerOrderService.getBuyerOrders(buyerId);
@@ -54,7 +70,7 @@ export async function getBuyerOrders(
 export async function updateOrderStatus(
   dto: UpdateOrderStatusDto
 ): Promise<OrderResponseDto> {
-  if (!useSellerMock) {
+  if (!useSellerOrderMock) {
     return apiClient(
       `/api/orders/${dto.orderId}/status`,
       {

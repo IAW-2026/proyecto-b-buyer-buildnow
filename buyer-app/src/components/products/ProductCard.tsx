@@ -75,34 +75,43 @@ export default function ProductCard({
     .charAt(0)
     .toUpperCase();
 
-  const renderImage = (sizes: string) => {
-    if (imageFailed) {
-      return (
-        <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-stone-100 via-[#FFF4E8] to-stone-200 px-4 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-[#ED6F00] shadow-sm">
-            {fallbackInitial}
-          </div>
-          <p className="mt-3 line-clamp-2 text-sm font-semibold text-[#823A00]">
-            {name}
-          </p>
-          <p className="mt-1 text-xs text-stone-500">
-            {fallbackLabel}
-          </p>
-        </div>
-      );
-    }
-
+const renderImage = (sizes: string) => {
+  // No renderizar Next/Image si la URL está vacía
+  if (imageFailed || !img?.trim()) {
     return (
-      <Image
-        src={img}
-        alt={name}
-        fill
-        sizes={sizes}
-        className="object-cover"
-        onError={() => setImageFailed(true)}
-      />
+      <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-stone-100 via-[#FFF4E8] to-stone-200 px-4 text-center">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl font-bold text-[#ED6F00] shadow-sm">
+          {fallbackInitial}
+        </div>
+
+        <p className="mt-3 line-clamp-2 text-sm font-semibold text-[#823A00]">
+          {name}
+        </p>
+
+        <p className="mt-1 text-xs text-stone-500">
+          {fallbackLabel}
+        </p>
+      </div>
     );
-  };
+  }
+
+  return (
+    <Image
+      src={img}
+      alt={name}
+      fill
+      sizes={sizes}
+      className="object-cover"
+      onError={() => {
+        console.warn(
+          `Error cargando imagen del producto "${name}"`,
+          img
+        );
+        setImageFailed(true);
+      }}
+    />
+  );
+};
 
   // ==============================
   // MODAL HANDLERS

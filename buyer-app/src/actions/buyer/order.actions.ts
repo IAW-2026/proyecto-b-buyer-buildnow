@@ -1,6 +1,7 @@
 "use server";
 
 import { requireBuyer } from "@/lib/auth/requireBuyer";
+import { getCurrentBuyer } from "@/server/services/buyer.service";
 import {
   checkoutBuyerCartService,
   createBuyerOrderService,
@@ -11,6 +12,8 @@ import type {
   BuyerOrderDto,
   OrderResponseDto,
 } from "@/types/order";
+import type { PaymentResponseDto } from "@/server/integrations/payment";
+import { deprecated_requestOptimisticRouteCacheEntry } from "next/dist/client/components/segment-cache/cache";
 
 function buyerNotFoundResponse<T>(): ActionResponse<T> {
   return {
@@ -24,7 +27,8 @@ export async function fetchBuyerOrdersAction(): Promise<
 > {
   try {
     const { userId } = await requireBuyer();
-    const orders = await getBuyerOrdersService(userId);
+    const buyer = getCurrentBuyer(userId);
+    const orders = await getBuyerOrdersService((await buyer).clerkId);
 
     return {
       success: true,
@@ -92,15 +96,18 @@ export async function checkoutAction(
   ActionResponse<{
     orderId: string;
     orders: OrderResponseDto[];
+    payment?: PaymentResponseDto;
   }>
 > {
   try {
     const { userId } = await requireBuyer();
+    const clerkId = await getCurrentBuyer(userId).then((buyer) => buyer.clerkId);
     const checkout = await checkoutBuyerCartService(
-      userId,
+      clerkId,
       deliveryAddress
     );
-
+    console.log("Checkout result:");
+    console.log(checkout);
     return {
       success: true,
       data: checkout,
@@ -115,6 +122,7 @@ export async function checkoutAction(
       return buyerNotFoundResponse<{
         orderId: string;
         orders: OrderResponseDto[];
+        payment?: PaymentResponseDto;
       }>();
     }
 
@@ -145,6 +153,16 @@ export async function checkoutAction(
       return {
         success: false,
         error: "No se pudieron crear las ordenes",
+      };
+    }
+
+    if (
+      error instanceof Error &&
+      error.message === "PAYMENT_CREATION_FAILED"
+    ) {
+      return {
+        success: false,
+        error: "No se pudo iniciar el proceso de pago. Intenta nuevamente.",
       };
     }
 

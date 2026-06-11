@@ -32,6 +32,14 @@ export interface ProductsSearchResponse {
   data: Product[];
 }
 
+export interface StoresSearchResponse {
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  data: Store[];
+}
+
 export type StoresQuery = {
   search?: string;
   pageNumber?: number;
