@@ -25,15 +25,16 @@ export const orderMapper = {
   ): OrderResponseDto {
     return {
       id: order.id,
+      orderId: order.id,
       buyerId: order.buyerId,
       storeId: order.storeId,
       storeName,
-      totalAmount: Number(order.totalAmount),
-      totalWeight: Number(order.totalWeight),
-      status: order.status,
+      precioTotal: Number(order.totalAmount),
+      pesoTotal: Number(order.totalWeight),
+      estadoDelPedido: order.status,
       deliveryAddress: order.deliveryAddress,
-      items: order.items.map((item) => ({
-        id: item.id,
+      itemsOrders: order.items.map((item) => ({
+        orderId: order.id,
         productId: item.productId,
         productName:
           productNames.get(item.productId) ||
