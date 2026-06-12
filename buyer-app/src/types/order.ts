@@ -47,7 +47,7 @@ export interface OrderResponseDto {
 }
 
 export interface BuyerOrderDto {
-  orderId: string;
+  id: string;
   storeId: string;
   storeName: string;
   totalAmount: number;
