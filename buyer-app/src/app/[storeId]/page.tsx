@@ -5,6 +5,7 @@ import AiMaterialAssistant from "@/components/ai/AiMaterialAssistant";
 import CartSidebar from "@/components/cart/CartSidebar";
 import StoreHeader from "@/components/stores/StoreHeader";
 import StoreProductsByCategory from "@/components/stores/StoreProductsByCategory";
+import { requireBuyer } from "@/lib/auth/requireBuyer";
 import {
   getAllStores,
   getCatalogCategories,
@@ -99,6 +100,8 @@ export default async function StorePage({
     fromStoresPage?: string;
   }>;
 }) {
+  await requireBuyer();
+
   const { storeId } = await params;
   const { fromStoresPage } = await searchParams;
   const data = await getStoreData(storeId);

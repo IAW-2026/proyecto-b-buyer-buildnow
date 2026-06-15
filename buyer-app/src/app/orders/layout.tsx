@@ -1,10 +1,13 @@
 import TopSearchBar from "@/components/search/TopSearchBar";
+import { requireBuyer } from "@/lib/auth/requireBuyer";
 
-export default function OrdersLayout({
+export default async function OrdersLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await requireBuyer();
+
   return (
     <div className="min-h-screen bg-[#FFF4E8]">
       {/* HEADER */}

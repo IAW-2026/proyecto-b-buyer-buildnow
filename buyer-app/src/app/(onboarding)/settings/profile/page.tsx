@@ -2,7 +2,12 @@ import { redirect } from "next/navigation";
 
 import ProfileForm from "@/components/forms/profile-form";
 import { getCurrentUser } from "@/lib/auth/getCurrentUser";
-import { findCurrentBuyer } from "@/server/services/buyer.service";
+import {
+  BuyerDisabledError,
+  BuyerNotFoundError,
+  ForbiddenError,
+  requireBuyer,
+} from "@/lib/auth/requireBuyer";
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
@@ -15,10 +20,20 @@ export default async function ProfilePage() {
     redirect("/admin");
   }
 
-  const buyer = await findCurrentBuyer(user.userId);
-
-  if (buyer) {
+  try {
+    await requireBuyer();
     redirect("/dashboard");
+  } catch (error) {
+    if (
+      error instanceof BuyerNotFoundError ||
+      error instanceof ForbiddenError
+    ) {
+      // A buyer record is created by the onboarding form below.
+    } else if (error instanceof BuyerDisabledError) {
+      redirect("/account-disabled");
+    } else {
+      throw error;
+    }
   }
 
   return (

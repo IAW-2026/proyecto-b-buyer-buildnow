@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
 import {
   getAllStores,
   getCatalogCategories,
@@ -148,11 +147,7 @@ export async function searchProductsAction(params: {
   pageSize?: number;
 }) {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      throw new Error("UNAUTHORIZED");
-    }
+    await requireBuyer();
 
     return await searchProductsService(params);
   } catch (error) {

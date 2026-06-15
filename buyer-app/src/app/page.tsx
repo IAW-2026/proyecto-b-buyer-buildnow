@@ -1,7 +1,11 @@
 import { redirect } from "next/navigation";
 import RoleRedirect from "@/components/auth/RoleRedirect";
 import { getCurrentUser } from "@/lib/auth/getCurrentUser";
-import { findCurrentBuyer } from "@/server/services/buyer.service";
+import {
+  BuyerDisabledError,
+  BuyerNotFoundError,
+  requireBuyer,
+} from "@/lib/auth/requireBuyer";
 
 export default async function HomePage() {
   const user = await getCurrentUser();
@@ -14,12 +18,20 @@ export default async function HomePage() {
     return <RoleRedirect target="/admin" />;
   }
 
-  const buyer = await findCurrentBuyer(user.userId);
+  try {
+    await requireBuyer();
+  } catch (error) {
+    if (error instanceof BuyerNotFoundError) {
+      return (
+        <RoleRedirect target="/settings/profile?onboarding=true" />
+      );
+    }
 
-  if (!buyer) {
-    return (
-      <RoleRedirect target="/settings/profile?onboarding=true" />
-    );
+    if (error instanceof BuyerDisabledError) {
+      return <RoleRedirect target="/account-disabled" />;
+    }
+
+    throw error;
   }
 
   return <RoleRedirect target="/dashboard" />;

@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { checkOnboarding } from "@/lib/auth/check-onboarding";
 import {
+  BuyerDisabledError,
+  BuyerNotFoundError,
   UnauthorizedError,
   ForbiddenError,
   requireBuyer,
@@ -24,6 +25,14 @@ export default async function ProtectedLayout({
   } catch (error) {
     if (error instanceof UnauthorizedError) {
       redirect("/login");
+    }
+
+    if (error instanceof BuyerNotFoundError) {
+      redirect("/settings/profile?onboarding=true");
+    }
+
+    if (error instanceof BuyerDisabledError) {
+      redirect("/account-disabled");
     }
 
     if (error instanceof ForbiddenError) {
@@ -64,8 +73,6 @@ export default async function ProtectedLayout({
 
     throw error;
   }
-
-  await checkOnboarding();
 
   return (
     <main className="min-h-screen bg-[#FFF4E8]">

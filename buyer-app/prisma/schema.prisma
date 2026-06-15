@@ -7,12 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum BuyerStatus {
+  ACTIVE
+  DISABLED
+}
+
 model Buyer {
   id        String    @id @default(cuid())
   clerkId   String    @unique
   name      String?
   email     String    @unique
   phone     String?
+  status    BuyerStatus @default(ACTIVE)
 
   addresses Address[]
   cart      Cart?
