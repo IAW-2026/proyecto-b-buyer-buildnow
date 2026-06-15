@@ -1,4 +1,5 @@
 import { serializeDecimal } from "@/lib/utils/serializeDecimal";
+import type { Address, Buyer } from "@prisma/client";
 
 import {
   createBuyer,
@@ -79,13 +80,13 @@ export async function registerBuyer(data: {
 
 export async function findCurrentBuyer(
   clerkId: string
-) {
+): Promise<(Buyer & { addresses: Address[] }) | null> {
   return findBuyerByClerkId(clerkId);
 }
 
 export async function getCurrentBuyer(
   clerkId: string
-) {
+): Promise<Buyer & { addresses: Address[] }> {
   const buyer = await findBuyerByClerkId(clerkId);
 
   if (!buyer) {
