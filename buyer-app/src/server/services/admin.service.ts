@@ -43,11 +43,21 @@ export async function getAdminSummary() {
   };
 }
 
-export function getAdminBuyers(options?: {
+export async function getAdminBuyers(options?: {
   skip?: number;
   take?: number;
 }) {
-  return findAdminBuyers(options);
+  const buyers = await findAdminBuyers(options);
+
+  return buyers.map((buyer) => ({
+    id: buyer.id,
+    name: buyer.name,
+    email: buyer.email,
+    phone: buyer.phone,
+    clerkId: buyer.clerkId,
+    addressesCount: buyer._count.addresses,
+    cartItemsCount: buyer.cart?._count.items ?? 0,
+  }));
 }
 
 export function getAdminBuyerById(id: string) {

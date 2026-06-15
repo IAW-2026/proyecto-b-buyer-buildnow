@@ -55,11 +55,11 @@ export default async function AdminBuyersPage() {
                       {buyer.phone || "Sin teléfono"}
                     </td>
                     <td className="px-4 py-3 text-stone-700">
-                      {buyer._count.addresses}
+                      {buyer.addressesCount}
                     </td>
                     <td className="px-4 py-3 text-stone-700">
-                      {buyer.cart
-                        ? `${buyer.cart._count.items} items`
+                      {buyer.cartItemsCount > 0
+                        ? `${buyer.cartItemsCount} items`
                         : "Sin carrito"}
                     </td>
                     <td className="px-4 py-3">
