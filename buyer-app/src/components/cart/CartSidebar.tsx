@@ -168,7 +168,7 @@ export default function CartSidebar() {
 
       setCheckoutSummary(result.data);
       setStep("checkout_summary");
-    } catch (error) {
+    } catch {
       setCheckoutErrorWithTimeout("Ocurrió un error al procesar el checkout");
     } finally {
       setIsCheckingOut(false);
@@ -213,7 +213,7 @@ export default function CartSidebar() {
       } else {
         router.push(`/orders/${checkoutSummary.orderId}/tracking`);
       }
-    } catch (error) {
+    } catch {
       setCheckoutErrorWithTimeout("Ocurrió un error al procesar el pago");
     } finally {
       setIsPaying(false);

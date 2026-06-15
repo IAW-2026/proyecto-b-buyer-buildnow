@@ -100,7 +100,7 @@ export function OrderPollingProvider({ children }: { children: React.ReactNode }
           if (trackRes.success) {
             setDeliveryTrackings((prev) => {
               const updated = { ...prev };
-              updated[orderId] = trackRes.data;
+              updated[orderId] = trackRes.data ?? null;
               return updated;
             });
           }
