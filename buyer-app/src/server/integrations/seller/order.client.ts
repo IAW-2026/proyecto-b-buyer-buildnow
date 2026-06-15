@@ -34,15 +34,12 @@ export async function createOrder(
 export async function getOrderById(
   orderId: string
 ): Promise<OrderResponseDto> {
-  console.log("orderId: ", orderId);
   if (!useSellerOrderMock) {
     const response = await apiClient(`/api/orders/${orderId}`, {
       method: "GET",
       serviceUrl: SELLER_API_URL,
     });
     const order: OrderResponseDto = response.data ?? response;
-    console.log("Order details response");
-    console.log(order);
     return order;
   } 
   return mockSellerOrderService.getOrderById(orderId);
@@ -60,7 +57,7 @@ export async function getBuyerOrders(
     });
     const orders: BuyerOrderDto[] = response.data ?? response;
     console.log("Buyer orders response");
-    console.log(orders);
+    console.log(orders.length);
     return orders;
   }
 

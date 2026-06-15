@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
+import { useOrderPolling } from "@/context/OrderPollingContext";
 import type { DeliveryTracking } from "@/types/delivery";
 import type { OrderResponseDto } from "@/types/order";
 
@@ -59,6 +61,8 @@ interface OrderTrackingClientProps {
       weight: number;
     }
   >;
+  shippingCost?: number;
+  serviceFee?: number;
 }
 
 function formatMoney(value: number) {
@@ -123,10 +127,26 @@ export default function OrderTrackingClient({
   order,
   deliveryTracking,
   productDetailsById,
+  shippingCost = 1500,
+  serviceFee = 1000,
 }: OrderTrackingClientProps) {
+  const { orders, deliveryTrackings, registerOrder } = useOrderPolling();
+
+  useEffect(() => {
+    registerOrder(order, deliveryTracking, shippingCost, serviceFee);
+  }, [order, deliveryTracking, shippingCost, serviceFee, registerOrder]);
+
+  const orderId = order.orderId || order.id;
+  const currentOrder = orders[orderId] || order;
+  const currentDeliveryTracking = deliveryTrackings[orderId] !== undefined
+    ? deliveryTrackings[orderId]
+    : deliveryTracking;
+
   const currentStepIndex =
-    statusIndex[order.estadoDelPedido] ?? -1;
-  const isCancelled = order.estadoDelPedido === "CANCELLED";
+    statusIndex[currentOrder.estadoDelPedido] ?? -1;
+  const isCancelled = currentOrder.estadoDelPedido === "CANCELLED";
+
+  const totalPayment = currentOrder.precioTotal + serviceFee + shippingCost;
 
   return (
     <div className="min-h-screen bg-[#FFF4E8] p-4 md:p-8">
@@ -145,17 +165,17 @@ export default function OrderTrackingClient({
             </h1>
 
             <p className="mt-2 text-stone-500">
-              Pedido #{order.orderId.slice(0, 12)}...
+              Pedido #{currentOrder.orderId.slice(0, 12)}...
             </p>
           </div>
 
           <div className="md:text-right">
             <p className="text-2xl font-bold text-[#ED6F00]">
-              {formatMoney(order.precioTotal)}
+              {formatMoney(totalPayment)}
             </p>
 
             <p className="text-sm text-stone-500">
-              Realizado: {formatDateTime(order.createdAt)}
+              Realizado: {formatDateTime(currentOrder.createdAt)}
             </p>
           </div>
         </div>
@@ -195,7 +215,7 @@ export default function OrderTrackingClient({
 
                     <p className="mt-1 min-h-5 text-xs text-stone-400">
                       {getStepDate(
-                        order,
+                        currentOrder,
                         index,
                         currentStepIndex
                       )}
@@ -222,7 +242,7 @@ export default function OrderTrackingClient({
 
             <div className="mt-8 rounded-lg border border-orange-200 bg-[#FFF4E8] p-4">
               <p className="text-sm text-[#823A00]">
-                {statusMessages[order.estadoDelPedido] ?? ""}
+                {statusMessages[currentOrder.estadoDelPedido] ?? ""}
               </p>
             </div>
           </div>
@@ -249,7 +269,7 @@ export default function OrderTrackingClient({
                   ID del pedido:
                 </span>
                 <span className="font-medium text-stone-900">
-                  {order.orderId.slice(0, 16)}...
+                  {currentOrder.orderId.slice(0, 16)}...
                 </span>
               </div>
 
@@ -258,8 +278,8 @@ export default function OrderTrackingClient({
                   Tienda:
                 </span>
                 <span className="font-medium text-stone-900">
-                  {order.storeName ||
-                    `Tienda ${order.storeId.slice(0, 8)}`}
+                  {currentOrder.storeName ||
+                    `Tienda ${currentOrder.storeId.slice(0, 8)}`}
                 </span>
               </div>
 
@@ -268,13 +288,13 @@ export default function OrderTrackingClient({
                   Items:
                 </span>
                 <span className="font-medium text-stone-900">
-                  {order.itemsOrders?.length ?? 0}
+                  {currentOrder.itemsOrders?.length ?? 0}
                 </span>
               </div>
 
               <div className="border-t border-orange-200 pt-4">
                 <div className="max-h-48 space-y-3 overflow-y-auto pr-2">
-                  {order.itemsOrders.map((item) => {
+                  {currentOrder.itemsOrders.map((item) => {
                     const productDetail =
                       productDetailsById[item.productId];
                     const productName =
@@ -332,11 +352,34 @@ export default function OrderTrackingClient({
               <hr className="my-2 border-orange-200" />
 
               <div className="flex justify-between gap-4 text-sm">
+                <span className="text-stone-600">Subtotal:</span>
+                <span className="font-semibold text-stone-900">
+                  {formatMoney(currentOrder.precioTotal)}
+                </span>
+              </div>
+
+              <div className="flex justify-between gap-4 text-sm">
+                <span className="text-stone-600">Tarifa de servicio:</span>
+                <span className="font-semibold text-stone-900">
+                  {formatMoney(serviceFee)}
+                </span>
+              </div>
+
+              <div className="flex justify-between gap-4 text-sm">
+                <span className="text-stone-600">Costo de envío:</span>
+                <span className="font-semibold text-stone-900">
+                  {formatMoney(shippingCost)}
+                </span>
+              </div>
+
+              <hr className="my-2 border-orange-200" />
+
+              <div className="flex justify-between gap-4 text-sm">
                 <span className="font-semibold text-[#823A00]">
                   Peso total:
                 </span>
                 <span className="font-semibold text-stone-900">
-                  {formatWeight(order.pesoTotal)}
+                  {formatWeight(currentOrder.pesoTotal)}
                 </span>
               </div>
 
@@ -345,7 +388,7 @@ export default function OrderTrackingClient({
                   Precio total:
                 </span>
                 <span className="text-base font-bold text-[#ED6F00]">
-                  {formatMoney(order.precioTotal)}
+                  {formatMoney(totalPayment)}
                 </span>
               </div>
             </div>
@@ -362,7 +405,7 @@ export default function OrderTrackingClient({
                   Dirección de entrega
                 </p>
                 <p className="text-sm font-medium text-stone-900">
-                  {order.deliveryAddress}
+                  {currentOrder.deliveryAddress}
                 </p>
               </div>
 
@@ -371,19 +414,19 @@ export default function OrderTrackingClient({
                   Repartidor
                 </p>
                 <p className="text-sm font-medium text-stone-900">
-                  {deliveryTracking?.curierName ??
+                  {currentDeliveryTracking?.curierName ??
                     "Se asignará cuando el pedido salga a ruta"}
                 </p>
               </div>
 
-              {deliveryTracking ? (
+              {currentDeliveryTracking ? (
                 <div className="border-t border-orange-200 pt-4">
                   <p className="mb-1 text-sm text-stone-600">
                     Llegada estimada
                   </p>
                   <p className="text-sm font-medium text-stone-900">
                     {formatDateTime(
-                      deliveryTracking.estimatedArrival
+                      currentDeliveryTracking.estimatedArrival
                     )}
                   </p>
                 </div>

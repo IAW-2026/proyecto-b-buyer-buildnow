@@ -43,6 +43,8 @@ export default async function OrderTrackingPage({
       order={trackingData.order}
       deliveryTracking={trackingData.deliveryTracking}
       productDetailsById={trackingData.productDetailsById}
+      shippingCost={trackingData.shippingCost}
+      serviceFee={trackingData.serviceFee}
     />
   );
 }

@@ -1,8 +1,11 @@
 import "server-only";
 
+import type { BuyerStatus } from "@prisma/client";
 import {
   countAddresses,
   countBuyers,
+  countBuyersByStatus,
+  countBuyersWithAddress,
   countCartItems,
   countCarts,
   deleteAdminAddress,
@@ -12,8 +15,11 @@ import {
   findAdminBuyers,
   findAdminCartById,
   findAdminCarts,
+  findBuyerCityEntries,
+  findRecentBuyerActivity,
   updateAdminAddress,
   updateAdminBuyer,
+  updateAdminBuyerStatus,
 } from "../repositories/admin.repository";
 
 export async function getAdminSummary() {
@@ -37,8 +43,11 @@ export async function getAdminSummary() {
   };
 }
 
-export function getAdminBuyers() {
-  return findAdminBuyers();
+export function getAdminBuyers(options?: {
+  skip?: number;
+  take?: number;
+}) {
+  return findAdminBuyers(options);
 }
 
 export function getAdminBuyerById(id: string) {
@@ -86,6 +95,15 @@ export function getAdminCartById(id: string) {
   return findAdminCartById(id);
 }
 
+function getCartEstimatedValue(
+  items: Array<{ quantity: number; price: unknown }>
+) {
+  return items.reduce(
+    (sum, item) => sum + item.quantity * Number(item.price),
+    0
+  );
+}
+
 export async function getAdminCartReport() {
   const carts = await findAdminCarts();
 
@@ -96,12 +114,7 @@ export async function getAdminCartReport() {
   );
   const totalEstimated = carts.reduce(
     (sum, cart) =>
-      sum +
-      cart.items.reduce(
-        (cartSum, item) =>
-          cartSum + item.quantity * Number(item.price),
-        0
-      ),
+      sum + getCartEstimatedValue(cart.items),
     0
   );
   const productTotals = new Map<string, number>();
@@ -131,4 +144,207 @@ export async function getAdminCartReport() {
       totalCarts === 0 ? 0 : totalItems / totalCarts,
     topProducts,
   };
+}
+
+export async function getAnalyticsBuyerSummary() {
+  const [totalBuyers, buyersWithAddress, carts] =
+    await Promise.all([
+      countBuyers(),
+      countBuyersWithAddress(),
+      findAdminCarts(),
+    ]);
+
+  return {
+    totalBuyers,
+    buyersWithAddress,
+    activeCarts: carts.length,
+    estimatedCartValue: carts.reduce(
+      (sum, cart) => sum + getCartEstimatedValue(cart.items),
+      0
+    ),
+  };
+}
+
+export async function getBuyersByCity() {
+  const entries = await findBuyerCityEntries();
+  const buyersByCity = new Map<string, Set<string>>();
+
+  for (const entry of entries) {
+    const city = entry.city.trim();
+
+    if (!city) continue;
+
+    const buyerIds =
+      buyersByCity.get(city) ?? new Set<string>();
+    buyerIds.add(entry.buyerId);
+    buyersByCity.set(city, buyerIds);
+  }
+
+  return Array.from(buyersByCity.entries())
+    .map(([city, buyerIds]) => ({
+      city,
+      buyers: buyerIds.size,
+    }))
+    .sort((a, b) => b.buyers - a.buyers);
+}
+
+export async function getTopCartProducts(limit = 10) {
+  const carts = await findAdminCarts();
+  const productTotals = new Map<string, number>();
+
+  for (const cart of carts) {
+    for (const item of cart.items) {
+      productTotals.set(
+        item.productId,
+        (productTotals.get(item.productId) ?? 0) + item.quantity
+      );
+    }
+  }
+
+  return Array.from(productTotals.entries())
+    .map(([productId, timesAdded]) => ({
+      productId,
+      timesAdded,
+    }))
+    .sort((a, b) => b.timesAdded - a.timesAdded)
+    .slice(0, limit);
+}
+
+export async function getTopBuyersByCartValue(limit = 10) {
+  const carts = await findAdminCarts();
+
+  return carts
+    .map((cart) => ({
+      buyerId: cart.buyer.id,
+      buyerName: cart.buyer.name ?? cart.buyer.email,
+      estimatedValue: getCartEstimatedValue(cart.items),
+    }))
+    .sort((a, b) => b.estimatedValue - a.estimatedValue)
+    .slice(0, limit);
+}
+
+type BuyerActivity = {
+  type:
+    | "BUYER_REGISTERED"
+    | "ADDRESS_ADDED"
+    | "CART_CREATED"
+    | "PRODUCT_ADDED_TO_CART";
+  description: string;
+  createdAt: Date;
+};
+
+export async function getRecentBuyerActivity(limit = 20) {
+  const activity = await findRecentBuyerActivity(limit);
+  const events: BuyerActivity[] = [
+    ...activity.buyers.map((buyer) => ({
+      type: "BUYER_REGISTERED" as const,
+      description: "Buyer registered",
+      createdAt: buyer.createdAt,
+    })),
+    ...activity.addresses.map((address) => ({
+      type: "ADDRESS_ADDED" as const,
+      description: "Address added",
+      createdAt: address.createdAt,
+    })),
+    ...activity.carts.map((cart) => ({
+      type: "CART_CREATED" as const,
+      description: "Cart created",
+      createdAt: cart.createdAt,
+    })),
+    ...activity.cartItems.map((cartItem) => ({
+      type: "PRODUCT_ADDED_TO_CART" as const,
+      description: "Product added to cart",
+      createdAt: cartItem.createdAt,
+    })),
+  ];
+
+  return events
+    .sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+    )
+    .slice(0, limit);
+}
+
+export async function getControlPlaneBuyerSummary() {
+  const [
+    totalBuyers,
+    activeBuyers,
+    disabledBuyers,
+    buyersWithAddress,
+  ] = await Promise.all([
+    countBuyers(),
+    countBuyersByStatus("ACTIVE"),
+    countBuyersByStatus("DISABLED"),
+    countBuyersWithAddress(),
+  ]);
+
+  return {
+    totalBuyers,
+    activeBuyers,
+    disabledBuyers,
+    buyersWithAddress,
+  };
+}
+
+export async function getControlPlaneBuyers(options?: {
+  skip?: number;
+  take?: number;
+}) {
+  const buyers = await findAdminBuyers(options);
+
+  return buyers.map((buyer) => ({
+    id: buyer.id,
+    name: buyer.name,
+    email: buyer.email,
+    phone: buyer.phone,
+    addressesCount: buyer._count.addresses,
+    status: buyer.status,
+  }));
+}
+
+export async function getControlPlaneBuyerById(id: string) {
+  const buyer = await findAdminBuyerById(id);
+
+  if (!buyer) {
+    return null;
+  }
+
+  const cartItems = buyer.cart?.items ?? [];
+
+  return {
+    buyer: {
+      id: buyer.id,
+      name: buyer.name,
+      email: buyer.email,
+      phone: buyer.phone,
+      status: buyer.status,
+    },
+    addresses: buyer.addresses.map((address) => ({
+      id: address.id,
+      street: address.street,
+      city: address.city,
+      notes: address.notes,
+    })),
+    cart: buyer.cart
+      ? {
+          itemsCount: cartItems.reduce(
+            (sum, item) => sum + item.quantity,
+            0
+          ),
+          estimatedValue: getCartEstimatedValue(cartItems),
+        }
+      : null,
+    cartItems: cartItems.map((item) => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      price: Number(item.price),
+    })),
+  };
+}
+
+export function setAdminBuyerStatus(
+  buyerId: string,
+  status: BuyerStatus
+) {
+  return updateAdminBuyerStatus(buyerId, status);
 }

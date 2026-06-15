@@ -11,7 +11,7 @@ export async function apiClient(
   options?: ApiClientOptions
 ) {
   const { getToken } = await auth();
-
+  
   const token = await getToken();
 
   const {

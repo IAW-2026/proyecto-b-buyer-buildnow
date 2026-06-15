@@ -218,7 +218,6 @@ export async function getProductDetails(
     return product;
   }
 
-  console.log("aaaaa")
   const response = await apiClient(
     `/api/products/${encodeURIComponent(productId)}`,
     {

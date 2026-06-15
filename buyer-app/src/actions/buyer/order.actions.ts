@@ -6,14 +6,19 @@ import {
   checkoutBuyerCartService,
   createBuyerOrderService,
   getBuyerOrdersService,
+  prepareCheckoutService,
+  initiatePaymentService,
+  getBuyerOrderTrackingService,
 } from "@/server/services/order.service";
+import { getOrderById } from "@/server/integrations/seller";
+import { getOrderTracking } from "@/server/integrations/delivery/delivery.client";
 import type { ActionResponse } from "@/types/action-response";
 import type {
   BuyerOrderDto,
   OrderResponseDto,
 } from "@/types/order";
+import type { DeliveryTracking } from "@/types/delivery";
 import type { PaymentResponseDto } from "@/server/integrations/payment";
-import { deprecated_requestOptimisticRouteCacheEntry } from "next/dist/client/components/segment-cache/cache";
 
 function buyerNotFoundResponse<T>(): ActionResponse<T> {
   return {
@@ -172,3 +177,112 @@ export async function checkoutAction(
     };
   }
 }
+
+export async function prepareCheckoutAction(
+  deliveryAddress: string
+): Promise<
+  ActionResponse<{
+    orderId: string;
+    subtotal: number;
+    shippingCost: number;
+    serviceFee: number;
+    total: number;
+  }>
+> {
+  try {
+    const { userId } = await requireBuyer();
+    const clerkId = await getCurrentBuyer(userId).then((buyer) => buyer.clerkId);
+    const result = await prepareCheckoutService(clerkId, deliveryAddress);
+
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (error) {
+    console.error("Error in prepareCheckoutAction:", error);
+    if (error instanceof Error && error.message === "BUYER_NOT_FOUND") {
+      return buyerNotFoundResponse<{
+        orderId: string;
+        subtotal: number;
+        shippingCost: number;
+        serviceFee: number;
+        total: number;
+      }>();
+    }
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Error al procesar el checkout",
+    };
+  }
+}
+
+export async function initiatePaymentAction(
+  orderId: string,
+  shippingCost: number,
+  serviceFee: number
+): Promise<
+  ActionResponse<{
+    payment: PaymentResponseDto;
+  }>
+> {
+  try {
+    const { userId } = await requireBuyer();
+    const clerkId = await getCurrentBuyer(userId).then((buyer) => buyer.clerkId);
+    const result = await initiatePaymentService(clerkId, orderId, shippingCost, serviceFee);
+
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (error) {
+    console.error("Error in initiatePaymentAction:", error);
+    if (error instanceof Error && error.message === "BUYER_NOT_FOUND") {
+      return buyerNotFoundResponse<{
+        payment: PaymentResponseDto;
+      }>();
+    }
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Error al iniciar el pago",
+    };
+  }
+}
+
+export async function fetchOrderByIdAction(
+  orderId: string
+): Promise<ActionResponse<OrderResponseDto>> {
+  try {
+    await requireBuyer();
+    const order = await getOrderById(orderId);
+    return {
+      success: true,
+      data: order,
+    };
+  } catch (error) {
+    console.error("Error in fetchOrderByIdAction:", error);
+    return {
+      success: false,
+      error: "Error al obtener la orden",
+    };
+  }
+}
+
+export async function fetchDeliveryTrackingAction(
+  orderId: string
+): Promise<ActionResponse<DeliveryTracking | null>> {
+  try {
+    await requireBuyer();
+    const tracking = await getOrderTracking(orderId);
+    return {
+      success: true,
+      data: tracking[0] ?? null,
+    };
+  } catch (error) {
+    console.error("Error in fetchDeliveryTrackingAction:", error);
+    return {
+      success: false,
+      error: "Error al obtener seguimiento de entrega",
+    };
+  }
+}
+
