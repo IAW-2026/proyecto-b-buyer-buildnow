@@ -1,5 +1,16 @@
 import { prisma } from "@/lib/prisma";
-import type { Address, Buyer } from "@prisma/client";
+import type { Address } from "@prisma/client";
+
+export type BuyerWithAddresses = {
+  id: string;
+  clerkId: string;
+  name: string | null;
+  email: string;
+  phone: string | null;
+  status: "ACTIVE" | "DISABLED";
+  createdAt: Date;
+  addresses: Address[];
+};
 
 // ==============================
 // HELPER TYPES
@@ -41,7 +52,7 @@ export async function createBuyer(data: {
 
 export async function findBuyerByClerkId(
   clerkId: string
-): Promise<(Buyer & { addresses: Address[] }) | null> {
+): Promise<BuyerWithAddresses | null> {
   return prisma.buyer.findUnique({
     where: {
       clerkId,
