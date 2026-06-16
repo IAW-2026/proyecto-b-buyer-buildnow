@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getOrderTracking, getDeliveryQuote } from "@/server/integrations/delivery/delivery.client";
+import { getOrderTracking, getDeliveryQuote, normalizeDeliveryQuoteAddress } from "@/server/integrations/delivery/delivery.client";
 import {
   createOrder,
   getBuyerOrders,
@@ -59,10 +59,24 @@ export async function createBuyerOrderService(
     throw new Error("BUYER_NOT_FOUND");
   }
 
+  const defaultAddress = buyer.addresses[0];
+  const fallbackAddress = defaultAddress
+    ? `${defaultAddress.street}, ${defaultAddress.city}`
+    : undefined;
+
+  const resolvedDeliveryAddress = resolveDeliveryAddress(
+    deliveryAddress,
+    fallbackAddress
+  );
+
+  const normalizedDeliveryAddress = normalizeDeliveryQuoteAddress(
+    resolvedDeliveryAddress
+  );
+
   return createOrder({
     buyerId: clerkId,
     storeId,
-    deliveryAddress,
+    deliveryAddress: normalizedDeliveryAddress,
     items,
   });
 }
@@ -123,7 +137,7 @@ export async function checkoutBuyerCartService(
     const order = await createOrder({
       buyerId: clerkId,
       storeId,
-      deliveryAddress: resolvedDeliveryAddress,
+      deliveryAddress: normalizeDeliveryQuoteAddress(resolvedDeliveryAddress),
       items,
     });
 
@@ -293,7 +307,7 @@ export async function prepareCheckoutService(
   const order = await createOrder({
     buyerId: clerkId,
     storeId,
-    deliveryAddress: resolvedDeliveryAddress,
+    deliveryAddress: normalizeDeliveryQuoteAddress(resolvedDeliveryAddress),
     items,
   });
 

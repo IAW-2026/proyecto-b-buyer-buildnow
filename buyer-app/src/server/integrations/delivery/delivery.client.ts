@@ -54,7 +54,7 @@ function stripDiacritics(value: string): string {
     .trim();
 }
 
-function normalizeDeliveryQuoteAddress(
+export function normalizeDeliveryQuoteAddress(
   address?: string
 ): string {
   const defaultStreet = "Brown 500";
