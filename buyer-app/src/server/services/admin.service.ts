@@ -180,21 +180,39 @@ export async function getBuyersByCity() {
   const buyersByCity = new Map<string, Set<string>>();
 
   for (const entry of entries) {
-    const city = entry.city.trim();
+    let value = entry.city.trim();
+
+    if (!value) continue;
+
+    // Remove trailing Argentina from the city string for analytics output only.
+    value = value.replace(/,\s*argentina$/i, "").trim();
+
+    const parts = value
+      .split(",")
+      .map((part) => part.trim())
+      .filter(Boolean);
+
+    const province = parts.length > 1 ? parts[parts.length - 1] : "";
+    const city = parts.length > 1 ? parts.slice(0, -1).join(", ") : parts[0];
 
     if (!city) continue;
 
+    const key = `${city}|${province}`;
     const buyerIds =
-      buyersByCity.get(city) ?? new Set<string>();
+      buyersByCity.get(key) ?? new Set<string>();
     buyerIds.add(entry.buyerId);
-    buyersByCity.set(city, buyerIds);
+    buyersByCity.set(key, buyerIds);
   }
 
   return Array.from(buyersByCity.entries())
-    .map(([city, buyerIds]) => ({
-      city,
-      buyers: buyerIds.size,
-    }))
+    .map(([key, buyerIds]) => {
+      const [city, province] = key.split("|");
+      return {
+        city,
+        province,
+        buyers: buyerIds.size,
+      };
+    })
     .sort((a, b) => b.buyers - a.buyers);
 }
 
