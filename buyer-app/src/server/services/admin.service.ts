@@ -3,6 +3,7 @@ import "server-only";
 import type { BuyerStatus } from "@prisma/client";
 import {
   countAddresses,
+  countAdminBuyers,
   countBuyers,
   countBuyersByStatus,
   countBuyersWithAddress,
@@ -20,6 +21,7 @@ import {
   updateAdminAddress,
   updateAdminBuyer,
   updateAdminBuyerStatus,
+  type AdminBuyerFilters,
 } from "../repositories/admin.repository";
 
 export async function getAdminSummary() {
@@ -46,6 +48,7 @@ export async function getAdminSummary() {
 export async function getAdminBuyers(options?: {
   skip?: number;
   take?: number;
+  filters?: AdminBuyerFilters;
 }) {
   const buyers = await findAdminBuyers(options);
 
@@ -317,17 +320,24 @@ export async function getControlPlaneBuyerSummary() {
 export async function getControlPlaneBuyers(options?: {
   skip?: number;
   take?: number;
+  filters?: AdminBuyerFilters;
 }) {
-  const buyers = await findAdminBuyers(options);
+  const [buyers, total] = await Promise.all([
+    findAdminBuyers(options),
+    countAdminBuyers(options?.filters),
+  ]);
 
-  return buyers.map((buyer) => ({
-    id: buyer.id,
-    name: buyer.name,
-    email: buyer.email,
-    phone: buyer.phone,
-    addressesCount: buyer._count.addresses,
-    status: buyer.status,
-  }));
+  return {
+    items: buyers.map((buyer) => ({
+      id: buyer.id,
+      name: buyer.name,
+      email: buyer.email,
+      phone: buyer.phone,
+      addressesCount: buyer._count.addresses,
+      status: buyer.status,
+    })),
+    total,
+  };
 }
 
 export async function getControlPlaneBuyerById(id: string) {

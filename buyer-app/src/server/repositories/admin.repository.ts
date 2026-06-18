@@ -1,7 +1,45 @@
 import "server-only";
 
-import type { BuyerStatus } from "@prisma/client";
+import type {
+  BuyerStatus,
+  Prisma,
+} from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+
+export type AdminBuyerFilters = {
+  status?: BuyerStatus;
+  search?: string;
+};
+
+function buildBuyerWhere(
+  filters?: AdminBuyerFilters
+): Prisma.BuyerWhereInput | undefined {
+  const search = filters?.search?.trim();
+
+  if (!filters?.status && !search) {
+    return undefined;
+  }
+
+  return {
+    status: filters?.status,
+    OR: search
+      ? [
+          {
+            name: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            email: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        ]
+      : undefined,
+  };
+}
 
 export async function countBuyers() {
   return prisma.buyer.count();
@@ -44,8 +82,10 @@ export async function countCartItems() {
 export async function findAdminBuyers(options?: {
   skip?: number;
   take?: number;
+  filters?: AdminBuyerFilters;
 }) {
   return prisma.buyer.findMany({
+    where: buildBuyerWhere(options?.filters),
     skip: options?.skip,
     take: options?.take,
     orderBy: {
@@ -74,6 +114,14 @@ export async function findAdminBuyers(options?: {
         },
       },
     },
+  });
+}
+
+export async function countAdminBuyers(
+  filters?: AdminBuyerFilters
+) {
+  return prisma.buyer.count({
+    where: buildBuyerWhere(filters),
   });
 }
 

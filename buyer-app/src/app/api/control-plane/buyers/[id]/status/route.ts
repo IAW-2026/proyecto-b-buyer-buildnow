@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { BuyerStatus } from "@prisma/client";
 
 import { withSuperAdminApi } from "@/lib/api/adminApi";
 import { setAdminBuyerStatus } from "@/server/services/admin.service";
@@ -20,8 +21,8 @@ export async function PATCH(
     }
 
     if (
-      body.status !== "ACTIVE" &&
-      body.status !== "DISABLED"
+      body.status !== BuyerStatus.ACTIVE &&
+      body.status !== BuyerStatus.DISABLED
     ) {
       return NextResponse.json(
         { error: "Status must be ACTIVE or DISABLED" },
@@ -30,7 +31,7 @@ export async function PATCH(
     }
 
     const { id } = await params;
-    await setAdminBuyerStatus(id, body.status as "ACTIVE" | "DISABLED");
+    await setAdminBuyerStatus(id, body.status);
 
     return NextResponse.json({ success: true });
   });
