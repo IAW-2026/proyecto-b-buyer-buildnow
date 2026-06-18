@@ -181,12 +181,12 @@ export default function CategoryLayout({
     return (
       <div className="brand-card p-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div>
+          <div className="min-w-0">
             <p className="text-sm uppercase tracking-wide text-[#A76E04] font-semibold">
               Categoría seleccionada
             </p>
 
-            <h1 className="mt-1 text-2xl font-bold text-[#823A00]">
+            <h1 className="mt-1 text-2xl font-bold text-[#823A00] truncate" title={category.name}>
               {category.name}
             </h1>
           </div>
@@ -214,12 +214,12 @@ export default function CategoryLayout({
     <div className="brand-card p-6">
       {/* HEADER */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+        <div className="min-w-0">
           <p className="text-sm uppercase tracking-wide text-[#A76E04] font-semibold">
             Categoría seleccionada
           </p>
 
-          <h1 className="mt-1 text-2xl font-bold text-[#823A00]">
+          <h1 className="mt-1 text-2xl font-bold text-[#823A00] truncate" title={category.name}>
             {category.name}
           </h1>
         </div>

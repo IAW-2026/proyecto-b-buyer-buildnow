@@ -81,9 +81,9 @@ export default function CategorySidebar({
       transition-[background-color,border-color,color,transform]
       duration-200
       ease-out
-      whitespace-nowrap
       text-left
       w-full
+      max-w-[200px]
       ${
         isSelected
           ? "border border-orange-200 bg-[#FFF4E8] text-[#823A00] font-semibold"
@@ -111,99 +111,115 @@ export default function CategorySidebar({
       </h2>
 
       {/* MOBILE/TABLET */}
-      <div className="lg:hidden relative flex items-center gap-2">
-        <button
-          onClick={() => scroll("left")}
-          disabled={!canScrollLeft}
-          className="
-            absolute
-            left-0
-            z-10
-            flex
-            h-8
-            w-8
-            flex-shrink-0
-            items-center
-            justify-center
-            rounded-full
-            bg-white
-            border
-            border-[#A76E04]
-            text-[#823A00]
-            text-sm
-            transition-[background-color,border-color,transform,opacity]
-            duration-200
-            ease-out
-            hover:enabled:bg-[#FFF4E8]
-            hover:enabled:border-[#A76E04]
-            disabled:opacity-30
-            disabled:cursor-not-allowed
-          "
-        >
-          ←
-        </button>
-
-        <div
-          ref={scrollContainerRef}
-          onScroll={checkScroll}
-          onLoad={checkScroll}
-          className="
-            flex
-            gap-2
-            overflow-x-auto
-            scroll-smooth
-            px-8
-            py-1
-            [&::-webkit-scrollbar]:hidden
-            [-ms-overflow-style:none]
-            [scrollbar-width:none]
-          "
-        >
-          {categories.map((category) => (
+      <div className="lg:hidden flex flex-col gap-3">
+        {selectedCategory && (
+          <div className="flex items-center min-w-0">
             <button
-              key={category.id}
-              onClick={() => handleSelectCategory(category)}
-              className={getCategoryButtonClassName(category)}
+              onClick={() => onSelectCategory(null)}
+              className="flex items-center gap-2 rounded-full border border-orange-200 bg-[#FFF4E8] px-3 py-1.5 text-sm font-semibold text-[#823A00] transition-colors hover:bg-orange-100 max-w-full"
             >
-
-              <span className="truncate block w-full" title={category.name}>
-                {category.name}
+              <span className="truncate" title={selectedCategory.name}>
+                {selectedCategory.name}
               </span>
-
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-orange-200/50 text-xs font-bold leading-none">
+                &times;
+              </span>
             </button>
-          ))}
-        </div>
+          </div>
+        )}
 
-        <button
-          onClick={() => scroll("right")}
-          disabled={!canScrollRight}
-          className="
-            absolute
-            right-0
-            z-10
-            flex
-            h-8
-            w-8
-            flex-shrink-0
-            items-center
-            justify-center
-            rounded-full
-            bg-white
-            border
-            border-[#A76E04]
-            text-[#823A00]
-            text-sm
-            transition-[background-color,border-color,transform,opacity]
-            duration-200
-            ease-out
-            hover:enabled:bg-[#FFF4E8]
-            hover:enabled:border-[#A76E04]
-            disabled:opacity-30
-            disabled:cursor-not-allowed
-          "
-        >
-          →
-        </button>
+        <div className="relative flex items-center gap-2">
+          <button
+            onClick={() => scroll("left")}
+            disabled={!canScrollLeft}
+            className="
+              absolute
+              left-0
+              z-10
+              flex
+              h-8
+              w-8
+              flex-shrink-0
+              items-center
+              justify-center
+              rounded-full
+              bg-white
+              border
+              border-[#A76E04]
+              text-[#823A00]
+              text-sm
+              transition-[background-color,border-color,transform,opacity]
+              duration-200
+              ease-out
+              hover:enabled:bg-[#FFF4E8]
+              hover:enabled:border-[#A76E04]
+              disabled:opacity-30
+              disabled:cursor-not-allowed
+            "
+          >
+            ←
+          </button>
+
+          <div
+            ref={scrollContainerRef}
+            onScroll={checkScroll}
+            onLoad={checkScroll}
+            className="
+              flex
+              gap-2
+              overflow-x-auto
+              scroll-smooth
+              px-8
+              py-1
+              [&::-webkit-scrollbar]:hidden
+              [-ms-overflow-style:none]
+              [scrollbar-width:none]
+            "
+          >
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => handleSelectCategory(category)}
+                className={getCategoryButtonClassName(category)}
+              >
+                <span className="truncate block w-full" title={category.name}>
+                  {category.name}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={() => scroll("right")}
+            disabled={!canScrollRight}
+            className="
+              absolute
+              right-0
+              z-10
+              flex
+              h-8
+              w-8
+              flex-shrink-0
+              items-center
+              justify-center
+              rounded-full
+              bg-white
+              border
+              border-[#A76E04]
+              text-[#823A00]
+              text-sm
+              transition-[background-color,border-color,transform,opacity]
+              duration-200
+              ease-out
+              hover:enabled:bg-[#FFF4E8]
+              hover:enabled:border-[#A76E04]
+              disabled:opacity-30
+              disabled:cursor-not-allowed
+            "
+          >
+            →
+          </button>
+        </div>
       </div>
 
       {/* DESKTOP */}
