@@ -87,6 +87,74 @@ function parseJsonResponse(
   };
 }
 
+const MAX_RETRIES = 3;
+const RETRYABLE_STATUS_CODES = new Set([429, 503]);
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function callGeminiApi(
+  prompt: string
+): Promise<GeminiResponse> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    if (attempt > 0) {
+      const backoff = 1000 * Math.pow(2, attempt - 1);
+      console.log(
+        `Gemini retry ${attempt}/${MAX_RETRIES} after ${backoff}ms...`
+      );
+      await delay(backoff);
+    }
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
+        GEMINI_MODEL
+      )}:generateContent?key=${encodeURIComponent(GEMINI_API_KEY!)}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: prompt }],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.2,
+            maxOutputTokens: 700,
+            responseMimeType: "application/json",
+          },
+        }),
+      }
+    );
+
+    if (response.ok) {
+      return (await response.json()) as GeminiResponse;
+    }
+
+    const errorBody = await response.text();
+    console.error(
+      `Gemini API error ${response.status} (attempt ${attempt + 1}):`,
+      errorBody
+    );
+
+    lastError = new Error(
+      `GEMINI_REQUEST_FAILED (${response.status}): ${errorBody}`
+    );
+
+    if (!RETRYABLE_STATUS_CODES.has(response.status)) {
+      throw lastError;
+    }
+  }
+
+  throw lastError ?? new Error("GEMINI_REQUEST_FAILED");
+}
+
 export async function generateMaterialRecommendations(
   message: string,
   products: GeminiProductInput[]
@@ -95,40 +163,9 @@ export async function generateMaterialRecommendations(
     throw new Error("GEMINI_API_KEY_MISSING");
   }
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
-      GEMINI_MODEL
-    )}:generateContent?key=${encodeURIComponent(GEMINI_API_KEY)}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: "user",
-            parts: [
-              {
-                text: buildPrompt(message, products),
-              },
-            ],
-          },
-        ],
-        generationConfig: {
-          temperature: 0.2,
-          maxOutputTokens: 700,
-          responseMimeType: "application/json",
-        },
-      }),
-    }
-  );
+  const prompt = buildPrompt(message, products);
+  const data = await callGeminiApi(prompt);
 
-  if (!response.ok) {
-    throw new Error("GEMINI_REQUEST_FAILED");
-  }
-
-  const data = (await response.json()) as GeminiResponse;
   const text =
     data.candidates?.[0]?.content?.parts
       ?.map((part) => part.text ?? "")

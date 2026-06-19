@@ -176,29 +176,35 @@ export async function getStores(): Promise<Store[]> {
 
 export async function getStoreProducts(
   storeId: string
-) {
+): Promise<Product[]> {
   if (useSellerMock) {
     return resolveStoreProducts(storeId);
   }
 
-  return apiClient(
+  const response = await apiClient(
     `/api/stores/${encodeURIComponent(storeId)}/products`,
     {
       method: "GET",
       serviceUrl: SELLER_API_URL,
     }
-  ) as Promise<Product[]>;
+  );
+
+  const products: Product[] = response.data ?? response;
+  return products;
 }
 
-export async function getCategories() {
+export async function getCategories(): Promise<Category[]> {
   if (useSellerMock) {
     return sellerApp.categories;
   }
 
-  return apiClient("/api/categories", {
+  const response = await apiClient("/api/categories", {
     method: "GET",
     serviceUrl: SELLER_API_URL,
-  }) as Promise<Category[]>;
+  });
+
+  const categories: Category[] = response.data ?? response;
+  return categories;
 }
 
 export async function getProductDetails(
@@ -240,18 +246,21 @@ export async function getProduct(
 
 export async function getProductsByCategory(
   categoryId: string
-) {
+): Promise<Product[]> {
   if (useSellerMock) {
     return resolveProductsByCategory(categoryId);
   }
 
-  return apiClient(
+  const response = await apiClient(
     `/api/products?categoryId=${encodeURIComponent(categoryId)}`,
     {
       method: "GET",
       serviceUrl: SELLER_API_URL,
     }
-  ) as Promise<Product[]>;
+  );
+
+  const products: Product[] = response.data ?? response;
+  return products;
 }
 
 export async function getProducts(params: {
