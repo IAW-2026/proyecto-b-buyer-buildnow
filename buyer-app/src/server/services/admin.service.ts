@@ -232,13 +232,50 @@ export async function getTopCartProducts(limit = 10) {
     }
   }
 
-  return Array.from(productTotals.entries())
+  const topProductsRaw = Array.from(productTotals.entries())
     .map(([productId, timesAdded]) => ({
       productId,
       timesAdded,
     }))
     .sort((a, b) => b.timesAdded - a.timesAdded)
     .slice(0, limit);
+
+  // Import locally to avoid circular dependencies if any
+  const { getProductDetails, getAllStores } = await import("./catalog.service");
+
+  let storesMap = new Map<string, string>();
+  try {
+    const stores = await getAllStores();
+    storesMap = new Map(stores.map((s) => [s.id, s.name]));
+  } catch (err) {
+    console.error("Error fetching stores:", err);
+  }
+
+  const enrichedProducts = await Promise.all(
+    topProductsRaw.map(async (item) => {
+      let productName = "Producto desconocido";
+      let storeName = "Tienda desconocida";
+      
+      try {
+        const product = await getProductDetails(item.productId);
+        if (product) {
+          productName = product.name;
+          storeName = storesMap.get(product.storeId) ?? `Tienda ${product.storeId.slice(0, 8)}`;
+        }
+      } catch (err) {
+        console.error(`Error fetching product details for ${item.productId}:`, err);
+      }
+
+      return {
+        productId: item.productId,
+        productName,
+        storeName,
+        timesAdded: item.timesAdded,
+      };
+    })
+  );
+
+  return enrichedProducts;
 }
 
 export async function getTopBuyersByCartValue(limit = 10) {
