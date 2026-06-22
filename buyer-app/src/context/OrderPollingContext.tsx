@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import {
   fetchBuyerOrdersAction,
@@ -39,33 +39,59 @@ export function OrderPollingProvider({ children }: { children: React.ReactNode }
   const activeOrderIdsRef = useRef<Set<string>>(new Set());
   const lastPolledTimesRef = useRef<Record<string, number>>({});
 
-  const registerOrder = (
+  const registerOrder = useCallback((
     order: OrderResponseDto,
     deliveryTracking: DeliveryTracking | null,
     shippingCost: number,
     serviceFee: number
   ) => {
     const orderId = order.orderId || order.id;
+
+    // Helper to compare statuses
+    const statusValues: Record<string, number> = {
+      PENDING_PAYMENT: 0,
+      CONFIRMED: 1,
+      READY: 2,
+      ON_THE_WAY: 3,
+      DELIVERED: 4,
+      CANCELLED: -1,
+    };
+
     setOrders((prev) => {
-      if (prev[orderId] && prev[orderId].estadoDelPedido === order.estadoDelPedido) {
-        return prev;
+      const prevOrder = prev[orderId];
+      if (prevOrder) {
+        if (prevOrder.estadoDelPedido === order.estadoDelPedido) {
+          return prev;
+        }
+
+        // Only allow status to move forward (or to cancelled)
+        const prevStatus = statusValues[prevOrder.estadoDelPedido] ?? -2;
+        const newStatus = statusValues[order.estadoDelPedido] ?? -2;
+        
+        if (prevStatus > newStatus && newStatus !== -1) {
+          return prev; // Ignore older status from stale props
+        }
       }
+
       const updated = { ...prev };
       updated[orderId] = order;
       return updated;
     });
+
     setDeliveryTrackings((prev) => {
       if (prev[orderId] === deliveryTracking) return prev;
       const updated = { ...prev };
       updated[orderId] = deliveryTracking;
       return updated;
     });
+
     setShippingCosts((prev) => {
       if (prev[orderId] === shippingCost) return prev;
       const updated = { ...prev };
       updated[orderId] = shippingCost;
       return updated;
     });
+
     setServiceFees((prev) => {
       if (prev[orderId] === serviceFee) return prev;
       const updated = { ...prev };
@@ -78,7 +104,7 @@ export function OrderPollingProvider({ children }: { children: React.ReactNode }
     } else {
       activeOrderIdsRef.current.delete(orderId);
     }
-  };
+  }, []);
 
   const refetchOrder = async (orderId: string) => {
     const res = await fetchOrderByIdAction(orderId);
