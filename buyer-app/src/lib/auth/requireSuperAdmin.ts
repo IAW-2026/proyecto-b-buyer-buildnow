@@ -13,7 +13,7 @@ export async function requireSuperAdmin() {
 
   console.log("[Analytics Endpoint] User role:", user.role, "UserId:", user.userId);
 
-  if (user.role !== "superadmin") {
+  if (user.role !== "superadmin" && user.role !== "admin") {
     throw new ForbiddenError();
   }
 

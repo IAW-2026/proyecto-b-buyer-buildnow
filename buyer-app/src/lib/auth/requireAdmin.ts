@@ -11,7 +11,7 @@ export async function requireAdmin() {
     throw new UnauthorizedError();
   }
 
-  if (user.role !== "admin") {
+  if (user.role !== "admin" && user.role !== "superadmin") {
     throw new ForbiddenError();
   }
 
