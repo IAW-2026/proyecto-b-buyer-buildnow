@@ -1,0 +1,174 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-brand-dark: #823A00;
+  --color-brand-primary: #A76E04;
+  --color-brand-accent: #ED6F00;
+}
+
+@theme {
+  --color-orange-50: #FFF4E8;
+  --color-orange-100: #FFE5C7;
+  --color-orange-200: #F8C58D;
+  --color-orange-300: #D99B45;
+  --color-orange-400: #A76E04;
+  --color-orange-500: #ED6F00;
+  --color-orange-600: #A76E04;
+  --color-orange-700: #823A00;
+  --color-orange-800: #6B2F00;
+  --color-orange-900: #4A2100;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(237, 111, 0, 0.10), transparent 32rem),
+    linear-gradient(180deg, #fffaf5 0%, #fff4e8 42%, #fff8f1 100%);
+  color: #1c1917;
+}
+
+.dark body {
+  background:
+    radial-gradient(circle at top left, rgba(237, 111, 0, 0.16), transparent 32rem),
+    linear-gradient(180deg, #1c1917 0%, #292524 48%, #1c1917 100%);
+  color: #f5f5f4;
+}
+
+::selection {
+  background: #ed6f00;
+  color: white;
+}
+
+@layer components {
+  .brand-card {
+    @apply rounded-2xl border border-orange-200 bg-white shadow-[0_10px_30px_rgba(130,58,0,0.08)] transition-[border-color,box-shadow,transform,background-color,color] duration-200 ease-out dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100 dark:shadow-[0_12px_34px_rgba(0,0,0,0.36)];
+  }
+
+  .brand-card-hover {
+    @apply hover:border-orange-400 hover:shadow-[0_14px_36px_rgba(130,58,0,0.14)] dark:hover:border-orange-500 dark:hover:shadow-[0_14px_36px_rgba(0,0,0,0.48)];
+  }
+
+  .brand-panel {
+    @apply rounded-xl border border-orange-100 bg-orange-50 text-orange-700 dark:border-stone-700 dark:bg-stone-800 dark:text-orange-100;
+  }
+
+  .brand-title {
+    @apply font-semibold text-orange-700 dark:text-orange-100;
+  }
+
+  .brand-button-primary {
+    @apply rounded-xl bg-orange-500 font-semibold text-white shadow-[0_8px_18px_rgba(237,111,0,0.22)] transition-[background-color,box-shadow,transform,opacity] duration-200 ease-out hover:bg-orange-600 hover:shadow-[0_10px_24px_rgba(237,111,0,0.30)] active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .brand-button-soft {
+    @apply rounded-xl border border-orange-300 bg-white font-medium text-orange-700 transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-out hover:border-orange-500 hover:bg-orange-50 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-40 dark:border-stone-700 dark:bg-stone-900 dark:text-orange-100 dark:hover:border-orange-500 dark:hover:bg-stone-800;
+  }
+}
+
+@layer base {
+  .dark input,
+  .dark textarea,
+  .dark select {
+    background-color: #1c1917;
+    border-color: #57534e;
+    color: #f5f5f4;
+    color-scheme: dark;
+  }
+
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    color: #a8a29e;
+  }
+
+  .dark table {
+    color: #f5f5f4;
+  }
+
+  .dark th {
+    color: #fed7aa;
+  }
+
+  .dark tr {
+    border-color: #44403c;
+  }
+}
+
+@layer utilities {
+  .dark .bg-white,
+  .dark [class~="bg-[#fffdf9]"] {
+    background-color: #1c1917 !important;
+  }
+
+  .dark .focus\:bg-white:focus {
+    background-color: #1c1917 !important;
+  }
+
+  .dark .bg-stone-100,
+  .dark .bg-stone-200,
+  .dark .bg-gray-100,
+  .dark [class~="bg-[#FFF4E8]"],
+  .dark [class~="bg-[#FFE5C7]"] {
+    background-color: #292524 !important;
+  }
+
+  .dark [class*="bg-[radial-gradient"],
+  .dark [class*="linear-gradient"] {
+    background:
+      radial-gradient(circle at top left, rgba(237, 111, 0, 0.16), transparent 30rem),
+      linear-gradient(180deg, #1c1917 0%, #292524 45%, #1c1917 100%) !important;
+  }
+
+  .dark .border-orange-100,
+  .dark .border-orange-200,
+  .dark .border-orange-300,
+  .dark .border-stone-300,
+  .dark .border-gray-200,
+  .dark [class~="border-[#A76E04]"],
+  .dark [class~="border-[#823A00]"],
+  .dark [class~="border-[#F8C58D]"] {
+    border-color: #57534e !important;
+  }
+
+  .dark .text-stone-950,
+  .dark .text-stone-900,
+  .dark .text-stone-800,
+  .dark .text-stone-700,
+  .dark .text-gray-950,
+  .dark .text-gray-900,
+  .dark .text-gray-800,
+  .dark .text-gray-700 {
+    color: #f5f5f4 !important;
+  }
+
+  .dark .text-stone-600,
+  .dark .text-stone-500,
+  .dark .text-stone-400,
+  .dark .text-gray-600,
+  .dark .text-gray-500,
+  .dark .text-gray-400 {
+    color: #d6d3d1 !important;
+  }
+
+  .dark .text-orange-700,
+  .dark [class~="text-[#823A00]"],
+  .dark [class~="text-[#A76E04]"] {
+    color: #fed7aa !important;
+  }
+
+  .dark .shadow-sm,
+  .dark .shadow-lg,
+  .dark .shadow-xl {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35) !important;
+  }
+
+  .dark .hover\:bg-\[\#FFF4E8\]:hover,
+  .dark .hover\:bg-\[\#FFE5C7\]:hover,
+  .dark .hover\:bg-orange-50:hover,
+  .dark .hover\:bg-stone-100:hover,
+  .dark .hover\:bg-stone-200:hover,
+  .dark .hover\:bg-gray-100:hover,
+  .dark .focus\:bg-gray-100:focus {
+    background-color: #44403c !important;
+  }
+}

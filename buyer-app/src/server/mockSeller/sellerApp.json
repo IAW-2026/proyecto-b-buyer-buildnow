@@ -1,0 +1,1597 @@
+{
+  "stores": [
+    {
+      "id": "store_001",
+      "name": "Corralón San Martín",
+      "description": "Materiales para construcción y ferretería pesada.",
+      "address": "Av. San Martín 2450, Bahía Blanca",
+      "status": "OPEN"
+    },
+    {
+      "id": "store_002",
+      "name": "ConstruMax",
+      "description": "Especialistas en obra gruesa y terminaciones.",
+      "address": "Don Bosco 1200, Bahía Blanca",
+      "status": "OPEN"
+    },
+    {
+      "id": "store_003",
+      "name": "FerreHogar",
+      "description": "Herramientas, pinturas y accesorios para el hogar.",
+      "address": "Sarmiento 845, Bahía Blanca",
+      "status": "CLOSE"
+    },
+    {
+      "id": "store_004",
+      "name": "Obra Sur",
+      "description": "Corralon con foco en mamposteria, arena y cal.",
+      "address": "Brasil 1620, Bahia Blanca",
+      "status": "OPEN"
+    },
+    {
+      "id": "store_005",
+      "name": "Materiales Norte",
+      "description": "Materiales secos, aberturas y electricidad para obra.",
+      "address": "Vieytes 2310, Bahia Blanca",
+      "status": "OPEN"
+    },
+    {
+      "id": "store_006",
+      "name": "Arenas del Puerto",
+      "description": "Aridos, bolsas para mezcla y materiales de base para obra.",
+      "address": "Camino Parque Sesquicentenario 4100, Bahia Blanca",
+      "status": "OPEN"
+    },
+    {
+      "id": "store_007",
+      "name": "Pintureria Centro",
+      "description": "Pinturas, impermeabilizantes, enduidos y accesorios de pintura.",
+      "address": "Zelarrayan 220, Bahia Blanca",
+      "status": "OPEN"
+    },
+    {
+      "id": "store_008",
+      "name": "Sanitarios Bahia",
+      "description": "Sanitarios, griferia y accesorios de plomeria para banos y cocinas.",
+      "address": "Av. Alem 1540, Bahia Blanca",
+      "status": "OPEN"
+    },
+    {
+      "id": "store_009",
+      "name": "Revestir Sur",
+      "description": "Ceramicos, porcelanatos, pastinas y adhesivos para terminaciones.",
+      "address": "Falucho 980, Bahia Blanca",
+      "status": "OPEN"
+    },
+    {
+      "id": "store_010",
+      "name": "ElectroObra Mayorista",
+      "description": "Material electrico de obra, tableros, cables y protecciones.",
+      "address": "Ruta 3 Sur km 695, Bahia Blanca",
+      "status": "CLOSE"
+    }
+  ],
+  "categories": [
+    {
+      "id": "cat_001",
+      "name": "Cementos"
+    },
+    {
+      "id": "cat_002",
+      "name": "Ladrillos"
+    },
+    {
+      "id": "cat_003",
+      "name": "Hierros"
+    },
+    {
+      "id": "cat_004",
+      "name": "Pinturas"
+    },
+    {
+      "id": "cat_005",
+      "name": "Herramientas"
+    },
+    {
+      "id": "cat_006",
+      "name": "Aberturas"
+    },
+    {
+      "id": "cat_007",
+      "name": "Electricidad"
+    },
+    {
+      "id": "cat_008",
+      "name": "Aridos"
+    },
+    {
+      "id": "cat_009",
+      "name": "Plomeria"
+    },
+    {
+      "id": "cat_010",
+      "name": "Revestimientos"
+    },
+    {
+      "id": "cat_011",
+      "name": "Sanitarios"
+    },
+    {
+      "id": "cat_012",
+      "name": "Adhesivos y Selladores"
+    }
+  ],
+  "products": [
+    {
+      "id": "prod_001",
+      "img": "/mock/products/cemento_avellaneda_50kg.jpg",
+      "storeId": "store_001",
+      "categoryId": "cat_001",
+      "categoryName": "Cementos",
+      "name": "Cemento Avellaneda 50kg",
+      "price": 12500,
+      "stock": 120,
+      "weight": 50,
+      "available": true
+    },
+    {
+      "id": "prod_002",
+      "img": "/mock/products/cemento_loma_negra_50kg.jpg",
+      "storeId": "store_002",
+      "categoryId": "cat_001",
+      "categoryName": "Cementos",
+      "name": "Cemento Loma Negra 50kg",
+      "price": 13200,
+      "stock": 85,
+      "weight": 50,
+      "available": true
+    },
+    {
+      "id": "prod_003",
+      "img": "/mock/products/ladrillo_hueco_18.jpg",
+      "storeId": "store_001",
+      "categoryId": "cat_002",
+      "categoryName": "Ladrillos",
+      "name": "Ladrillo Hueco 18x18x33",
+      "price": 950,
+      "stock": 2000,
+      "weight": 2.8,
+      "available": true
+    },
+    {
+      "id": "prod_004",
+      "img": "/mock/products/ladrillo_comun.jpg",
+      "storeId": "store_002",
+      "categoryId": "cat_002",
+      "categoryName": "Ladrillos",
+      "name": "Ladrillo Común",
+      "price": 430,
+      "stock": 5000,
+      "weight": 1.9,
+      "available": true
+    },
+    {
+      "id": "prod_005",
+      "img": "/mock/products/hierro_8mm.jpg",
+      "storeId": "store_001",
+      "categoryId": "cat_003",
+      "categoryName": "Hierros",
+      "name": "Hierro de Construcción 8mm x 12m",
+      "price": 18900,
+      "stock": 70,
+      "weight": 4.7,
+      "available": true
+    },
+    {
+      "id": "prod_006",
+      "img": "/mock/products/hierro_12mm.jpg",
+      "storeId": "store_002",
+      "categoryId": "cat_003",
+      "categoryName": "Hierros",
+      "name": "Hierro de Construcción 12mm x 12m",
+      "price": 28400,
+      "stock": 40,
+      "weight": 10.5,
+      "available": true
+    },
+    {
+      "id": "prod_007",
+      "img": "/mock/products/pintura_blanca_20l.jpg",
+      "storeId": "store_003",
+      "categoryId": "cat_004",
+      "categoryName": "Pinturas",
+      "name": "Pintura Latex Blanca 20L",
+      "price": 35600,
+      "stock": 15,
+      "weight": 22,
+      "available": false
+    },
+    {
+      "id": "prod_008",
+      "img": "/mock/products/pintura_impermeabilizante.jpg",
+      "storeId": "store_003",
+      "categoryId": "cat_004",
+      "categoryName": "Pinturas",
+      "name": "Membrana Líquida Impermeabilizante 10L",
+      "price": 42100,
+      "stock": 8,
+      "weight": 12,
+      "available": false
+    },
+    {
+      "id": "prod_009",
+      "img": "/mock/products/amoladora_bosch.jpg",
+      "storeId": "store_003",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Amoladora Bosch GWS 700",
+      "price": 98700,
+      "stock": 10,
+      "weight": 2.1,
+      "available": false
+    },
+    {
+      "id": "prod_010",
+      "img": "/mock/products/taladro_dewalt.jpg",
+      "storeId": "store_002",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Taladro Percutor DeWalt 650W",
+      "price": 112500,
+      "stock": 12,
+      "weight": 3.4,
+      "available": true
+    },
+    {
+      "id": "prod_011",
+      "img": "/mock/products/ladrillo_hueco_12.jpg",
+      "storeId": "store_004",
+      "categoryId": "cat_002",
+      "categoryName": "Ladrillos",
+      "name": "Ladrillo Hueco 12x18x33",
+      "price": 790,
+      "stock": 2800,
+      "weight": 2.1,
+      "available": true
+    },
+    {
+      "id": "prod_012",
+      "img": "/mock/products/ladrillo_portante_18.jpg",
+      "storeId": "store_004",
+      "categoryId": "cat_002",
+      "categoryName": "Ladrillos",
+      "name": "Ladrillo Portante 18x19x33",
+      "price": 1180,
+      "stock": 1600,
+      "weight": 3.4,
+      "available": true
+    },
+    {
+      "id": "prod_013",
+      "img": "/mock/products/ladrillo_visto.jpg",
+      "storeId": "store_005",
+      "categoryId": "cat_002",
+      "categoryName": "Ladrillos",
+      "name": "Ladrillo Visto Prensado",
+      "price": 620,
+      "stock": 4200,
+      "weight": 2,
+      "available": true
+    },
+    {
+      "id": "prod_014",
+      "img": "/mock/products/ladrillo_refractario.jpg",
+      "storeId": "store_005",
+      "categoryId": "cat_002",
+      "categoryName": "Ladrillos",
+      "name": "Ladrillo Refractario",
+      "price": 1450,
+      "stock": 900,
+      "weight": 2.6,
+      "available": true
+    },
+    {
+      "id": "prod_015",
+      "img": "/mock/products/ladrillo_ceramico_8.jpg",
+      "storeId": "store_001",
+      "categoryId": "cat_002",
+      "categoryName": "Ladrillos",
+      "name": "Ladrillo Ceramico 8x18x33",
+      "price": 640,
+      "stock": 3000,
+      "weight": 1.6,
+      "available": true
+    },
+    {
+      "id": "prod_016",
+      "img": "/mock/products/ladrillo_ceramico_18.jpg",
+      "storeId": "store_002",
+      "categoryId": "cat_002",
+      "categoryName": "Ladrillos",
+      "name": "Ladrillo Ceramico 18x18x33",
+      "price": 980,
+      "stock": 2100,
+      "weight": 2.9,
+      "available": true
+    },
+    {
+      "id": "prod_017",
+      "img": "/mock/products/ladrillo_bloque_hormigon.jpg",
+      "storeId": "store_004",
+      "categoryId": "cat_002",
+      "categoryName": "Ladrillos",
+      "name": "Ladrillo Bloque de Hormigon",
+      "price": 1550,
+      "stock": 650,
+      "weight": 7.8,
+      "available": true
+    },
+    {
+      "id": "prod_018",
+      "img": "/mock/products/ladrillo_retak.jpg",
+      "storeId": "store_005",
+      "categoryId": "cat_002",
+      "categoryName": "Ladrillos",
+      "name": "Ladrillo Retak 60x25x10",
+      "price": 2650,
+      "stock": 340,
+      "weight": 5.4,
+      "available": true
+    },
+    {
+      "id": "prod_019",
+      "img": "/mock/products/cal_hidratada_25kg.jpg",
+      "storeId": "store_004",
+      "categoryId": "cat_001",
+      "categoryName": "Cementos",
+      "name": "Cal Hidratada 25kg",
+      "price": 7800,
+      "stock": 110,
+      "weight": 25,
+      "available": true
+    },
+    {
+      "id": "prod_020",
+      "img": "/mock/products/cemento_rapido_25kg.jpg",
+      "storeId": "store_005",
+      "categoryId": "cat_001",
+      "categoryName": "Cementos",
+      "name": "Cemento Rapido 25kg",
+      "price": 9400,
+      "stock": 45,
+      "weight": 25,
+      "available": true
+    },
+    {
+      "id": "prod_021",
+      "img": "/mock/products/malla_sima_15x15.jpg",
+      "storeId": "store_004",
+      "categoryId": "cat_003",
+      "categoryName": "Hierros",
+      "name": "Malla Sima 15x15 6mm",
+      "price": 48200,
+      "stock": 28,
+      "weight": 18,
+      "available": true
+    },
+    {
+      "id": "prod_022",
+      "img": "/mock/products/alambre_recocido_1kg.jpg",
+      "storeId": "store_005",
+      "categoryId": "cat_003",
+      "categoryName": "Hierros",
+      "name": "Alambre Recocido 1kg",
+      "price": 6900,
+      "stock": 75,
+      "weight": 1,
+      "available": true
+    },
+    {
+      "id": "prod_023",
+      "img": "/mock/products/rodillo_pintura_22cm.jpg",
+      "storeId": "store_003",
+      "categoryId": "cat_004",
+      "categoryName": "Pinturas",
+      "name": "Rodillo para Pintura 22cm",
+      "price": 8200,
+      "stock": 24,
+      "weight": 0.4,
+      "available": false
+    },
+    {
+      "id": "prod_024",
+      "img": "/mock/products/esmalte_sintetico_blanco_4l.jpg",
+      "storeId": "store_005",
+      "categoryId": "cat_004",
+      "categoryName": "Pinturas",
+      "name": "Esmalte Sintetico Blanco 4L",
+      "price": 28700,
+      "stock": 18,
+      "weight": 4.6,
+      "available": true
+    },
+    {
+      "id": "prod_025",
+      "img": "/mock/products/cinta_metrica_5m.jpg",
+      "storeId": "store_004",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Cinta Metrica 5m",
+      "price": 6100,
+      "stock": 60,
+      "weight": 0.3,
+      "available": true
+    },
+    {
+      "id": "prod_026",
+      "img": "/mock/products/nivel_aluminio_60cm.jpg",
+      "storeId": "store_005",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Nivel de Aluminio 60cm",
+      "price": 18400,
+      "stock": 22,
+      "weight": 0.7,
+      "available": true
+    },
+    {
+      "id": "prod_027",
+      "img": "/mock/products/puerta_chapa_inyectada.jpg",
+      "storeId": "store_005",
+      "categoryId": "cat_006",
+      "categoryName": "Aberturas",
+      "name": "Puerta Chapa Inyectada 80x200",
+      "price": 128000,
+      "stock": 9,
+      "weight": 24,
+      "available": true
+    },
+    {
+      "id": "prod_028",
+      "img": "/mock/products/ventana_aluminio_120x110.jpg",
+      "storeId": "store_005",
+      "categoryId": "cat_006",
+      "categoryName": "Aberturas",
+      "name": "Ventana Aluminio 120x110",
+      "price": 168500,
+      "stock": 7,
+      "weight": 18,
+      "available": true
+    },
+    {
+      "id": "prod_029",
+      "img": "/mock/products/cable_unipolar_2_5mm.jpg",
+      "storeId": "store_005",
+      "categoryId": "cat_007",
+      "categoryName": "Electricidad",
+      "name": "Cable Unipolar 2.5mm Rollo 100m",
+      "price": 75200,
+      "stock": 13,
+      "weight": 3.9,
+      "available": true
+    },
+    {
+      "id": "prod_030",
+      "img": "/mock/products/termica_bipolar_25a.jpg",
+      "storeId": "store_004",
+      "categoryId": "cat_007",
+      "categoryName": "Electricidad",
+      "name": "Llave Termica Bipolar 25A",
+      "price": 18900,
+      "stock": 35,
+      "weight": 0.2,
+      "available": true
+    },
+    {
+      "id": "prod_031",
+      "img": "/mock/products/arena_fina_30kg.jpg",
+      "storeId": "store_006",
+      "categoryId": "cat_008",
+      "categoryName": "Aridos",
+      "name": "Arena Fina Bolsa 30kg",
+      "price": 4200,
+      "stock": 180,
+      "weight": 30,
+      "available": true
+    },
+    {
+      "id": "prod_032",
+      "img": "/mock/products/arena_gruesa_30kg.jpg",
+      "storeId": "store_006",
+      "categoryId": "cat_008",
+      "categoryName": "Aridos",
+      "name": "Arena Gruesa Bolsa 30kg",
+      "price": 3900,
+      "stock": 210,
+      "weight": 30,
+      "available": true
+    },
+    {
+      "id": "prod_033",
+      "img": "/mock/products/piedra_partida_30kg.jpg",
+      "storeId": "store_006",
+      "categoryId": "cat_008",
+      "categoryName": "Aridos",
+      "name": "Piedra Partida Bolsa 30kg",
+      "price": 5100,
+      "stock": 160,
+      "weight": 30,
+      "available": true
+    },
+    {
+      "id": "prod_034",
+      "img": "/mock/products/granza_30kg.jpg",
+      "storeId": "store_006",
+      "categoryId": "cat_008",
+      "categoryName": "Aridos",
+      "name": "Granza Seleccionada Bolsa 30kg",
+      "price": 4800,
+      "stock": 95,
+      "weight": 30,
+      "available": true
+    },
+    {
+      "id": "prod_035",
+      "img": "/mock/products/tosca_30kg.jpg",
+      "storeId": "store_006",
+      "categoryId": "cat_008",
+      "categoryName": "Aridos",
+      "name": "Tosca Compactacion Bolsa 30kg",
+      "price": 3600,
+      "stock": 140,
+      "weight": 30,
+      "available": true
+    },
+    {
+      "id": "prod_036",
+      "img": "/mock/products/cascote_molido_25kg.jpg",
+      "storeId": "store_006",
+      "categoryId": "cat_008",
+      "categoryName": "Aridos",
+      "name": "Cascote Molido Bolsa 25kg",
+      "price": 3300,
+      "stock": 110,
+      "weight": 25,
+      "available": true
+    },
+    {
+      "id": "prod_037",
+      "img": "/mock/products/cal_aerea_25kg.jpg",
+      "storeId": "store_006",
+      "categoryId": "cat_001",
+      "categoryName": "Cementos",
+      "name": "Cal Aerea 25kg",
+      "price": 7200,
+      "stock": 80,
+      "weight": 25,
+      "available": true
+    },
+    {
+      "id": "prod_038",
+      "img": "/mock/products/mortero_albanileria_30kg.jpg",
+      "storeId": "store_006",
+      "categoryId": "cat_001",
+      "categoryName": "Cementos",
+      "name": "Mortero de Albanileria 30kg",
+      "price": 8900,
+      "stock": 65,
+      "weight": 30,
+      "available": true
+    },
+    {
+      "id": "prod_039",
+      "img": "/mock/products/latex_interior_blanco_20l.jpg",
+      "storeId": "store_007",
+      "categoryId": "cat_004",
+      "categoryName": "Pinturas",
+      "name": "Latex Interior Blanco 20L",
+      "price": 33200,
+      "stock": 32,
+      "weight": 22,
+      "available": true
+    },
+    {
+      "id": "prod_040",
+      "img": "/mock/products/latex_exterior_blanco_20l.jpg",
+      "storeId": "store_007",
+      "categoryId": "cat_004",
+      "categoryName": "Pinturas",
+      "name": "Latex Exterior Blanco 20L",
+      "price": 38900,
+      "stock": 24,
+      "weight": 22,
+      "available": true
+    },
+    {
+      "id": "prod_041",
+      "img": "/mock/products/membrana_liquida_roja_20l.jpg",
+      "storeId": "store_007",
+      "categoryId": "cat_004",
+      "categoryName": "Pinturas",
+      "name": "Membrana Liquida Roja 20L",
+      "price": 61200,
+      "stock": 16,
+      "weight": 23,
+      "available": true
+    },
+    {
+      "id": "prod_042",
+      "img": "/mock/products/fijador_sellador_4l.jpg",
+      "storeId": "store_007",
+      "categoryId": "cat_004",
+      "categoryName": "Pinturas",
+      "name": "Fijador Sellador al Agua 4L",
+      "price": 15400,
+      "stock": 38,
+      "weight": 4.4,
+      "available": true
+    },
+    {
+      "id": "prod_043",
+      "img": "/mock/products/enduidoplastico_20kg.jpg",
+      "storeId": "store_007",
+      "categoryId": "cat_004",
+      "categoryName": "Pinturas",
+      "name": "Enduido Plastico Interior 20kg",
+      "price": 24600,
+      "stock": 20,
+      "weight": 20,
+      "available": true
+    },
+    {
+      "id": "prod_044",
+      "img": "/mock/products/pincel_profesional_3.jpg",
+      "storeId": "store_007",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Pincel Profesional 3 pulgadas",
+      "price": 5400,
+      "stock": 55,
+      "weight": 0.2,
+      "available": true
+    },
+    {
+      "id": "prod_045",
+      "img": "/mock/products/bandeja_pintura.jpg",
+      "storeId": "store_007",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Bandeja para Pintura 25cm",
+      "price": 3900,
+      "stock": 60,
+      "weight": 0.35,
+      "available": true
+    },
+    {
+      "id": "prod_046",
+      "img": "/mock/products/cinta_papel_48mm.jpg",
+      "storeId": "store_007",
+      "categoryId": "cat_012",
+      "categoryName": "Adhesivos y Selladores",
+      "name": "Cinta de Papel 48mm x 50m",
+      "price": 2800,
+      "stock": 85,
+      "weight": 0.18,
+      "available": true
+    },
+    {
+      "id": "prod_047",
+      "img": "/mock/products/cano_pvc_110.jpg",
+      "storeId": "store_008",
+      "categoryId": "cat_009",
+      "categoryName": "Plomeria",
+      "name": "Cano PVC Cloacal 110mm x 4m",
+      "price": 18400,
+      "stock": 36,
+      "weight": 5.8,
+      "available": true
+    },
+    {
+      "id": "prod_048",
+      "img": "/mock/products/cano_pvc_50.jpg",
+      "storeId": "store_008",
+      "categoryId": "cat_009",
+      "categoryName": "Plomeria",
+      "name": "Cano PVC Cloacal 50mm x 4m",
+      "price": 9200,
+      "stock": 48,
+      "weight": 2.4,
+      "available": true
+    },
+    {
+      "id": "prod_049",
+      "img": "/mock/products/codo_pvc_110_90.jpg",
+      "storeId": "store_008",
+      "categoryId": "cat_009",
+      "categoryName": "Plomeria",
+      "name": "Codo PVC 110mm 90 grados",
+      "price": 4100,
+      "stock": 70,
+      "weight": 0.55,
+      "available": true
+    },
+    {
+      "id": "prod_050",
+      "img": "/mock/products/adhesivo_pvc_250cc.jpg",
+      "storeId": "store_008",
+      "categoryId": "cat_012",
+      "categoryName": "Adhesivos y Selladores",
+      "name": "Adhesivo PVC 250cc",
+      "price": 6200,
+      "stock": 44,
+      "weight": 0.3,
+      "available": true
+    },
+    {
+      "id": "prod_051",
+      "img": "/mock/products/silicona_neutra_transparente.jpg",
+      "storeId": "store_008",
+      "categoryId": "cat_012",
+      "categoryName": "Adhesivos y Selladores",
+      "name": "Silicona Neutra Transparente 280ml",
+      "price": 7800,
+      "stock": 52,
+      "weight": 0.35,
+      "available": true
+    },
+    {
+      "id": "prod_052",
+      "img": "/mock/products/inodoro_largo_blanco.jpg",
+      "storeId": "store_008",
+      "categoryId": "cat_011",
+      "categoryName": "Sanitarios",
+      "name": "Inodoro Largo Blanco",
+      "price": 98400,
+      "stock": 11,
+      "weight": 28,
+      "available": true
+    },
+    {
+      "id": "prod_053",
+      "img": "/mock/products/mochila_descarga_doble.jpg",
+      "storeId": "store_008",
+      "categoryId": "cat_011",
+      "categoryName": "Sanitarios",
+      "name": "Mochila Descarga Doble Accion",
+      "price": 54200,
+      "stock": 14,
+      "weight": 6.5,
+      "available": true
+    },
+    {
+      "id": "prod_054",
+      "img": "/mock/products/griferia_lavatorio.jpg",
+      "storeId": "store_008",
+      "categoryId": "cat_011",
+      "categoryName": "Sanitarios",
+      "name": "Griferia Monocomando Lavatorio",
+      "price": 76200,
+      "stock": 9,
+      "weight": 1.7,
+      "available": true
+    },
+    {
+      "id": "prod_055",
+      "img": "/mock/products/ceramico_blanco_45x45.jpg",
+      "storeId": "store_009",
+      "categoryId": "cat_010",
+      "categoryName": "Revestimientos",
+      "name": "Ceramico Blanco 45x45 Caja 2m2",
+      "price": 29800,
+      "stock": 50,
+      "weight": 28,
+      "available": true
+    },
+    {
+      "id": "prod_056",
+      "img": "/mock/products/porcelanato_gris_60x60.jpg",
+      "storeId": "store_009",
+      "categoryId": "cat_010",
+      "categoryName": "Revestimientos",
+      "name": "Porcelanato Gris 60x60 Caja 1.44m2",
+      "price": 51200,
+      "stock": 34,
+      "weight": 31,
+      "available": true
+    },
+    {
+      "id": "prod_057",
+      "img": "/mock/products/revestimiento_subway_blanco.jpg",
+      "storeId": "store_009",
+      "categoryId": "cat_010",
+      "categoryName": "Revestimientos",
+      "name": "Revestimiento Subway Blanco Caja 1m2",
+      "price": 26800,
+      "stock": 42,
+      "weight": 18,
+      "available": true
+    },
+    {
+      "id": "prod_058",
+      "img": "/mock/products/adhesivo_ceramico_30kg.jpg",
+      "storeId": "store_009",
+      "categoryId": "cat_012",
+      "categoryName": "Adhesivos y Selladores",
+      "name": "Adhesivo Ceramico Interior 30kg",
+      "price": 10400,
+      "stock": 90,
+      "weight": 30,
+      "available": true
+    },
+    {
+      "id": "prod_059",
+      "img": "/mock/products/adhesivo_porcelanato_30kg.jpg",
+      "storeId": "store_009",
+      "categoryId": "cat_012",
+      "categoryName": "Adhesivos y Selladores",
+      "name": "Adhesivo Porcelanato Flexible 30kg",
+      "price": 16200,
+      "stock": 72,
+      "weight": 30,
+      "available": true
+    },
+    {
+      "id": "prod_060",
+      "img": "/mock/products/pastina_blanca_1kg.jpg",
+      "storeId": "store_009",
+      "categoryId": "cat_012",
+      "categoryName": "Adhesivos y Selladores",
+      "name": "Pastina Blanca 1kg",
+      "price": 3400,
+      "stock": 120,
+      "weight": 1,
+      "available": true
+    },
+    {
+      "id": "prod_061",
+      "img": "/mock/products/crucetas_2mm.jpg",
+      "storeId": "store_009",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Crucetas Plasticas 2mm Bolsa 100u",
+      "price": 1800,
+      "stock": 75,
+      "weight": 0.1,
+      "available": true
+    },
+    {
+      "id": "prod_062",
+      "img": "/mock/products/cortadora_ceramica_60cm.jpg",
+      "storeId": "store_009",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Cortadora Ceramica Manual 60cm",
+      "price": 89500,
+      "stock": 8,
+      "weight": 7.5,
+      "available": true
+    },
+    {
+      "id": "prod_063",
+      "img": "/mock/products/cable_unipolar_1_5mm.jpg",
+      "storeId": "store_010",
+      "categoryId": "cat_007",
+      "categoryName": "Electricidad",
+      "name": "Cable Unipolar 1.5mm Rollo 100m",
+      "price": 54800,
+      "stock": 20,
+      "weight": 2.6,
+      "available": false
+    },
+    {
+      "id": "prod_064",
+      "img": "/mock/products/cable_unipolar_4mm.jpg",
+      "storeId": "store_010",
+      "categoryId": "cat_007",
+      "categoryName": "Electricidad",
+      "name": "Cable Unipolar 4mm Rollo 100m",
+      "price": 109500,
+      "stock": 12,
+      "weight": 5.8,
+      "available": false
+    },
+    {
+      "id": "prod_065",
+      "img": "/mock/products/disyuntor_40a.jpg",
+      "storeId": "store_010",
+      "categoryId": "cat_007",
+      "categoryName": "Electricidad",
+      "name": "Disyuntor Diferencial 40A",
+      "price": 48600,
+      "stock": 18,
+      "weight": 0.35,
+      "available": false
+    },
+    {
+      "id": "prod_066",
+      "img": "/mock/products/caja_termica_12_modulos.jpg",
+      "storeId": "store_010",
+      "categoryId": "cat_007",
+      "categoryName": "Electricidad",
+      "name": "Caja para Termicas 12 Modulos",
+      "price": 22400,
+      "stock": 16,
+      "weight": 1.1,
+      "available": false
+    },
+    {
+      "id": "prod_067",
+      "img": "/mock/products/corrugado_20mm.jpg",
+      "storeId": "store_010",
+      "categoryId": "cat_007",
+      "categoryName": "Electricidad",
+      "name": "Cano Corrugado 20mm Rollo 25m",
+      "price": 14300,
+      "stock": 24,
+      "weight": 2,
+      "available": false
+    },
+    {
+      "id": "prod_068",
+      "img": "/mock/products/tomacorriente_10a.jpg",
+      "storeId": "store_010",
+      "categoryId": "cat_007",
+      "categoryName": "Electricidad",
+      "name": "Tomacorriente 10A Blanco",
+      "price": 3600,
+      "stock": 60,
+      "weight": 0.12,
+      "available": false
+    },
+    {
+      "id": "prod_069",
+      "img": "/mock/products/yeso_25kg.jpg",
+      "storeId": "store_001",
+      "categoryId": "cat_001",
+      "categoryName": "Cementos",
+      "name": "Yeso Construccion 25kg",
+      "price": 6800,
+      "stock": 55,
+      "weight": 25,
+      "available": true
+    },
+    {
+      "id": "prod_070",
+      "img": "/mock/products/hidrofugo_10l.jpg",
+      "storeId": "store_001",
+      "categoryId": "cat_012",
+      "categoryName": "Adhesivos y Selladores",
+      "name": "Hidrofugo para Mortero 10L",
+      "price": 26400,
+      "stock": 18,
+      "weight": 10.5,
+      "available": true
+    },
+    {
+      "id": "prod_071",
+      "img": "/mock/products/clavos_punta_paris_1kg.jpg",
+      "storeId": "store_002",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Clavos Punta Paris 2 pulgadas 1kg",
+      "price": 5200,
+      "stock": 95,
+      "weight": 1,
+      "available": true
+    },
+    {
+      "id": "prod_072",
+      "img": "/mock/products/carretilla_90l.jpg",
+      "storeId": "store_002",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Carretilla Reforzada 90L",
+      "price": 138000,
+      "stock": 6,
+      "weight": 14,
+      "available": true
+    },
+    {
+      "id": "prod_073",
+      "img": "/mock/products/fratacho_madera.jpg",
+      "storeId": "store_004",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Fratacho de Madera 18x30",
+      "price": 7300,
+      "stock": 40,
+      "weight": 0.8,
+      "available": true
+    },
+    {
+      "id": "prod_074",
+      "img": "/mock/products/cuchara_albanil_8.jpg",
+      "storeId": "store_004",
+      "categoryId": "cat_005",
+      "categoryName": "Herramientas",
+      "name": "Cuchara de Albanil 8 pulgadas",
+      "price": 9600,
+      "stock": 34,
+      "weight": 0.45,
+      "available": true
+    },
+    {
+      "id": "prod_075",
+      "img": "/mock/products/puerta_placa_70.jpg",
+      "storeId": "store_005",
+      "categoryId": "cat_006",
+      "categoryName": "Aberturas",
+      "name": "Puerta Placa Interior 70x200",
+      "price": 69500,
+      "stock": 13,
+      "weight": 18,
+      "available": true
+    },
+    {
+      "id": "prod_076",
+      "img": "/mock/products/ventiluz_aluminio_60x40.jpg",
+      "storeId": "store_005",
+      "categoryId": "cat_006",
+      "categoryName": "Aberturas",
+      "name": "Ventiluz Aluminio 60x40",
+      "price": 54200,
+      "stock": 10,
+      "weight": 7.5,
+      "available": true
+    }
+  ],
+  "productsByStore": {
+    "store_001": [
+      "prod_001",
+      "prod_003",
+      "prod_005",
+      "prod_015",
+      "prod_069",
+      "prod_070"
+    ],
+    "store_002": [
+      "prod_002",
+      "prod_004",
+      "prod_006",
+      "prod_010",
+      "prod_016",
+      "prod_071",
+      "prod_072"
+    ],
+    "store_003": [
+      "prod_007",
+      "prod_008",
+      "prod_009",
+      "prod_023"
+    ],
+    "store_004": [
+      "prod_011",
+      "prod_012",
+      "prod_017",
+      "prod_019",
+      "prod_021",
+      "prod_025",
+      "prod_030",
+      "prod_073",
+      "prod_074"
+    ],
+    "store_005": [
+      "prod_013",
+      "prod_014",
+      "prod_018",
+      "prod_020",
+      "prod_022",
+      "prod_024",
+      "prod_026",
+      "prod_027",
+      "prod_028",
+      "prod_029",
+      "prod_075",
+      "prod_076"
+    ],
+    "store_006": [
+      "prod_031",
+      "prod_032",
+      "prod_033",
+      "prod_034",
+      "prod_035",
+      "prod_036",
+      "prod_037",
+      "prod_038"
+    ],
+    "store_007": [
+      "prod_039",
+      "prod_040",
+      "prod_041",
+      "prod_042",
+      "prod_043",
+      "prod_044",
+      "prod_045",
+      "prod_046"
+    ],
+    "store_008": [
+      "prod_047",
+      "prod_048",
+      "prod_049",
+      "prod_050",
+      "prod_051",
+      "prod_052",
+      "prod_053",
+      "prod_054"
+    ],
+    "store_009": [
+      "prod_055",
+      "prod_056",
+      "prod_057",
+      "prod_058",
+      "prod_059",
+      "prod_060",
+      "prod_061",
+      "prod_062"
+    ],
+    "store_010": [
+      "prod_063",
+      "prod_064",
+      "prod_065",
+      "prod_066",
+      "prod_067",
+      "prod_068"
+    ]
+  },
+  "productsByCategory": {
+    "cat_001": [
+      "prod_001",
+      "prod_002",
+      "prod_019",
+      "prod_020",
+      "prod_037",
+      "prod_038",
+      "prod_069"
+    ],
+    "cat_002": [
+      "prod_003",
+      "prod_004",
+      "prod_011",
+      "prod_012",
+      "prod_013",
+      "prod_014",
+      "prod_015",
+      "prod_016",
+      "prod_017",
+      "prod_018"
+    ],
+    "cat_003": [
+      "prod_005",
+      "prod_006",
+      "prod_021",
+      "prod_022"
+    ],
+    "cat_004": [
+      "prod_007",
+      "prod_008",
+      "prod_023",
+      "prod_024",
+      "prod_039",
+      "prod_040",
+      "prod_041",
+      "prod_042",
+      "prod_043"
+    ],
+    "cat_005": [
+      "prod_009",
+      "prod_010",
+      "prod_025",
+      "prod_026",
+      "prod_044",
+      "prod_045",
+      "prod_061",
+      "prod_062",
+      "prod_071",
+      "prod_072",
+      "prod_073",
+      "prod_074"
+    ],
+    "cat_006": [
+      "prod_027",
+      "prod_028",
+      "prod_075",
+      "prod_076"
+    ],
+    "cat_007": [
+      "prod_029",
+      "prod_030",
+      "prod_063",
+      "prod_064",
+      "prod_065",
+      "prod_066",
+      "prod_067",
+      "prod_068"
+    ],
+    "cat_008": [
+      "prod_031",
+      "prod_032",
+      "prod_033",
+      "prod_034",
+      "prod_035",
+      "prod_036"
+    ],
+    "cat_009": [
+      "prod_047",
+      "prod_048",
+      "prod_049"
+    ],
+    "cat_010": [
+      "prod_055",
+      "prod_056",
+      "prod_057"
+    ],
+    "cat_011": [
+      "prod_052",
+      "prod_053",
+      "prod_054"
+    ],
+    "cat_012": [
+      "prod_046",
+      "prod_050",
+      "prod_051",
+      "prod_058",
+      "prod_059",
+      "prod_060",
+      "prod_070"
+    ]
+  },
+  "endpoints": {
+    "/api/stores": "stores",
+    "/api/categories": "categories",
+    "/api/stores/store_001/products": [
+      "prod_001",
+      "prod_003",
+      "prod_005",
+      "prod_015",
+      "prod_069",
+      "prod_070"
+    ],
+    "/api/stores/store_002/products": [
+      "prod_002",
+      "prod_004",
+      "prod_006",
+      "prod_010",
+      "prod_016",
+      "prod_071",
+      "prod_072"
+    ],
+    "/api/stores/store_003/products": [
+      "prod_007",
+      "prod_008",
+      "prod_009",
+      "prod_023"
+    ],
+    "/api/stores/store_004/products": [
+      "prod_011",
+      "prod_012",
+      "prod_017",
+      "prod_019",
+      "prod_021",
+      "prod_025",
+      "prod_030",
+      "prod_073",
+      "prod_074"
+    ],
+    "/api/stores/store_005/products": [
+      "prod_013",
+      "prod_014",
+      "prod_018",
+      "prod_020",
+      "prod_022",
+      "prod_024",
+      "prod_026",
+      "prod_027",
+      "prod_028",
+      "prod_029",
+      "prod_075",
+      "prod_076"
+    ],
+    "/api/stores/store_006/products": [
+      "prod_031",
+      "prod_032",
+      "prod_033",
+      "prod_034",
+      "prod_035",
+      "prod_036",
+      "prod_037",
+      "prod_038"
+    ],
+    "/api/stores/store_007/products": [
+      "prod_039",
+      "prod_040",
+      "prod_041",
+      "prod_042",
+      "prod_043",
+      "prod_044",
+      "prod_045",
+      "prod_046"
+    ],
+    "/api/stores/store_008/products": [
+      "prod_047",
+      "prod_048",
+      "prod_049",
+      "prod_050",
+      "prod_051",
+      "prod_052",
+      "prod_053",
+      "prod_054"
+    ],
+    "/api/stores/store_009/products": [
+      "prod_055",
+      "prod_056",
+      "prod_057",
+      "prod_058",
+      "prod_059",
+      "prod_060",
+      "prod_061",
+      "prod_062"
+    ],
+    "/api/stores/store_010/products": [
+      "prod_063",
+      "prod_064",
+      "prod_065",
+      "prod_066",
+      "prod_067",
+      "prod_068"
+    ],
+    "/api/products/prod_001": "prod_001",
+    "/api/products/prod_002": "prod_002",
+    "/api/products/prod_003": "prod_003",
+    "/api/products/prod_004": "prod_004",
+    "/api/products/prod_005": "prod_005",
+    "/api/products/prod_006": "prod_006",
+    "/api/products/prod_007": "prod_007",
+    "/api/products/prod_008": "prod_008",
+    "/api/products/prod_009": "prod_009",
+    "/api/products/prod_010": "prod_010",
+    "/api/products/prod_011": "prod_011",
+    "/api/products/prod_012": "prod_012",
+    "/api/products/prod_013": "prod_013",
+    "/api/products/prod_014": "prod_014",
+    "/api/products/prod_015": "prod_015",
+    "/api/products/prod_016": "prod_016",
+    "/api/products/prod_017": "prod_017",
+    "/api/products/prod_018": "prod_018",
+    "/api/products/prod_019": "prod_019",
+    "/api/products/prod_020": "prod_020",
+    "/api/products/prod_021": "prod_021",
+    "/api/products/prod_022": "prod_022",
+    "/api/products/prod_023": "prod_023",
+    "/api/products/prod_024": "prod_024",
+    "/api/products/prod_025": "prod_025",
+    "/api/products/prod_026": "prod_026",
+    "/api/products/prod_027": "prod_027",
+    "/api/products/prod_028": "prod_028",
+    "/api/products/prod_029": "prod_029",
+    "/api/products/prod_030": "prod_030",
+    "/api/products/prod_031": "prod_031",
+    "/api/products/prod_032": "prod_032",
+    "/api/products/prod_033": "prod_033",
+    "/api/products/prod_034": "prod_034",
+    "/api/products/prod_035": "prod_035",
+    "/api/products/prod_036": "prod_036",
+    "/api/products/prod_037": "prod_037",
+    "/api/products/prod_038": "prod_038",
+    "/api/products/prod_039": "prod_039",
+    "/api/products/prod_040": "prod_040",
+    "/api/products/prod_041": "prod_041",
+    "/api/products/prod_042": "prod_042",
+    "/api/products/prod_043": "prod_043",
+    "/api/products/prod_044": "prod_044",
+    "/api/products/prod_045": "prod_045",
+    "/api/products/prod_046": "prod_046",
+    "/api/products/prod_047": "prod_047",
+    "/api/products/prod_048": "prod_048",
+    "/api/products/prod_049": "prod_049",
+    "/api/products/prod_050": "prod_050",
+    "/api/products/prod_051": "prod_051",
+    "/api/products/prod_052": "prod_052",
+    "/api/products/prod_053": "prod_053",
+    "/api/products/prod_054": "prod_054",
+    "/api/products/prod_055": "prod_055",
+    "/api/products/prod_056": "prod_056",
+    "/api/products/prod_057": "prod_057",
+    "/api/products/prod_058": "prod_058",
+    "/api/products/prod_059": "prod_059",
+    "/api/products/prod_060": "prod_060",
+    "/api/products/prod_061": "prod_061",
+    "/api/products/prod_062": "prod_062",
+    "/api/products/prod_063": "prod_063",
+    "/api/products/prod_064": "prod_064",
+    "/api/products/prod_065": "prod_065",
+    "/api/products/prod_066": "prod_066",
+    "/api/products/prod_067": "prod_067",
+    "/api/products/prod_068": "prod_068",
+    "/api/products/prod_069": "prod_069",
+    "/api/products/prod_070": "prod_070",
+    "/api/products/prod_071": "prod_071",
+    "/api/products/prod_072": "prod_072",
+    "/api/products/prod_073": "prod_073",
+    "/api/products/prod_074": "prod_074",
+    "/api/products/prod_075": "prod_075",
+    "/api/products/prod_076": "prod_076",
+    "/api/products?search={searchString}&pageNumber={pageNumber}&pageSize={pageSize}": "products",
+    "/api/products?categoryId=cat_001": [
+      "prod_001",
+      "prod_002",
+      "prod_019",
+      "prod_020",
+      "prod_037",
+      "prod_038",
+      "prod_069"
+    ],
+    "/api/products?categoryId=cat_002": [
+      "prod_003",
+      "prod_004",
+      "prod_011",
+      "prod_012",
+      "prod_013",
+      "prod_014",
+      "prod_015",
+      "prod_016",
+      "prod_017",
+      "prod_018"
+    ],
+    "/api/products?categoryId=cat_003": [
+      "prod_005",
+      "prod_006",
+      "prod_021",
+      "prod_022"
+    ],
+    "/api/products?categoryId=cat_004": [
+      "prod_007",
+      "prod_008",
+      "prod_023",
+      "prod_024",
+      "prod_039",
+      "prod_040",
+      "prod_041",
+      "prod_042",
+      "prod_043"
+    ],
+    "/api/products?categoryId=cat_005": [
+      "prod_009",
+      "prod_010",
+      "prod_025",
+      "prod_026",
+      "prod_044",
+      "prod_045",
+      "prod_061",
+      "prod_062",
+      "prod_071",
+      "prod_072",
+      "prod_073",
+      "prod_074"
+    ],
+    "/api/products?categoryId=cat_006": [
+      "prod_027",
+      "prod_028",
+      "prod_075",
+      "prod_076"
+    ],
+    "/api/products?categoryId=cat_007": [
+      "prod_029",
+      "prod_030",
+      "prod_063",
+      "prod_064",
+      "prod_065",
+      "prod_066",
+      "prod_067",
+      "prod_068"
+    ],
+    "/api/products?categoryId=cat_008": [
+      "prod_031",
+      "prod_032",
+      "prod_033",
+      "prod_034",
+      "prod_035",
+      "prod_036"
+    ],
+    "/api/products?categoryId=cat_009": [
+      "prod_047",
+      "prod_048",
+      "prod_049"
+    ],
+    "/api/products?categoryId=cat_010": [
+      "prod_055",
+      "prod_056",
+      "prod_057"
+    ],
+    "/api/products?categoryId=cat_011": [
+      "prod_052",
+      "prod_053",
+      "prod_054"
+    ],
+    "/api/products?categoryId=cat_012": [
+      "prod_046",
+      "prod_050",
+      "prod_051",
+      "prod_058",
+      "prod_059",
+      "prod_060",
+      "prod_070"
+    ]
+  },
+  "orders": [
+    {
+      "id": "order_001",
+      "buyerId": "buyer_001",
+      "storeId": "store_001",
+      "storeName": "Corralón San Martín",
+      "totalAmount": 38500,
+      "status": "DELIVERED",
+      "deliveryAddress": "Av. Siempre Viva 742, Bahía Blanca",
+      "items": [
+        {
+          "productId": "prod_001",
+          "quantity": 2
+        },
+        {
+          "productId": "prod_003",
+          "quantity": 50
+        }
+      ],
+      "createdAt": "2026-05-04T12:12:09Z",
+      "updatedAt": "2026-05-09T14:30:00Z"
+    },
+    {
+      "id": "order_002",
+      "buyerId": "buyer_001",
+      "storeId": "store_002",
+      "storeName": "ConstruMax",
+      "totalAmount": 142800,
+      "status": "SHIPPED",
+      "deliveryAddress": "Av. Siempre Viva 742, Bahía Blanca",
+      "items": [
+        {
+          "productId": "prod_002",
+          "quantity": 3
+        },
+        {
+          "productId": "prod_006",
+          "quantity": 2
+        }
+      ],
+      "createdAt": "2026-05-12T08:45:23Z",
+      "updatedAt": "2026-05-14T10:15:00Z"
+    },
+    {
+      "id": "order_003",
+      "buyerId": "buyer_001",
+      "storeId": "store_001",
+      "storeName": "Corralón San Martín",
+      "totalAmount": 56700,
+      "status": "CONFIRMED",
+      "deliveryAddress": "Av. Siempre Viva 742, Bahía Blanca",
+      "items": [
+        {
+          "productId": "prod_005",
+          "quantity": 3
+        }
+      ],
+      "createdAt": "2026-05-13T16:20:45Z",
+      "updatedAt": "2026-05-13T17:00:00Z"
+    },
+    {
+      "id": "order_004",
+      "buyerId": "buyer_001",
+      "storeId": "store_002",
+      "storeName": "ConstruMax",
+      "totalAmount": 101200,
+      "status": "PENDING_PAYMENT",
+      "deliveryAddress": "Av. Siempre Viva 742, Bahía Blanca",
+      "items": [
+        {
+          "productId": "prod_010",
+          "quantity": 1
+        },
+        {
+          "productId": "prod_004",
+          "quantity": 100
+        }
+      ],
+      "createdAt": "2026-05-15T09:30:15Z",
+      "updatedAt": "2026-05-15T09:30:15Z"
+    }
+  ]
+}
