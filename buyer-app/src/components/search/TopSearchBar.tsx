@@ -1,0 +1,540 @@
+"use client";
+
+import { useRef, useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { SignOutButton, useUser } from "@clerk/nextjs";
+import OrdersDropdown from "@/components/orders/OrdersDropdown";
+
+const SEARCH_HISTORY_KEY = "buildnow:search-history";
+const MAX_SEARCH_HISTORY = 6;
+
+interface TopSearchBarProps {
+  showCartButton?: boolean;
+  onCartClick?: () => void;
+  onSearch?: (search: string) => void;
+  searchValue?: string;
+  onSearchValueChange?: (search: string) => void;
+  showSearch?: boolean;
+}
+
+export default function TopSearchBar({
+  showCartButton = false,
+  onCartClick,
+  onSearch,
+  searchValue,
+  onSearchValueChange,
+  showSearch = true,
+}: TopSearchBarProps) {
+  const { user } = useUser();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isOrdersDropdownOpen, setIsOrdersDropdownOpen] = useState(false);
+  const [localSearchText, setLocalSearchText] = useState("");
+  const [isSearchHistoryOpen, setIsSearchHistoryOpen] =
+    useState(false);
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLFormElement>(null);
+  const searchText = searchValue ?? localSearchText;
+  const searchHistoryKey = user?.id
+    ? `${SEARCH_HISTORY_KEY}:${user.id}`
+    : SEARCH_HISTORY_KEY;
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setIsSearchHistoryOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      try {
+        const stored = window.localStorage.getItem(
+          searchHistoryKey
+        );
+
+        if (!stored) {
+          setSearchHistory([]);
+          return;
+        }
+
+        const parsed = JSON.parse(stored) as unknown;
+
+        if (!Array.isArray(parsed)) {
+          setSearchHistory([]);
+          return;
+        }
+
+        setSearchHistory(
+          parsed
+            .filter(
+              (item): item is string =>
+                typeof item === "string" &&
+                item.trim().length > 0
+            )
+            .slice(0, MAX_SEARCH_HISTORY)
+        );
+      } catch {
+        setSearchHistory([]);
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [searchHistoryKey]);
+
+  const persistSearchHistory = (history: string[]) => {
+    setSearchHistory(history);
+    window.localStorage.setItem(
+      searchHistoryKey,
+      JSON.stringify(history)
+    );
+  };
+
+  const addSearchToHistory = (search: string) => {
+    const normalizedSearch = search.trim();
+
+    if (!normalizedSearch) return;
+
+    const nextHistory = [
+      normalizedSearch,
+      ...searchHistory.filter(
+        (item) =>
+          item.toLocaleLowerCase() !==
+          normalizedSearch.toLocaleLowerCase()
+      ),
+    ].slice(0, MAX_SEARCH_HISTORY);
+
+    persistSearchHistory(nextHistory);
+  };
+
+  const removeSearchFromHistory = (search: string) => {
+    persistSearchHistory(
+      searchHistory.filter((item) => item !== search)
+    );
+  };
+
+  const handleSearchSubmit = (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    const nextSearch = searchText.trim();
+    addSearchToHistory(nextSearch);
+    setIsSearchHistoryOpen(false);
+    onSearch?.(nextSearch);
+  };
+
+  const handleSearchTextChange = (value: string) => {
+    if (searchValue === undefined) {
+      setLocalSearchText(value);
+    }
+
+    onSearchValueChange?.(value);
+  };
+
+  const handleClearSearch = () => {
+    handleSearchTextChange("");
+    setIsSearchHistoryOpen(false);
+    onSearch?.("");
+  };
+
+  const handleHistorySearch = (search: string) => {
+    handleSearchTextChange(search);
+    addSearchToHistory(search);
+    setIsSearchHistoryOpen(false);
+    onSearch?.(search);
+  };
+
+  return (
+    <header
+      className="
+        flex
+        flex-wrap
+        items-center
+        justify-between
+        gap-3
+        brand-card
+        bg-[#fffdf9]
+        ring-1
+        ring-white/70
+        p-3
+        sm:gap-4
+        sm:p-4
+      "
+    >
+      {/* LOGO */}
+      <Link
+        href="/dashboard"
+        className="flex min-w-0 flex-1 items-center gap-2 rounded-xl transition-[opacity,transform] duration-200 hover:-translate-y-0.5 hover:opacity-90 sm:flex-none"
+        aria-label="Ir al dashboard"
+      >
+        <Image
+          src="/buildnow-logo.png"
+          alt="BuildNow"
+          width={40}
+          height={40}
+          className="h-9 w-9 shrink-0 rounded-xl object-cover shadow-sm sm:h-10 sm:w-10"
+          priority
+        />
+
+        <div className="min-w-0">
+          <h1 className="truncate text-base font-bold text-[#823A00] sm:text-lg">
+            BuildNow
+          </h1>
+
+          <p className="hidden text-xs text-[#A76E04] sm:block">
+            Materiales para construcción
+          </p>
+        </div>
+      </Link>
+
+      {showSearch ? (
+        <form
+          ref={searchRef}
+          onSubmit={handleSearchSubmit}
+          className="order-3 flex w-full gap-2 sm:order-none sm:flex-1 sm:max-w-2xl"
+        >
+          <div className="relative min-w-0 flex-1">
+            <input
+              type="text"
+              value={searchText}
+              onFocus={() => setIsSearchHistoryOpen(true)}
+              onChange={(event) =>
+                handleSearchTextChange(event.target.value)
+              }
+              placeholder="Buscar productos..."
+              className="
+                h-11
+                w-full
+                rounded-xl
+                border
+                border-orange-200
+                bg-[#FFF4E8]
+                px-4
+                pr-11
+                text-sm
+                text-[#823A00]
+                outline-none
+                transition-[background-color,border-color,box-shadow]
+                duration-200
+                ease-out
+                focus:border-[#A76E04]
+                focus:bg-white
+                focus:shadow-[0_0_0_3px_rgba(237,111,0,0.12)]
+                sm:h-12
+                sm:text-base
+              "
+            />
+
+            {searchText && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                aria-label="Limpiar búsqueda"
+                className="
+                  absolute
+                  right-2
+                  top-1/2
+                  flex
+                  h-7
+                  w-7
+                  -translate-y-1/2
+                  items-center
+                  justify-center
+                  rounded-full
+                  text-lg
+                  font-medium
+                  text-stone-500
+                  transition
+                  hover:bg-stone-200
+                  hover:text-[#823A00]
+                "
+              >
+                ×
+              </button>
+            )}
+
+            {isSearchHistoryOpen && searchHistory.length > 0 ? (
+              <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-[#A76E04] bg-white shadow-lg">
+                <div className="border-b border-[#F8C58D] px-4 py-2 text-xs font-medium uppercase tracking-wide text-[#823A00]">
+                  Búsquedas recientes
+                </div>
+                <div className="max-h-64 overflow-y-auto">
+                  {searchHistory.map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-center gap-2 border-b border-stone-100 last:border-b-0"
+                    >
+                      <button
+                        type="button"
+                        onMouseDown={(event) =>
+                          event.preventDefault()
+                        }
+                        onClick={() =>
+                          handleHistorySearch(item)
+                        }
+                        className="min-w-0 flex-1 truncate px-4 py-3 text-left text-sm text-stone-700 transition hover:bg-[#FFF4E8] hover:text-[#823A00]"
+                        title={item}
+                      >
+                        {item}
+                      </button>
+                      <button
+                        type="button"
+                        onMouseDown={(event) =>
+                          event.preventDefault()
+                        }
+                        onClick={() =>
+                          removeSearchFromHistory(item)
+                        }
+                        className="mr-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-stone-400 transition hover:bg-stone-100 hover:text-red-600"
+                        aria-label={`Eliminar busqueda ${item}`}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          <button
+            type="submit"
+            className="
+              h-11
+              shrink-0
+              rounded-xl
+              bg-[#ED6F00]
+              px-4
+              text-sm
+              font-semibold
+              text-white
+              transition-[background-color,box-shadow,transform]
+              duration-200
+              ease-out
+              hover:bg-[#A76E04]
+              hover:shadow-md
+              active:translate-y-px
+              sm:h-12
+              sm:px-5
+            "
+          >
+            Buscar
+          </button>
+        </form>
+      ) : (
+        <div className="hidden flex-1 sm:block" />
+      )}
+
+      {/* USER AND CART */}
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        {/* ORDERS BUTTON */}
+        <button
+          onClick={() =>
+            setIsOrdersDropdownOpen(!isOrdersDropdownOpen)
+          }
+          className="
+            h-10
+            w-10
+            max-[420px]:h-9
+            max-[420px]:w-9
+            rounded-full
+            border
+            border-orange-200
+            bg-[#FFF4E8]
+            flex
+            items-center
+            justify-center
+            text-[#823A00]
+            hover:bg-[#FFE5C7]
+            transition-[background-color,border-color,transform]
+            duration-200
+            ease-out
+            active:translate-y-px
+            text-lg
+          "
+          title="Ver mis pedidos"
+        >
+          📦
+        </button>
+
+        {showCartButton && (
+          <button
+            onClick={onCartClick}
+            className="
+              h-10
+              w-10
+              max-[420px]:h-9
+              max-[420px]:w-9
+              rounded-full
+              border
+              border-orange-200
+              bg-[#FFF4E8]
+              flex
+              items-center
+              justify-center
+              text-[#823A00]
+              hover:bg-[#FFE5C7]
+              transition-[background-color,border-color,transform]
+              duration-200
+              ease-out
+              active:translate-y-px
+            "
+          >
+            🛒
+          </button>
+        )}
+
+        <div
+          ref={dropdownRef}
+          className="relative"
+        >
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="
+              flex
+              items-center
+              gap-2
+              p-2
+              hover:bg-[#FFF4E8]
+              rounded-xl
+              transition-[background-color,transform]
+              duration-200
+              ease-out
+              active:translate-y-px
+            "
+          >
+            <div
+              className="
+                h-10
+                w-10
+                max-[420px]:h-9
+                max-[420px]:w-9
+                rounded-full
+                border
+                border-orange-200
+                bg-[#FFF4E8]
+                text-[#823A00]
+                flex
+                items-center
+                justify-center
+              "
+            >
+              👤
+            </div>
+
+            <div className="hidden md:block text-left">
+              <p className="text-sm font-medium text-[#823A00]">
+                Hola
+              </p>
+
+              <p className="text-xs text-stone-500">
+                Mi cuenta
+              </p>
+            </div>
+          </button>
+
+          {/* DROPDOWN MENU */}
+          {isDropdownOpen && (
+            <div
+              className="
+                absolute
+                right-0
+                mt-2
+                w-48
+                bg-white
+                border
+                border-[#A76E04]
+                rounded-xl
+                shadow-lg
+                z-50
+              "
+            >
+              <Link
+                href="/me"
+                onClick={() => setIsDropdownOpen(false)}
+                className="
+                  block
+                  px-4
+                  py-3
+                  text-sm
+                  text-stone-800
+                  hover:bg-[#FFF4E8]
+                  hover:text-[#823A00]
+                  transition
+                  rounded-t-xl
+                "
+              >
+                👤 Mi perfil
+              </Link>
+
+              <Link
+                href="/me#addresses"
+                onClick={() => setIsDropdownOpen(false)}
+                className="
+                  block
+                  px-4
+                  py-3
+                  text-sm
+                  text-stone-800
+                  hover:bg-[#FFF4E8]
+                  hover:text-[#823A00]
+                  transition
+                  border-t
+                  border-stone-200
+                "
+              >
+                📍 Mis direcciones
+              </Link>
+
+              <SignOutButton>
+                <button
+                  className="
+                    w-full
+                    text-left
+                    px-4
+                    py-3
+                    text-sm
+                    text-red-600
+                    hover:bg-red-50
+                    transition
+                    border-t
+                    border-stone-200
+                    rounded-b-xl
+                  "
+                >
+                  🚪 Cerrar sesión
+                </button>
+              </SignOutButton>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ORDERS DROPDOWN */}
+      <OrdersDropdown
+        isOpen={isOrdersDropdownOpen}
+        onClose={() => setIsOrdersDropdownOpen(false)}
+      />
+    </header>
+  );
+}

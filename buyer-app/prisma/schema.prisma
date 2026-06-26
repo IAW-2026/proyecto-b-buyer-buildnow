@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum BuyerStatus {
+  ACTIVE
+  DISABLED
+}
+
+model Buyer {
+  id        String    @id @default(cuid())
+  clerkId   String    @unique
+  name      String?
+  email     String    @unique
+  phone     String?
+  status    BuyerStatus @default(ACTIVE)
+
+  addresses Address[]
+  cart      Cart?
+
+  createdAt DateTime  @default(now())
+}
+
+model Address {
+  id        String   @id @default(cuid())
+
+  buyerId   String
+  buyer     Buyer    @relation(fields: [buyerId], references: [id])
+
+  street    String
+  city      String
+  notes     String?
+
+  createdAt DateTime @default(now())
+}
+
+model Cart {
+  id        String      @id @default(cuid())
+
+  buyerId   String      @unique
+  buyer     Buyer       @relation(fields: [buyerId], references: [id])
+
+  items     CartItem[]
+
+  createdAt DateTime    @default(now())
+}
+
+model CartItem {
+  id          String    @id @default(cuid())
+
+  cartId      String
+  cart        Cart      @relation(fields: [cartId], references: [id])
+
+  productId   String
+  storeId     String
+  quantity    Int
+  price       Decimal   @db.Decimal(10,2)
+
+  createdAt   DateTime  @default(now())
+}
+
+// SELLER MOCK
+enum MockSellerOrderStatus {
+  PENDING_PAYMENT
+  CONFIRMED
+  READY
+  ON_THE_WAY
+  DELIVERED
+  CANCELLED
+}
+
+model MockSellerOrder {
+  id                String                  @id @default(cuid())
+
+  buyerId           String
+  storeId           String
+
+  totalAmount       Decimal                 @db.Decimal(10, 2)
+  totalWeight       Decimal                 @db.Decimal(10, 2)
+
+  status            MockSellerOrderStatus   @default(PENDING_PAYMENT)
+
+  deliveryAddress   String
+
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+
+  items             MockSellerOrderItem[]
+}
+
+model MockSellerOrderItem {
+  id            String             @id @default(cuid())
+
+  orderId       String
+  productId     String
+
+  quantity      Int
+
+  price         Decimal            @db.Decimal(10, 2)
+
+  order         MockSellerOrder    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  createdAt     DateTime           @default(now())
+}

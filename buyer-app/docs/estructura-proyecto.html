@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Estructura del proyecto Buyer App</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #080b10;
+        --paper: #111821;
+        --paper-soft: #172231;
+        --ink: #f4f7fb;
+        --muted: #aab6c6;
+        --line: #263547;
+        --brand: #62c7df;
+        --brand-soft: #113746;
+        --accent: #f0b46f;
+        --accent-soft: #3b2919;
+        --green: #9ed39d;
+        --green-soft: #1e3524;
+        --shadow: 0 22px 60px rgba(0, 0, 0, 0.38);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 12% 0%, rgba(98, 199, 223, 0.18), transparent 34%),
+          radial-gradient(circle at 88% 8%, rgba(240, 180, 111, 0.13), transparent 28%),
+          linear-gradient(180deg, #080b10 0%, #0c1118 54%, #080b10 100%);
+      }
+
+      main {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 46px 0 56px;
+      }
+
+      header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 280px;
+        gap: 28px;
+        align-items: end;
+        padding-bottom: 28px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--brand);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 760px;
+        margin: 0;
+        font-size: clamp(2.1rem, 5vw, 4.25rem);
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      .subtitle {
+        max-width: 760px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 1.04rem;
+        line-height: 1.65;
+      }
+
+      .meta {
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(17, 24, 33, 0.86);
+        box-shadow: var(--shadow);
+      }
+
+      .meta strong,
+      .section-label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--brand);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      .meta p,
+      .card p,
+      .flow-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      section {
+        margin-top: 34px;
+      }
+
+      h2 {
+        margin: 0 0 16px;
+        font-size: clamp(1.45rem, 3vw, 2rem);
+        line-height: 1.15;
+        letter-spacing: 0;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .card,
+      .flow-card {
+        min-height: 100%;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(17, 24, 33, 0.92);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+      }
+
+      .path {
+        display: inline-flex;
+        max-width: 100%;
+        margin-bottom: 12px;
+        padding: 6px 9px;
+        border-radius: 6px;
+        color: var(--brand);
+        background: var(--brand-soft);
+        font-family:
+          "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        font-size: 0.82rem;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+      }
+
+      .card h3,
+      .flow-card h3 {
+        margin: 0 0 8px;
+        font-size: 1rem;
+        line-height: 1.25;
+      }
+
+      details {
+        margin-top: 14px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+      }
+
+      summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-top: 12px;
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 800;
+        list-style: none;
+      }
+
+      summary::-webkit-details-marker {
+        display: none;
+      }
+
+      summary::after {
+        content: "+";
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        color: var(--bg);
+        background: var(--brand);
+        font-weight: 900;
+      }
+
+      details[open] summary::after {
+        content: "-";
+      }
+
+      .detail-body {
+        display: grid;
+        gap: 9px;
+        padding-top: 11px;
+        font-size: 0.93rem;
+        line-height: 1.55;
+      }
+
+      .detail-body ul {
+        display: grid;
+        gap: 7px;
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .two-col {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        gap: 16px;
+        align-items: start;
+      }
+
+      .notes {
+        display: grid;
+        gap: 10px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .notes li {
+        padding: 14px 16px;
+        border-left: 4px solid var(--accent);
+        border-radius: 6px;
+        color: var(--muted);
+        background: var(--accent-soft);
+        line-height: 1.5;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(120px, 1fr));
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+
+      .flow-card {
+        min-width: 120px;
+        position: relative;
+        padding: 15px;
+      }
+
+      .flow-card:not(:last-child)::after {
+        content: ">";
+        position: absolute;
+        top: 50%;
+        right: -10px;
+        z-index: 1;
+        width: 20px;
+        height: 20px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: var(--bg);
+        background: var(--brand);
+        font-size: 0.75rem;
+        font-weight: 900;
+        transform: translateY(-50%);
+      }
+
+      .flow-card:nth-child(2n) {
+        background: rgba(23, 34, 49, 0.96);
+      }
+
+      .tag {
+        display: inline-flex;
+        margin-bottom: 10px;
+        padding: 5px 8px;
+        border-radius: 999px;
+        color: var(--green);
+        background: var(--green-soft);
+        font-size: 0.74rem;
+        font-weight: 800;
+      }
+
+      code {
+        color: var(--accent);
+        font-family:
+          "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        font-size: 0.92em;
+      }
+
+      .example {
+        display: grid;
+        gap: 12px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #0f141b;
+        color: var(--ink);
+        box-shadow: var(--shadow);
+      }
+
+      .example p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .example code {
+        color: #f7bd77;
+      }
+
+      footer {
+        margin-top: 34px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.55;
+      }
+
+      @media (max-width: 920px) {
+        header,
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 640px) {
+        main {
+          width: min(100% - 22px, 1120px);
+          padding-top: 28px;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .flow-card:not(:last-child)::after {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">Buyer App · guía interna</p>
+          <h1>Estructura del proyecto</h1>
+          <p class="subtitle">
+            Esta guía resume qué responsabilidad tiene cada carpeta importante
+            y cómo viaja una acción de usuario desde la interfaz hasta las
+            integraciones, Prisma y la respuesta final.
+          </p>
+        </div>
+
+        <aside class="meta">
+          <strong>Stack principal</strong>
+          <p>
+            Next.js App Router, React, TypeScript, Clerk, Prisma, Tailwind y
+            clientes HTTP para servicios externos o mocks locales.
+          </p>
+          <details>
+            <summary>Más detalle</summary>
+            <div class="detail-body">
+              <p>
+                La app combina server components para lectura inicial,
+                componentes cliente para interacción y server actions/API routes
+                para ejecutar operaciones protegidas en el servidor.
+              </p>
+            </div>
+          </details>
+        </aside>
+      </header>
+
+      <section>
+        <span class="section-label">Mapa rápido</span>
+        <h2>Carpetas y archivos clave</h2>
+        <div class="grid">
+          <article class="card">
+            <span class="path">src/app</span>
+            <h3>Rutas, layouts y API routes</h3>
+            <p>
+              Define las pantallas del App Router, grupos como
+              <code>(public)</code>, <code>(private)</code>,
+              <code>(onboarding)</code> y endpoints internos bajo
+              <code>api</code>.
+            </p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <ul>
+                  <li><code>page.tsx</code> representa una pantalla.</li>
+                  <li><code>layout.tsx</code> envuelve rutas con estructura común.</li>
+                  <li><code>api/*/route.ts</code> expone endpoints internos, como IA o georef.</li>
+                </ul>
+              </div>
+            </details>
+          </article>
+
+          <article class="card">
+            <span class="path">src/components</span>
+            <h3>Interfaz reutilizable</h3>
+            <p>
+              Contiene piezas visuales por dominio: carrito, productos,
+              tiendas, órdenes, direcciones, admin, búsqueda y asistente IA.
+            </p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>
+                  Acá vive la experiencia visible. Algunos componentes son
+                  server components y otros usan estado/eventos del navegador,
+                  como formularios, sidebar del carrito o asistente IA.
+                </p>
+              </div>
+            </details>
+          </article>
+
+          <article class="card">
+            <span class="path">src/actions</span>
+            <h3>Server actions</h3>
+            <p>
+              Expone operaciones invocables desde componentes, valida sesión o
+              rol y delega la lógica real a servicios.
+            </p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>
+                  Funcionan como frontera entre UI y servidor. Devuelven
+                  respuestas simples para que la interfaz pueda mostrar éxito,
+                  errores de permisos o validaciones de negocio.
+                </p>
+              </div>
+            </details>
+          </article>
+
+          <article class="card">
+            <span class="path">src/server/services</span>
+            <h3>Casos de uso</h3>
+            <p>
+              Coordina reglas de negocio. Por ejemplo, catálogo, carrito,
+              compradores, admin y recomendaciones IA.
+            </p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>
+                  Es la capa que decide qué hacer. Puede combinar repositorios,
+                  integraciones externas y validaciones como stock suficiente o
+                  carrito con productos de una sola tienda.
+                </p>
+              </div>
+            </details>
+          </article>
+
+          <article class="card">
+            <span class="path">src/server/repositories</span>
+            <h3>Acceso a base de datos</h3>
+            <p>
+              Encapsula consultas Prisma para buyers, direcciones, carritos y
+              datos administrativos.
+            </p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>
+                  No debería contener lógica visual ni saber de componentes. Su
+                  trabajo es leer, crear, actualizar o borrar entidades del
+                  modelo local de Buyer.
+                </p>
+              </div>
+            </details>
+          </article>
+
+          <article class="card">
+            <span class="path">src/server/integrations</span>
+            <h3>Servicios externos</h3>
+            <p>
+              Clientes server-only para Seller, Delivery y Gemini. Separan el
+              contrato externo de la lógica de la app.
+            </p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>
+                  Centraliza URLs, payloads y respuestas de otros sistemas. Por
+                  ejemplo, Seller entrega tiendas/productos y Gemini genera
+                  recomendaciones del asistente.
+                </p>
+              </div>
+            </details>
+          </article>
+
+          <article class="card">
+            <span class="path">src/lib</span>
+            <h3>Infraestructura compartida</h3>
+            <p>
+              Helpers de autenticación, cliente Prisma, clientes HTTP base,
+              rate limit, serialización y validaciones.
+            </p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>
+                  Es código transversal: piezas usadas por varias capas. Buenos
+                  candidatos son utilidades pequeñas, clientes base y funciones
+                  de seguridad o normalización.
+                </p>
+              </div>
+            </details>
+          </article>
+
+          <article class="card">
+            <span class="path">src/context</span>
+            <h3>Estado del cliente</h3>
+            <p>
+              Guarda estado React compartido, como el carrito visible en la
+              experiencia de compra.
+            </p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>
+                  Conviene usarlo para estado de UI que varios componentes
+                  necesitan leer o actualizar sin pasarse props por muchas capas.
+                </p>
+              </div>
+            </details>
+          </article>
+
+          <article class="card">
+            <span class="path">prisma</span>
+            <h3>Modelo persistente</h3>
+            <p>
+              Incluye <code>schema.prisma</code> y migraciones de la base de
+              datos local de Buyer.
+            </p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>
+                  El schema define entidades como buyer, direcciones, carrito e
+                  items. Las migraciones dejan registrado cómo evolucionó la base.
+                </p>
+              </div>
+            </details>
+          </article>
+
+          <article class="card">
+            <span class="path">public</span>
+            <h3>Assets estáticos</h3>
+            <p>
+              Logo, favicon e imágenes mock de productos servidas directamente
+              por Next.
+            </p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>
+                  Todo lo que está acá se puede servir como archivo estático.
+                  Sirve para imágenes de producto, íconos y recursos que no
+                  necesitan procesamiento del servidor.
+                </p>
+              </div>
+            </details>
+          </article>
+
+          <article class="card">
+            <span class="path">scripts</span>
+            <h3>Automatizaciones locales</h3>
+            <p>
+              Scripts auxiliares, como la generación de imágenes mock para el
+              catálogo.
+            </p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>
+                  Son tareas de apoyo para desarrollo. No forman parte directa
+                  del runtime de Next, pero ayudan a preparar datos o assets.
+                </p>
+              </div>
+            </details>
+          </article>
+
+          <article class="card">
+            <span class="path">docs</span>
+            <h3>Documentación del proyecto</h3>
+            <p>
+              Documentos HTML o Markdown para explicar arquitectura, endpoints
+              y decisiones del sistema.
+            </p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>
+                  Es el lugar para guías de lectura rápida: estructura, contratos
+                  consumidos, decisiones técnicas y flujos principales.
+                </p>
+              </div>
+            </details>
+          </article>
+        </div>
+      </section>
+
+      <section class="two-col">
+        <div>
+          <span class="section-label">Cómo pensar la app</span>
+          <h2>Separación por capas</h2>
+          <ul class="notes">
+            <li>
+              Las pantallas y componentes no deberían hablar directo con Prisma
+              ni con APIs externas. Usan server actions, API routes o servicios.
+            </li>
+            <li>
+              Los servicios concentran reglas: stock, tienda única en carrito,
+              búsqueda, recomendaciones, armado de órdenes o datos de tracking.
+            </li>
+            <li>
+              Las integraciones aíslan contratos externos. Si no hay URL real
+              de Seller, el cliente usa el mock de <code>src/server/mockSeller</code>.
+            </li>
+          </ul>
+          <details>
+            <summary>Más detalle</summary>
+            <div class="detail-body">
+              <p>
+                Esta separación ayuda a cambiar una capa sin reescribir todo:
+                se puede reemplazar un mock por una API real, ajustar una regla
+                de negocio en services o modificar UI sin tocar persistencia.
+              </p>
+            </div>
+          </details>
+        </div>
+
+        <div class="example">
+          <p>
+            Ejemplo de lectura: <code>src/app/[storeId]/page.tsx</code> arma la
+            página de una tienda llamando a <code>getAllStores</code>,
+            <code>getCatalogCategories</code> y
+            <code>getStoreProductsService</code>. Esos servicios consultan la
+            integración Seller y devuelven datos listos para renderizar.
+          </p>
+          <p>
+            Ejemplo de escritura: agregar al carrito pasa por
+            <code>addToCartAction</code>, valida el buyer con Clerk, ejecuta
+            <code>addProductToCart</code> y persiste el item con Prisma.
+          </p>
+          <details>
+            <summary>Más detalle</summary>
+            <div class="detail-body">
+              <p>
+                En lectura, el server component puede esperar datos antes de
+                renderizar. En escritura, la acción vuelve con un resultado
+                controlado para que el componente cliente actualice el estado o
+                muestre un mensaje.
+              </p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section>
+        <span class="section-label">Flujo de ejemplo</span>
+        <h2>Agregar un producto al carrito</h2>
+        <div class="flow" aria-label="Flujo entre capas">
+          <article class="flow-card">
+            <span class="tag">UI</span>
+            <h3>ProductCard</h3>
+            <p>El usuario toca agregar o cambia la cantidad del producto.</p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>El componente captura el evento y llama a una acción del carrito.</p>
+              </div>
+            </details>
+          </article>
+
+          <article class="flow-card">
+            <span class="tag">Action</span>
+            <h3>cart.actions.ts</h3>
+            <p><code>addToCartAction(productId)</code> recibe la intención.</p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>La action traduce errores técnicos a respuestas útiles para la UI.</p>
+              </div>
+            </details>
+          </article>
+
+          <article class="flow-card">
+            <span class="tag">Auth</span>
+            <h3>requireBuyer</h3>
+            <p>Confirma sesión de Clerk y permisos de comprador.</p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>Si no hay sesión o rol correcto, corta el flujo antes de tocar datos.</p>
+              </div>
+            </details>
+          </article>
+
+          <article class="flow-card">
+            <span class="tag">Service</span>
+            <h3>buyer.service.ts</h3>
+            <p>Busca o crea carrito, valida stock y evita mezclar tiendas.</p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>Acá aparecen reglas como <code>DIFFERENT_STORE_CART</code> o <code>INSUFFICIENT_STOCK</code>.</p>
+              </div>
+            </details>
+          </article>
+
+          <article class="flow-card">
+            <span class="tag">Data</span>
+            <h3>Seller + Prisma</h3>
+            <p>Seller aporta detalle del producto; Prisma guarda el carrito.</p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>Seller puede venir de API real o mock; Prisma persiste la parte propia de Buyer.</p>
+              </div>
+            </details>
+          </article>
+
+          <article class="flow-card">
+            <span class="tag">Response</span>
+            <h3>UI actualizada</h3>
+            <p>La action devuelve éxito o error y el componente refresca estado.</p>
+            <details>
+              <summary>Más detalle</summary>
+              <div class="detail-body">
+                <p>El usuario ve la cantidad nueva, el carrito actualizado o un mensaje de error.</p>
+              </div>
+            </details>
+          </article>
+        </div>
+      </section>
+
+      <footer>
+        Regla práctica: si una carpeta empieza con <code>server</code>, su código
+        pertenece al lado servidor. Si está en <code>components</code> o
+        <code>context</code>, pensarlo como experiencia de usuario. Si está en
+        <code>lib</code>, debería ser infraestructura reusable y sin lógica de
+        pantalla.
+      </footer>
+    </main>
+  </body>
+</html>
